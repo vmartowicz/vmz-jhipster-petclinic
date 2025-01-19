@@ -1,0 +1,37 @@
+{
+  "annotations": {
+    "changelogDate": "20200627072727"
+  },
+  "applications": ["jhpetclinic"],
+  "changelogDate": "20200627072727",
+  "clientRootFolder": "",
+  "dto": "mapstruct",
+  "entityTableName": "visits",
+  "fields": [
+    {
+      "fieldName": "visitDate",
+      "fieldType": "LocalDate"
+    },
+    {
+      "fieldName": "description",
+      "fieldType": "String",
+      "fieldValidateRules": ["required", "maxlength"],
+      "fieldValidateRulesMaxlength": "255"
+    }
+  ],
+  "jpaMetamodelFiltering": true,
+  "name": "Visit",
+  "pagination": "pagination",
+  "relationships": [
+    {
+      "otherEntityField": "name",
+      "otherEntityName": "pet",
+      "otherEntityRelationshipName": "visits",
+      "relationshipName": "pet",
+      "relationshipSide": "right",
+      "relationshipType": "many-to-one"
+    }
+  ],
+  "searchEngine": "no",
+  "service": "serviceImpl"
+}

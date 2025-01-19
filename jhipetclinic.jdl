@@ -1,0 +1,81 @@
+application {
+  config {
+    applicationType monolith,
+    authenticationType jwt,
+    baseName jhpetclinic,
+    buildTool maven,
+    clientFramework angularX,
+    clientTheme flatly,
+    clientThemeVariant primary,
+    databaseType sql,
+    devDatabaseType h2Disk,
+    enableTranslation true,
+    languages [en]
+    nativeLanguage en,
+    packageName fr.vmz.jhipster.petclinic,
+    prodDatabaseType postgresql,
+    searchEngine no,
+    testFrameworks []
+  }
+  entities *
+}
+
+entity Vet(vets) {
+  firstName String required maxlength(30)
+  lastName String required maxlength(30)
+}
+
+entity Specialty(specialties) {
+  name String required maxlength(80)
+}
+
+entity PetType(types) {
+  name String required maxlength(80)
+}
+
+entity Owner(owners) {
+  firstName String required maxlength(30)
+  lastName String required maxlength(30)
+  address String required maxlength(255)
+  city String required maxlength(80)
+  telephone String required maxlength(20)
+}
+
+entity Pet(pets) {
+  name String required maxlength(30)
+  birthDate LocalDate
+}
+
+entity Visit(visits) {
+  visitDate LocalDate
+  description String required maxlength(255)
+}
+
+// --- Relationships ----------------------------------------------
+relationship ManyToMany {
+  Vet{specialties(name)} to Specialty{vets}
+}
+
+relationship OneToMany {
+  Owner{pets(name)} to Pet{owner(lastName)}
+  Pet{visits} to Visit{pet(name)}
+}
+
+relationship ManyToOne {
+  Pet{type(name)} to PetType
+}
+
+// --- Application options ----------------------------------------
+
+// Set pagination options
+paginate PetType, Specialty, Vet, Owner, Pet, Visit with pagination
+
+// We will use DTO's and not expose domain classes directly
+dto * with mapstruct
+
+// Set service options to all except few
+service all with serviceImpl
+
+filter Vet, Owner, Pet, Visit
+
+//search Owner with elasticsearch

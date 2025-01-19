@@ -1,0 +1,39 @@
+/* ==========================================================================
+Main page styles
+========================================================================== */
+
+.pets {
+  display: inline-block;
+  width: 239px;
+  height: 170px;
+  background: url('../../content/images/pets.png') no-repeat center top;
+  background-size: contain;
+}
+
+.spring-pivotal {
+  display: inline-block;
+  width: 200px;
+  height: 42px;
+  background: url('../../content/images/spring-pivotal-logo.png') no-repeat left top;
+  background-size: contain;
+}
+
+.jhlogo {
+  height: 204px;
+  width: 84px;
+  display: inline-block;
+  background: url('../../content/images/logo-jhipster.png') no-repeat right top;
+  background-size: contain;
+}
+
+/* wait autoprefixer update to allow simple generation of high pixel density media query */
+@media only screen and (-webkit-min-device-pixel-ratio: 2),
+  only screen and (-moz-min-device-pixel-ratio: 2),
+  only screen and (-o-min-device-pixel-ratio: 2/1),
+  only screen and (min-resolution: 192dpi),
+  only screen and (min-resolution: 2dppx) {
+  .pets {
+    background: url('../../content/images/pets.png') no-repeat center top;
+    background-size: contain;
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "annotations": {
+    "changelogDate": "20200627072227"
+  },
+  "applications": ["jhpetclinic"],
+  "changelogDate": "20200627072227",
+  "clientRootFolder": "",
+  "dto": "mapstruct",
+  "entityTableName": "types",
+  "fields": [
+    {
+      "fieldName": "name",
+      "fieldType": "String",
+      "fieldValidateRules": ["required", "maxlength"],
+      "fieldValidateRulesMaxlength": "80"
+    }
+  ],
+  "name": "PetType",
+  "pagination": "pagination",
+  "relationships": [],
+  "searchEngine": "no",
+  "service": "serviceImpl"
+}

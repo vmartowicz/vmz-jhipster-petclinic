@@ -1,0 +1,31 @@
+{
+  "annotations": {
+    "changelogDate": "20200627072327"
+  },
+  "applications": ["jhpetclinic"],
+  "changelogDate": "20200627072327",
+  "clientRootFolder": "",
+  "dto": "mapstruct",
+  "entityTableName": "specialties",
+  "fields": [
+    {
+      "fieldName": "name",
+      "fieldType": "String",
+      "fieldValidateRules": ["required", "maxlength"],
+      "fieldValidateRulesMaxlength": "80"
+    }
+  ],
+  "name": "Specialty",
+  "pagination": "pagination",
+  "relationships": [
+    {
+      "otherEntityName": "vet",
+      "otherEntityRelationshipName": "specialties",
+      "relationshipName": "vets",
+      "relationshipSide": "right",
+      "relationshipType": "many-to-many"
+    }
+  ],
+  "searchEngine": "no",
+  "service": "serviceImpl"
+}
