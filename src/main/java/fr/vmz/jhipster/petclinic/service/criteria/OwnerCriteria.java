@@ -34,6 +34,14 @@ public class OwnerCriteria implements Serializable, Criteria {
 
     private StringFilter telephone;
 
+    private StringFilter createdBy;
+
+    private InstantFilter createdDate;
+
+    private StringFilter lastModifiedBy;
+
+    private InstantFilter lastModifiedDate;
+
     private LongFilter petsId;
 
     private Boolean distinct;
@@ -47,6 +55,10 @@ public class OwnerCriteria implements Serializable, Criteria {
         this.address = other.optionalAddress().map(StringFilter::copy).orElse(null);
         this.city = other.optionalCity().map(StringFilter::copy).orElse(null);
         this.telephone = other.optionalTelephone().map(StringFilter::copy).orElse(null);
+        this.createdBy = other.optionalCreatedBy().map(StringFilter::copy).orElse(null);
+        this.createdDate = other.optionalCreatedDate().map(InstantFilter::copy).orElse(null);
+        this.lastModifiedBy = other.optionalLastModifiedBy().map(StringFilter::copy).orElse(null);
+        this.lastModifiedDate = other.optionalLastModifiedDate().map(InstantFilter::copy).orElse(null);
         this.petsId = other.optionalPetsId().map(LongFilter::copy).orElse(null);
         this.distinct = other.distinct;
     }
@@ -170,6 +182,82 @@ public class OwnerCriteria implements Serializable, Criteria {
         this.telephone = telephone;
     }
 
+    public StringFilter getCreatedBy() {
+        return createdBy;
+    }
+
+    public Optional<StringFilter> optionalCreatedBy() {
+        return Optional.ofNullable(createdBy);
+    }
+
+    public StringFilter createdBy() {
+        if (createdBy == null) {
+            setCreatedBy(new StringFilter());
+        }
+        return createdBy;
+    }
+
+    public void setCreatedBy(StringFilter createdBy) {
+        this.createdBy = createdBy;
+    }
+
+    public InstantFilter getCreatedDate() {
+        return createdDate;
+    }
+
+    public Optional<InstantFilter> optionalCreatedDate() {
+        return Optional.ofNullable(createdDate);
+    }
+
+    public InstantFilter createdDate() {
+        if (createdDate == null) {
+            setCreatedDate(new InstantFilter());
+        }
+        return createdDate;
+    }
+
+    public void setCreatedDate(InstantFilter createdDate) {
+        this.createdDate = createdDate;
+    }
+
+    public StringFilter getLastModifiedBy() {
+        return lastModifiedBy;
+    }
+
+    public Optional<StringFilter> optionalLastModifiedBy() {
+        return Optional.ofNullable(lastModifiedBy);
+    }
+
+    public StringFilter lastModifiedBy() {
+        if (lastModifiedBy == null) {
+            setLastModifiedBy(new StringFilter());
+        }
+        return lastModifiedBy;
+    }
+
+    public void setLastModifiedBy(StringFilter lastModifiedBy) {
+        this.lastModifiedBy = lastModifiedBy;
+    }
+
+    public InstantFilter getLastModifiedDate() {
+        return lastModifiedDate;
+    }
+
+    public Optional<InstantFilter> optionalLastModifiedDate() {
+        return Optional.ofNullable(lastModifiedDate);
+    }
+
+    public InstantFilter lastModifiedDate() {
+        if (lastModifiedDate == null) {
+            setLastModifiedDate(new InstantFilter());
+        }
+        return lastModifiedDate;
+    }
+
+    public void setLastModifiedDate(InstantFilter lastModifiedDate) {
+        this.lastModifiedDate = lastModifiedDate;
+    }
+
     public LongFilter getPetsId() {
         return petsId;
     }
@@ -224,6 +312,10 @@ public class OwnerCriteria implements Serializable, Criteria {
             Objects.equals(address, that.address) &&
             Objects.equals(city, that.city) &&
             Objects.equals(telephone, that.telephone) &&
+            Objects.equals(createdBy, that.createdBy) &&
+            Objects.equals(createdDate, that.createdDate) &&
+            Objects.equals(lastModifiedBy, that.lastModifiedBy) &&
+            Objects.equals(lastModifiedDate, that.lastModifiedDate) &&
             Objects.equals(petsId, that.petsId) &&
             Objects.equals(distinct, that.distinct)
         );
@@ -231,7 +323,20 @@ public class OwnerCriteria implements Serializable, Criteria {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, firstName, lastName, address, city, telephone, petsId, distinct);
+        return Objects.hash(
+            id,
+            firstName,
+            lastName,
+            address,
+            city,
+            telephone,
+            createdBy,
+            createdDate,
+            lastModifiedBy,
+            lastModifiedDate,
+            petsId,
+            distinct
+        );
     }
 
     // prettier-ignore
@@ -244,6 +349,10 @@ public class OwnerCriteria implements Serializable, Criteria {
             optionalAddress().map(f -> "address=" + f + ", ").orElse("") +
             optionalCity().map(f -> "city=" + f + ", ").orElse("") +
             optionalTelephone().map(f -> "telephone=" + f + ", ").orElse("") +
+            optionalCreatedBy().map(f -> "createdBy=" + f + ", ").orElse("") +
+            optionalCreatedDate().map(f -> "createdDate=" + f + ", ").orElse("") +
+            optionalLastModifiedBy().map(f -> "lastModifiedBy=" + f + ", ").orElse("") +
+            optionalLastModifiedDate().map(f -> "lastModifiedDate=" + f + ", ").orElse("") +
             optionalPetsId().map(f -> "petsId=" + f + ", ").orElse("") +
             optionalDistinct().map(f -> "distinct=" + f + ", ").orElse("") +
         "}";

@@ -5,6 +5,10 @@ export interface IVisit {
   id: number;
   visitDate?: dayjs.Dayjs | null;
   description?: string | null;
+  createdBy?: string | null;
+  createdDate?: dayjs.Dayjs | null;
+  lastModifiedBy?: string | null;
+  lastModifiedDate?: dayjs.Dayjs | null;
   pet?: Pick<IPet, 'id' | 'name'> | null;
 }
 

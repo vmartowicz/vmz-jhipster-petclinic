@@ -43,6 +43,7 @@ public class SpecialtyServiceImpl implements SpecialtyService {
     public SpecialtyDTO update(SpecialtyDTO specialtyDTO) {
         LOG.debug("Request to update Specialty : {}", specialtyDTO);
         Specialty specialty = specialtyMapper.toEntity(specialtyDTO);
+        specialty.setIsPersisted();
         specialty = specialtyRepository.save(specialty);
         return specialtyMapper.toDto(specialty);
     }

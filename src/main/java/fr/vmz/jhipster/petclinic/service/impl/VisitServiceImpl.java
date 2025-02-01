@@ -43,6 +43,7 @@ public class VisitServiceImpl implements VisitService {
     public VisitDTO update(VisitDTO visitDTO) {
         LOG.debug("Request to update Visit : {}", visitDTO);
         Visit visit = visitMapper.toEntity(visitDTO);
+        visit.setIsPersisted();
         visit = visitRepository.save(visit);
         return visitMapper.toDto(visit);
     }

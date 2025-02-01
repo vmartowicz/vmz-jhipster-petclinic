@@ -25,6 +25,10 @@ describe('Owner Form Service', () => {
             address: expect.any(Object),
             city: expect.any(Object),
             telephone: expect.any(Object),
+            createdBy: expect.any(Object),
+            createdDate: expect.any(Object),
+            lastModifiedBy: expect.any(Object),
+            lastModifiedDate: expect.any(Object),
           }),
         );
       });
@@ -40,6 +44,10 @@ describe('Owner Form Service', () => {
             address: expect.any(Object),
             city: expect.any(Object),
             telephone: expect.any(Object),
+            createdBy: expect.any(Object),
+            createdDate: expect.any(Object),
+            lastModifiedBy: expect.any(Object),
+            lastModifiedDate: expect.any(Object),
           }),
         );
       });

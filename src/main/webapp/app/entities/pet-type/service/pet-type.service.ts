@@ -1,6 +1,8 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpResponse } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, map } from 'rxjs';
+
+import dayjs from 'dayjs/esm';
 
 import { isPresent } from 'app/core/util/operators';
 import { ApplicationConfigService } from 'app/core/config/application-config.service';
@@ -8,6 +10,17 @@ import { createRequestOption } from 'app/core/request/request-util';
 import { IPetType, NewPetType } from '../pet-type.model';
 
 export type PartialUpdatePetType = Partial<IPetType> & Pick<IPetType, 'id'>;
+
+type RestOf<T extends IPetType | NewPetType> = Omit<T, 'createdDate' | 'lastModifiedDate'> & {
+  createdDate?: string | null;
+  lastModifiedDate?: string | null;
+};
+
+export type RestPetType = RestOf<IPetType>;
+
+export type NewRestPetType = RestOf<NewPetType>;
+
+export type PartialUpdateRestPetType = RestOf<PartialUpdatePetType>;
 
 export type EntityResponseType = HttpResponse<IPetType>;
 export type EntityArrayResponseType = HttpResponse<IPetType[]>;
@@ -20,24 +33,37 @@ export class PetTypeService {
   protected resourceUrl = this.applicationConfigService.getEndpointFor('api/pet-types');
 
   create(petType: NewPetType): Observable<EntityResponseType> {
-    return this.http.post<IPetType>(this.resourceUrl, petType, { observe: 'response' });
+    const copy = this.convertDateFromClient(petType);
+    return this.http
+      .post<RestPetType>(this.resourceUrl, copy, { observe: 'response' })
+      .pipe(map(res => this.convertResponseFromServer(res)));
   }
 
   update(petType: IPetType): Observable<EntityResponseType> {
-    return this.http.put<IPetType>(`${this.resourceUrl}/${this.getPetTypeIdentifier(petType)}`, petType, { observe: 'response' });
+    const copy = this.convertDateFromClient(petType);
+    return this.http
+      .put<RestPetType>(`${this.resourceUrl}/${this.getPetTypeIdentifier(petType)}`, copy, { observe: 'response' })
+      .pipe(map(res => this.convertResponseFromServer(res)));
   }
 
   partialUpdate(petType: PartialUpdatePetType): Observable<EntityResponseType> {
-    return this.http.patch<IPetType>(`${this.resourceUrl}/${this.getPetTypeIdentifier(petType)}`, petType, { observe: 'response' });
+    const copy = this.convertDateFromClient(petType);
+    return this.http
+      .patch<RestPetType>(`${this.resourceUrl}/${this.getPetTypeIdentifier(petType)}`, copy, { observe: 'response' })
+      .pipe(map(res => this.convertResponseFromServer(res)));
   }
 
   find(id: number): Observable<EntityResponseType> {
-    return this.http.get<IPetType>(`${this.resourceUrl}/${id}`, { observe: 'response' });
+    return this.http
+      .get<RestPetType>(`${this.resourceUrl}/${id}`, { observe: 'response' })
+      .pipe(map(res => this.convertResponseFromServer(res)));
   }
 
   query(req?: any): Observable<EntityArrayResponseType> {
     const options = createRequestOption(req);
-    return this.http.get<IPetType[]>(this.resourceUrl, { params: options, observe: 'response' });
+    return this.http
+      .get<RestPetType[]>(this.resourceUrl, { params: options, observe: 'response' })
+      .pipe(map(res => this.convertResponseArrayFromServer(res)));
   }
 
   delete(id: number): Observable<HttpResponse<{}>> {
@@ -70,5 +96,33 @@ export class PetTypeService {
       return [...petTypesToAdd, ...petTypeCollection];
     }
     return petTypeCollection;
+  }
+
+  protected convertDateFromClient<T extends IPetType | NewPetType | PartialUpdatePetType>(petType: T): RestOf<T> {
+    return {
+      ...petType,
+      createdDate: petType.createdDate?.toJSON() ?? null,
+      lastModifiedDate: petType.lastModifiedDate?.toJSON() ?? null,
+    };
+  }
+
+  protected convertDateFromServer(restPetType: RestPetType): IPetType {
+    return {
+      ...restPetType,
+      createdDate: restPetType.createdDate ? dayjs(restPetType.createdDate) : undefined,
+      lastModifiedDate: restPetType.lastModifiedDate ? dayjs(restPetType.lastModifiedDate) : undefined,
+    };
+  }
+
+  protected convertResponseFromServer(res: HttpResponse<RestPetType>): HttpResponse<IPetType> {
+    return res.clone({
+      body: res.body ? this.convertDateFromServer(res.body) : null,
+    });
+  }
+
+  protected convertResponseArrayFromServer(res: HttpResponse<RestPetType[]>): HttpResponse<IPetType[]> {
+    return res.clone({
+      body: res.body ? res.body.map(item => this.convertDateFromServer(item)) : null,
+    });
   }
 }

@@ -3,6 +3,7 @@ package fr.vmz.jhipster.petclinic.repository;
 import fr.vmz.jhipster.petclinic.domain.Pet;
 import java.util.List;
 import java.util.Optional;
+import org.javers.spring.annotation.JaversSpringDataAuditable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.*;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Repository;
  * Spring Data JPA repository for the Pet entity.
  */
 @Repository
+@JaversSpringDataAuditable
 public interface PetRepository extends JpaRepository<Pet, Long>, JpaSpecificationExecutor<Pet> {
     default Optional<Pet> findOneWithEagerRelationships(Long id) {
         return this.findOneWithToOneRelationships(id);

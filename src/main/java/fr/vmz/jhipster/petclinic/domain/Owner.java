@@ -4,10 +4,12 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import java.io.Serializable;
+import java.time.Instant;
 import java.util.HashSet;
 import java.util.Set;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.springframework.data.domain.Persistable;
 
 /**
  * A Owner.
@@ -15,8 +17,9 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 @Entity
 @Table(name = "owners")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+@JsonIgnoreProperties(value = { "new" })
 @SuppressWarnings("common-java:DuplicatedBlocks")
-public class Owner implements Serializable {
+public class Owner extends AbstractAuditingEntity<Long> implements Serializable, Persistable<Long> {
 
     private static final long serialVersionUID = 1L;
 
@@ -50,6 +53,14 @@ public class Owner implements Serializable {
     @Size(max = 20)
     @Column(name = "telephone", length = 20, nullable = false)
     private String telephone;
+
+    // Inherited createdBy definition
+    // Inherited createdDate definition
+    // Inherited lastModifiedBy definition
+    // Inherited lastModifiedDate definition
+    @org.springframework.data.annotation.Transient
+    @Transient
+    private boolean isPersisted;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "owner")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
@@ -136,6 +147,48 @@ public class Owner implements Serializable {
         this.telephone = telephone;
     }
 
+    // Inherited createdBy methods
+    public Owner createdBy(String createdBy) {
+        this.setCreatedBy(createdBy);
+        return this;
+    }
+
+    // Inherited createdDate methods
+    public Owner createdDate(Instant createdDate) {
+        this.setCreatedDate(createdDate);
+        return this;
+    }
+
+    // Inherited lastModifiedBy methods
+    public Owner lastModifiedBy(String lastModifiedBy) {
+        this.setLastModifiedBy(lastModifiedBy);
+        return this;
+    }
+
+    // Inherited lastModifiedDate methods
+    public Owner lastModifiedDate(Instant lastModifiedDate) {
+        this.setLastModifiedDate(lastModifiedDate);
+        return this;
+    }
+
+    @PostLoad
+    @PostPersist
+    public void updateEntityState() {
+        this.setIsPersisted();
+    }
+
+    @org.springframework.data.annotation.Transient
+    @Transient
+    @Override
+    public boolean isNew() {
+        return !this.isPersisted;
+    }
+
+    public Owner setIsPersisted() {
+        this.isPersisted = true;
+        return this;
+    }
+
     public Set<Pet> getPets() {
         return this.pets;
     }
@@ -196,6 +249,10 @@ public class Owner implements Serializable {
             ", address='" + getAddress() + "'" +
             ", city='" + getCity() + "'" +
             ", telephone='" + getTelephone() + "'" +
+            ", createdBy='" + getCreatedBy() + "'" +
+            ", createdDate='" + getCreatedDate() + "'" +
+            ", lastModifiedBy='" + getLastModifiedBy() + "'" +
+            ", lastModifiedDate='" + getLastModifiedDate() + "'" +
             "}";
     }
 }

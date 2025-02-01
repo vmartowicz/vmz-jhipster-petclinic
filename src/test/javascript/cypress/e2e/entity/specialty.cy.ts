@@ -15,7 +15,7 @@ describe('Specialty e2e test', () => {
   const specialtyPageUrlPattern = new RegExp('/specialty(\\?.*)?$');
   const username = Cypress.env('E2E_USERNAME') ?? 'user';
   const password = Cypress.env('E2E_PASSWORD') ?? 'user';
-  const specialtySample = { name: 'till' };
+  const specialtySample = { name: 'drat sit lift' };
 
   let specialty;
 

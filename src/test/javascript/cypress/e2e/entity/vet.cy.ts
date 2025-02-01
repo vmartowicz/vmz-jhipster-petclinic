@@ -15,7 +15,7 @@ describe('Vet e2e test', () => {
   const vetPageUrlPattern = new RegExp('/vet(\\?.*)?$');
   const username = Cypress.env('E2E_USERNAME') ?? 'user';
   const password = Cypress.env('E2E_PASSWORD') ?? 'user';
-  const vetSample = { firstName: 'Vincenzo', lastName: 'Mann' };
+  const vetSample = { firstName: 'Lowell', lastName: 'Hegmann' };
 
   let vet;
 

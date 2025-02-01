@@ -3,7 +3,11 @@
     "applicationType": "monolith",
     "authenticationType": "jwt",
     "baseName": "jhpetclinic",
-    "blueprints": [],
+    "blueprints": [
+      {
+        "name": "generator-jhipster-entity-audit"
+      }
+    ],
     "buildTool": "maven",
     "cacheProvider": "ehcache",
     "clientFramework": "angular",
@@ -40,5 +44,9 @@
     "testFrameworks": ["cypress", "cucumber", "gatling"],
     "useSass": true,
     "websocket": false
+  },
+  "generator-jhipster-entity-audit": {
+    "auditFramework": "javers",
+    "auditPage": true
   }
 }

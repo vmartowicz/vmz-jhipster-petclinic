@@ -43,6 +43,7 @@ public class VetServiceImpl implements VetService {
     public VetDTO update(VetDTO vetDTO) {
         LOG.debug("Request to update Vet : {}", vetDTO);
         Vet vet = vetMapper.toEntity(vetDTO);
+        vet.setIsPersisted();
         vet = vetRepository.save(vet);
         return vetMapper.toDto(vet);
     }

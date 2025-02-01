@@ -12,8 +12,10 @@ import { IVisit, NewVisit } from '../visit.model';
 
 export type PartialUpdateVisit = Partial<IVisit> & Pick<IVisit, 'id'>;
 
-type RestOf<T extends IVisit | NewVisit> = Omit<T, 'visitDate'> & {
+type RestOf<T extends IVisit | NewVisit> = Omit<T, 'visitDate' | 'createdDate' | 'lastModifiedDate'> & {
   visitDate?: string | null;
+  createdDate?: string | null;
+  lastModifiedDate?: string | null;
 };
 
 export type RestVisit = RestOf<IVisit>;
@@ -100,6 +102,8 @@ export class VisitService {
     return {
       ...visit,
       visitDate: visit.visitDate?.format(DATE_FORMAT) ?? null,
+      createdDate: visit.createdDate?.toJSON() ?? null,
+      lastModifiedDate: visit.lastModifiedDate?.toJSON() ?? null,
     };
   }
 
@@ -107,6 +111,8 @@ export class VisitService {
     return {
       ...restVisit,
       visitDate: restVisit.visitDate ? dayjs(restVisit.visitDate) : undefined,
+      createdDate: restVisit.createdDate ? dayjs(restVisit.createdDate) : undefined,
+      lastModifiedDate: restVisit.lastModifiedDate ? dayjs(restVisit.lastModifiedDate) : undefined,
     };
   }
 

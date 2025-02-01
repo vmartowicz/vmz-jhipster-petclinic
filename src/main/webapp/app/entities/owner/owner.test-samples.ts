@@ -1,3 +1,5 @@
+import dayjs from 'dayjs/esm';
+
 import { IOwner, NewOwner } from './owner.model';
 
 export const sampleWithRequiredData: IOwner = {
@@ -10,12 +12,15 @@ export const sampleWithRequiredData: IOwner = {
 };
 
 export const sampleWithPartialData: IOwner = {
-  id: 12097,
-  firstName: 'Gerardo',
-  lastName: 'Swaniawski',
-  address: 'braid dreamily',
-  city: 'Mableville',
-  telephone: '959.871.0739',
+  id: 15531,
+  firstName: 'Ernest',
+  lastName: 'Volkman',
+  address: 'whack',
+  city: 'Danbury',
+  telephone: '1-661-395-9771',
+  createdBy: 'drag',
+  createdDate: dayjs('2020-06-26T11:09'),
+  lastModifiedBy: 'absentmindedly',
 };
 
 export const sampleWithFullData: IOwner = {
@@ -25,6 +30,10 @@ export const sampleWithFullData: IOwner = {
   address: 'readily',
   city: 'Haagborough',
   telephone: '920.647.6559',
+  createdBy: 'barring what toe',
+  createdDate: dayjs('2020-06-26T15:11'),
+  lastModifiedBy: 'yuck but invite',
+  lastModifiedDate: dayjs('2020-06-26T16:40'),
 };
 
 export const sampleWithNewData: NewOwner = {

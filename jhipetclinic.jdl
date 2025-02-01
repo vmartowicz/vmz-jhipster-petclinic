@@ -16,23 +16,32 @@ application {
     prodDatabaseType postgresql,
     searchEngine no,
     testFrameworks [cypress, cucumber, gatling]
+    blueprints [generator-jhipster-entity-audit]
+  }
+
+  config(generator-jhipster-entity-audit) {
+    auditFramework javers
   }
   entities *
 }
 
+@EnableAudit
 entity Vet(vets) {
   firstName String required maxlength(30)
   lastName String required maxlength(30)
 }
 
+@EnableAudit
 entity Specialty(specialties) {
   name String required maxlength(80)
 }
 
+@EnableAudit
 entity PetType(types) {
   name String required maxlength(80)
 }
 
+@EnableAudit
 entity Owner(owners) {
   firstName String required maxlength(30)
   lastName String required maxlength(30)
@@ -41,11 +50,13 @@ entity Owner(owners) {
   telephone String required maxlength(20)
 }
 
+@EnableAudit
 entity Pet(pets) {
   name String required maxlength(30)
   birthDate LocalDate
 }
 
+@EnableAudit
 entity Visit(visits) {
   visitDate LocalDate
   description String required maxlength(255)

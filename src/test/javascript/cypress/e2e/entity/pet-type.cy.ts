@@ -15,7 +15,7 @@ describe('PetType e2e test', () => {
   const petTypePageUrlPattern = new RegExp('/pet-type(\\?.*)?$');
   const username = Cypress.env('E2E_USERNAME') ?? 'user';
   const password = Cypress.env('E2E_PASSWORD') ?? 'user';
-  const petTypeSample = { name: 'phooey and abaft' };
+  const petTypeSample = { name: 'in' };
 
   let petType;
 

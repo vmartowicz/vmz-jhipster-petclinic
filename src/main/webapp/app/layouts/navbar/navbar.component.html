@@ -137,6 +137,18 @@
             <li>
               <a
                 class="dropdown-item"
+                routerLink="/admin/entity-audit"
+                routerLinkActive="active"
+                [routerLinkActiveOptions]="{ exact: true }"
+                (click)="collapseNavbar()"
+              >
+                <fa-icon icon="list-alt" [fixedWidth]="true"></fa-icon>
+                <span jhiTranslate="global.menu.admin.entityAudit">Entity Audit</span>
+              </a>
+            </li>
+            <li>
+              <a
+                class="dropdown-item"
                 routerLink="/authority"
                 routerLinkActive="active"
                 [routerLinkActiveOptions]="{ exact: true }"

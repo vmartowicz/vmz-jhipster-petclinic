@@ -22,6 +22,10 @@ describe('Vet Form Service', () => {
             id: expect.any(Object),
             firstName: expect.any(Object),
             lastName: expect.any(Object),
+            createdBy: expect.any(Object),
+            createdDate: expect.any(Object),
+            lastModifiedBy: expect.any(Object),
+            lastModifiedDate: expect.any(Object),
             specialties: expect.any(Object),
           }),
         );
@@ -35,6 +39,10 @@ describe('Vet Form Service', () => {
             id: expect.any(Object),
             firstName: expect.any(Object),
             lastName: expect.any(Object),
+            createdBy: expect.any(Object),
+            createdDate: expect.any(Object),
+            lastModifiedBy: expect.any(Object),
+            lastModifiedDate: expect.any(Object),
             specialties: expect.any(Object),
           }),
         );

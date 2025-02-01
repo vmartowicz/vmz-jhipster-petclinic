@@ -41,6 +41,7 @@ public class OwnerServiceImpl implements OwnerService {
     public OwnerDTO update(OwnerDTO ownerDTO) {
         LOG.debug("Request to update Owner : {}", ownerDTO);
         Owner owner = ownerMapper.toEntity(ownerDTO);
+        owner.setIsPersisted();
         owner = ownerRepository.save(owner);
         return ownerMapper.toDto(owner);
     }

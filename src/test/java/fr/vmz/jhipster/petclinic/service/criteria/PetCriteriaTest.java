@@ -78,6 +78,10 @@ class PetCriteriaTest {
         petCriteria.id();
         petCriteria.name();
         petCriteria.birthDate();
+        petCriteria.createdBy();
+        petCriteria.createdDate();
+        petCriteria.lastModifiedBy();
+        petCriteria.lastModifiedDate();
         petCriteria.visitsId();
         petCriteria.typeId();
         petCriteria.ownerId();
@@ -90,6 +94,10 @@ class PetCriteriaTest {
                 condition.apply(criteria.getId()) &&
                 condition.apply(criteria.getName()) &&
                 condition.apply(criteria.getBirthDate()) &&
+                condition.apply(criteria.getCreatedBy()) &&
+                condition.apply(criteria.getCreatedDate()) &&
+                condition.apply(criteria.getLastModifiedBy()) &&
+                condition.apply(criteria.getLastModifiedDate()) &&
                 condition.apply(criteria.getVisitsId()) &&
                 condition.apply(criteria.getTypeId()) &&
                 condition.apply(criteria.getOwnerId()) &&
@@ -104,6 +112,10 @@ class PetCriteriaTest {
                 condition.apply(criteria.getId(), copy.getId()) &&
                 condition.apply(criteria.getName(), copy.getName()) &&
                 condition.apply(criteria.getBirthDate(), copy.getBirthDate()) &&
+                condition.apply(criteria.getCreatedBy(), copy.getCreatedBy()) &&
+                condition.apply(criteria.getCreatedDate(), copy.getCreatedDate()) &&
+                condition.apply(criteria.getLastModifiedBy(), copy.getLastModifiedBy()) &&
+                condition.apply(criteria.getLastModifiedDate(), copy.getLastModifiedDate()) &&
                 condition.apply(criteria.getVisitsId(), copy.getVisitsId()) &&
                 condition.apply(criteria.getTypeId(), copy.getTypeId()) &&
                 condition.apply(criteria.getOwnerId(), copy.getOwnerId()) &&

@@ -65,7 +65,18 @@ public class VetGatlingTest extends Simulation {
                     http("Create new vet")
                         .post("/api/vets")
                         .headers(headersHttpAuthenticated)
-                        .body(StringBody("{" + "\"firstName\": \"SAMPLE_TEXT\"" + ", \"lastName\": \"SAMPLE_TEXT\"" + "}"))
+                        .body(
+                            StringBody(
+                                "{" +
+                                "\"firstName\": \"SAMPLE_TEXT\"" +
+                                ", \"lastName\": \"SAMPLE_TEXT\"" +
+                                ", \"createdBy\": \"SAMPLE_TEXT\"" +
+                                ", \"createdDate\": \"2020-01-01T00:00:00.000Z\"" +
+                                ", \"lastModifiedBy\": \"SAMPLE_TEXT\"" +
+                                ", \"lastModifiedDate\": \"2020-01-01T00:00:00.000Z\"" +
+                                "}"
+                            )
+                        )
                         .asJson()
                         .check(status().is(201))
                         .check(headerRegex("Location", "(.*)").saveAs("new_vet_url"))

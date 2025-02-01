@@ -56,6 +56,34 @@
                 <fa-icon class="p-1" icon="sort"></fa-icon>
               </div>
             </th>
+            <th scope="col" jhiSortBy="createdBy">
+              <div class="d-flex">
+                <span jhiTranslate="jhpetclinicApp.visit.createdBy">Created By</span>
+
+                <fa-icon class="p-1" icon="sort"></fa-icon>
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="createdDate">
+              <div class="d-flex">
+                <span jhiTranslate="jhpetclinicApp.visit.createdDate">Created Date</span>
+
+                <fa-icon class="p-1" icon="sort"></fa-icon>
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="lastModifiedBy">
+              <div class="d-flex">
+                <span jhiTranslate="jhpetclinicApp.visit.lastModifiedBy">Last Modified By</span>
+
+                <fa-icon class="p-1" icon="sort"></fa-icon>
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="lastModifiedDate">
+              <div class="d-flex">
+                <span jhiTranslate="jhpetclinicApp.visit.lastModifiedDate">Last Modified Date</span>
+
+                <fa-icon class="p-1" icon="sort"></fa-icon>
+              </div>
+            </th>
             <th scope="col" jhiSortBy="pet.name">
               <div class="d-flex">
                 <span jhiTranslate="jhpetclinicApp.visit.pet">Pet</span>
@@ -73,6 +101,10 @@
               </td>
               <td>{{ visit.visitDate | formatMediumDate }}</td>
               <td>{{ visit.description }}</td>
+              <td>{{ visit.createdBy }}</td>
+              <td>{{ visit.createdDate | formatMediumDatetime }}</td>
+              <td>{{ visit.lastModifiedBy }}</td>
+              <td>{{ visit.lastModifiedDate | formatMediumDatetime }}</td>
               <td>
                 @if (visit.pet) {
                   <div>

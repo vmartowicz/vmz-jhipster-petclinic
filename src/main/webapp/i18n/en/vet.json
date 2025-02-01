@@ -20,6 +20,10 @@
       "id": "ID",
       "firstName": "First Name",
       "lastName": "Last Name",
+      "createdBy": "Created By",
+      "createdDate": "Created Date",
+      "lastModifiedBy": "Last Modified By",
+      "lastModifiedDate": "Last Modified Date",
       "specialties": "Specialties"
     }
   }

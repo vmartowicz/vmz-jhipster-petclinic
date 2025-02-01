@@ -5,10 +5,12 @@ import { provideHttpClient } from '@angular/common/http';
 import { IOwner } from '../owner.model';
 import { sampleWithFullData, sampleWithNewData, sampleWithPartialData, sampleWithRequiredData } from '../owner.test-samples';
 
-import { OwnerService } from './owner.service';
+import { OwnerService, RestOwner } from './owner.service';
 
-const requireRestSample: IOwner = {
+const requireRestSample: RestOwner = {
   ...sampleWithRequiredData,
+  createdDate: sampleWithRequiredData.createdDate?.toJSON(),
+  lastModifiedDate: sampleWithRequiredData.lastModifiedDate?.toJSON(),
 };
 
 describe('Owner Service', () => {

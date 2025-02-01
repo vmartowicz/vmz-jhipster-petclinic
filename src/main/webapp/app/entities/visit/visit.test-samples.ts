@@ -8,14 +8,21 @@ export const sampleWithRequiredData: IVisit = {
 };
 
 export const sampleWithPartialData: IVisit = {
-  id: 18436,
-  description: 'reference',
+  id: 11422,
+  description: 'husband aboard',
+  createdDate: dayjs('2020-06-26T15:54'),
+  lastModifiedBy: 'unless cluttered',
+  lastModifiedDate: dayjs('2020-06-27T05:35'),
 };
 
 export const sampleWithFullData: IVisit = {
   id: 19427,
   visitDate: dayjs('2020-06-27'),
   description: 'ouch yippee',
+  createdBy: 'icy whoa aboard',
+  createdDate: dayjs('2020-06-27T04:07'),
+  lastModifiedBy: 'miserly alongside',
+  lastModifiedDate: dayjs('2020-06-26T17:24'),
 };
 
 export const sampleWithNewData: NewVisit = {

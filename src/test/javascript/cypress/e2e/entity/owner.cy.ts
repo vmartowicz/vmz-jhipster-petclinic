@@ -16,11 +16,11 @@ describe('Owner e2e test', () => {
   const username = Cypress.env('E2E_USERNAME') ?? 'user';
   const password = Cypress.env('E2E_PASSWORD') ?? 'user';
   const ownerSample = {
-    firstName: 'Willow',
-    lastName: 'Hodkiewicz-Wunsch',
-    address: 'before enraged',
-    city: 'East Annaliseland',
-    telephone: '232.387.0768 x909',
+    firstName: 'Xzavier',
+    lastName: 'Dickinson',
+    address: 'label uh-huh pacemaker',
+    city: 'New Ralphville',
+    telephone: '811-601-0319',
   };
 
   let owner;

@@ -65,7 +65,18 @@ public class PetGatlingTest extends Simulation {
                     http("Create new pet")
                         .post("/api/pets")
                         .headers(headersHttpAuthenticated)
-                        .body(StringBody("{" + "\"name\": \"SAMPLE_TEXT\"" + ", \"birthDate\": \"2020-01-01T00:00:00.000Z\"" + "}"))
+                        .body(
+                            StringBody(
+                                "{" +
+                                "\"name\": \"SAMPLE_TEXT\"" +
+                                ", \"birthDate\": \"2020-01-01T00:00:00.000Z\"" +
+                                ", \"createdBy\": \"SAMPLE_TEXT\"" +
+                                ", \"createdDate\": \"2020-01-01T00:00:00.000Z\"" +
+                                ", \"lastModifiedBy\": \"SAMPLE_TEXT\"" +
+                                ", \"lastModifiedDate\": \"2020-01-01T00:00:00.000Z\"" +
+                                "}"
+                            )
+                        )
                         .asJson()
                         .check(status().is(201))
                         .check(headerRegex("Location", "(.*)").saveAs("new_pet_url"))

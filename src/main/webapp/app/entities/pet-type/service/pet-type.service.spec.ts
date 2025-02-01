@@ -5,10 +5,12 @@ import { provideHttpClient } from '@angular/common/http';
 import { IPetType } from '../pet-type.model';
 import { sampleWithFullData, sampleWithNewData, sampleWithPartialData, sampleWithRequiredData } from '../pet-type.test-samples';
 
-import { PetTypeService } from './pet-type.service';
+import { PetTypeService, RestPetType } from './pet-type.service';
 
-const requireRestSample: IPetType = {
+const requireRestSample: RestPetType = {
   ...sampleWithRequiredData,
+  createdDate: sampleWithRequiredData.createdDate?.toJSON(),
+  lastModifiedDate: sampleWithRequiredData.lastModifiedDate?.toJSON(),
 };
 
 describe('PetType Service', () => {

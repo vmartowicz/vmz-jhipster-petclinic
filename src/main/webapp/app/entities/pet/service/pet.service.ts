@@ -12,8 +12,10 @@ import { IPet, NewPet } from '../pet.model';
 
 export type PartialUpdatePet = Partial<IPet> & Pick<IPet, 'id'>;
 
-type RestOf<T extends IPet | NewPet> = Omit<T, 'birthDate'> & {
+type RestOf<T extends IPet | NewPet> = Omit<T, 'birthDate' | 'createdDate' | 'lastModifiedDate'> & {
   birthDate?: string | null;
+  createdDate?: string | null;
+  lastModifiedDate?: string | null;
 };
 
 export type RestPet = RestOf<IPet>;
@@ -97,6 +99,8 @@ export class PetService {
     return {
       ...pet,
       birthDate: pet.birthDate?.format(DATE_FORMAT) ?? null,
+      createdDate: pet.createdDate?.toJSON() ?? null,
+      lastModifiedDate: pet.lastModifiedDate?.toJSON() ?? null,
     };
   }
 
@@ -104,6 +108,8 @@ export class PetService {
     return {
       ...restPet,
       birthDate: restPet.birthDate ? dayjs(restPet.birthDate) : undefined,
+      createdDate: restPet.createdDate ? dayjs(restPet.createdDate) : undefined,
+      lastModifiedDate: restPet.lastModifiedDate ? dayjs(restPet.lastModifiedDate) : undefined,
     };
   }
 

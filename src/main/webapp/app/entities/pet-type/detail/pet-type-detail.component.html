@@ -19,6 +19,22 @@
           <dd>
             <span>{{ petTypeRef.name }}</span>
           </dd>
+          <dt><span jhiTranslate="jhpetclinicApp.petType.createdBy">Created By</span></dt>
+          <dd>
+            <span>{{ petTypeRef.createdBy }}</span>
+          </dd>
+          <dt><span jhiTranslate="jhpetclinicApp.petType.createdDate">Created Date</span></dt>
+          <dd>
+            <span>{{ petTypeRef.createdDate | formatMediumDatetime }}</span>
+          </dd>
+          <dt><span jhiTranslate="jhpetclinicApp.petType.lastModifiedBy">Last Modified By</span></dt>
+          <dd>
+            <span>{{ petTypeRef.lastModifiedBy }}</span>
+          </dd>
+          <dt><span jhiTranslate="jhpetclinicApp.petType.lastModifiedDate">Last Modified Date</span></dt>
+          <dd>
+            <span>{{ petTypeRef.lastModifiedDate | formatMediumDatetime }}</span>
+          </dd>
         </dl>
 
         <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">

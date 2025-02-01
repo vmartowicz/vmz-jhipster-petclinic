@@ -23,6 +23,22 @@
           <dd>
             <span>{{ petRef.birthDate | formatMediumDate }}</span>
           </dd>
+          <dt><span jhiTranslate="jhpetclinicApp.pet.createdBy">Created By</span></dt>
+          <dd>
+            <span>{{ petRef.createdBy }}</span>
+          </dd>
+          <dt><span jhiTranslate="jhpetclinicApp.pet.createdDate">Created Date</span></dt>
+          <dd>
+            <span>{{ petRef.createdDate | formatMediumDatetime }}</span>
+          </dd>
+          <dt><span jhiTranslate="jhpetclinicApp.pet.lastModifiedBy">Last Modified By</span></dt>
+          <dd>
+            <span>{{ petRef.lastModifiedBy }}</span>
+          </dd>
+          <dt><span jhiTranslate="jhpetclinicApp.pet.lastModifiedDate">Last Modified Date</span></dt>
+          <dd>
+            <span>{{ petRef.lastModifiedDate | formatMediumDatetime }}</span>
+          </dd>
           <dt><span jhiTranslate="jhpetclinicApp.pet.type">Type</span></dt>
           <dd>
             @if (pet()!.type) {

@@ -81,6 +81,10 @@ class OwnerCriteriaTest {
         ownerCriteria.address();
         ownerCriteria.city();
         ownerCriteria.telephone();
+        ownerCriteria.createdBy();
+        ownerCriteria.createdDate();
+        ownerCriteria.lastModifiedBy();
+        ownerCriteria.lastModifiedDate();
         ownerCriteria.petsId();
         ownerCriteria.distinct();
     }
@@ -94,6 +98,10 @@ class OwnerCriteriaTest {
                 condition.apply(criteria.getAddress()) &&
                 condition.apply(criteria.getCity()) &&
                 condition.apply(criteria.getTelephone()) &&
+                condition.apply(criteria.getCreatedBy()) &&
+                condition.apply(criteria.getCreatedDate()) &&
+                condition.apply(criteria.getLastModifiedBy()) &&
+                condition.apply(criteria.getLastModifiedDate()) &&
                 condition.apply(criteria.getPetsId()) &&
                 condition.apply(criteria.getDistinct()),
             "every filter matches"
@@ -109,6 +117,10 @@ class OwnerCriteriaTest {
                 condition.apply(criteria.getAddress(), copy.getAddress()) &&
                 condition.apply(criteria.getCity(), copy.getCity()) &&
                 condition.apply(criteria.getTelephone(), copy.getTelephone()) &&
+                condition.apply(criteria.getCreatedBy(), copy.getCreatedBy()) &&
+                condition.apply(criteria.getCreatedDate(), copy.getCreatedDate()) &&
+                condition.apply(criteria.getLastModifiedBy(), copy.getLastModifiedBy()) &&
+                condition.apply(criteria.getLastModifiedDate(), copy.getLastModifiedDate()) &&
                 condition.apply(criteria.getPetsId(), copy.getPetsId()) &&
                 condition.apply(criteria.getDistinct(), copy.getDistinct()),
             "every filter matches"

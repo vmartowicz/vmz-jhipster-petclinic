@@ -19,6 +19,22 @@
           <dd>
             <span>{{ specialtyRef.name }}</span>
           </dd>
+          <dt><span jhiTranslate="jhpetclinicApp.specialty.createdBy">Created By</span></dt>
+          <dd>
+            <span>{{ specialtyRef.createdBy }}</span>
+          </dd>
+          <dt><span jhiTranslate="jhpetclinicApp.specialty.createdDate">Created Date</span></dt>
+          <dd>
+            <span>{{ specialtyRef.createdDate | formatMediumDatetime }}</span>
+          </dd>
+          <dt><span jhiTranslate="jhpetclinicApp.specialty.lastModifiedBy">Last Modified By</span></dt>
+          <dd>
+            <span>{{ specialtyRef.lastModifiedBy }}</span>
+          </dd>
+          <dt><span jhiTranslate="jhpetclinicApp.specialty.lastModifiedDate">Last Modified Date</span></dt>
+          <dd>
+            <span>{{ specialtyRef.lastModifiedDate | formatMediumDatetime }}</span>
+          </dd>
           <dt><span jhiTranslate="jhpetclinicApp.specialty.vets">Vets</span></dt>
           <dd>
             @for (vets of specialtyRef.vets; track $index; let last = $last) {

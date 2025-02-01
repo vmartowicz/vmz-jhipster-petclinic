@@ -5,10 +5,12 @@ import { provideHttpClient } from '@angular/common/http';
 import { IVet } from '../vet.model';
 import { sampleWithFullData, sampleWithNewData, sampleWithPartialData, sampleWithRequiredData } from '../vet.test-samples';
 
-import { VetService } from './vet.service';
+import { RestVet, VetService } from './vet.service';
 
-const requireRestSample: IVet = {
+const requireRestSample: RestVet = {
   ...sampleWithRequiredData,
+  createdDate: sampleWithRequiredData.createdDate?.toJSON(),
+  lastModifiedDate: sampleWithRequiredData.lastModifiedDate?.toJSON(),
 };
 
 describe('Vet Service', () => {

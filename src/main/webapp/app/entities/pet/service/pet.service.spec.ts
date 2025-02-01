@@ -11,6 +11,8 @@ import { PetService, RestPet } from './pet.service';
 const requireRestSample: RestPet = {
   ...sampleWithRequiredData,
   birthDate: sampleWithRequiredData.birthDate?.format(DATE_FORMAT),
+  createdDate: sampleWithRequiredData.createdDate?.toJSON(),
+  lastModifiedDate: sampleWithRequiredData.lastModifiedDate?.toJSON(),
 };
 
 describe('Pet Service', () => {

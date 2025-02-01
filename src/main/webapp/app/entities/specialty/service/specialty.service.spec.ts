@@ -5,10 +5,12 @@ import { provideHttpClient } from '@angular/common/http';
 import { ISpecialty } from '../specialty.model';
 import { sampleWithFullData, sampleWithNewData, sampleWithPartialData, sampleWithRequiredData } from '../specialty.test-samples';
 
-import { SpecialtyService } from './specialty.service';
+import { RestSpecialty, SpecialtyService } from './specialty.service';
 
-const requireRestSample: ISpecialty = {
+const requireRestSample: RestSpecialty = {
   ...sampleWithRequiredData,
+  createdDate: sampleWithRequiredData.createdDate?.toJSON(),
+  lastModifiedDate: sampleWithRequiredData.lastModifiedDate?.toJSON(),
 };
 
 describe('Specialty Service', () => {

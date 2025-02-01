@@ -92,6 +92,18 @@ public class OwnerQueryService extends QueryService<Owner> {
             if (criteria.getTelephone() != null) {
                 specification = specification.and(buildStringSpecification(criteria.getTelephone(), Owner_.telephone));
             }
+            if (criteria.getCreatedBy() != null) {
+                specification = specification.and(buildStringSpecification(criteria.getCreatedBy(), Owner_.createdBy));
+            }
+            if (criteria.getCreatedDate() != null) {
+                specification = specification.and(buildRangeSpecification(criteria.getCreatedDate(), Owner_.createdDate));
+            }
+            if (criteria.getLastModifiedBy() != null) {
+                specification = specification.and(buildStringSpecification(criteria.getLastModifiedBy(), Owner_.lastModifiedBy));
+            }
+            if (criteria.getLastModifiedDate() != null) {
+                specification = specification.and(buildRangeSpecification(criteria.getLastModifiedDate(), Owner_.lastModifiedDate));
+            }
             if (criteria.getPetsId() != null) {
                 specification = specification.and(
                     buildSpecification(criteria.getPetsId(), root -> root.join(Owner_.pets, JoinType.LEFT).get(Pet_.id))

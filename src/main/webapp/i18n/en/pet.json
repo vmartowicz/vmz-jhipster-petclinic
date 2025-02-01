@@ -20,6 +20,10 @@
       "id": "ID",
       "name": "Name",
       "birthDate": "Birth Date",
+      "createdBy": "Created By",
+      "createdDate": "Created Date",
+      "lastModifiedBy": "Last Modified By",
+      "lastModifiedDate": "Last Modified Date",
       "visits": "Visits",
       "type": "Type",
       "owner": "Owner"

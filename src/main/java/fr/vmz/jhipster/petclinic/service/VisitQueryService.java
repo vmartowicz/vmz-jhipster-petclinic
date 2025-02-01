@@ -83,6 +83,18 @@ public class VisitQueryService extends QueryService<Visit> {
             if (criteria.getDescription() != null) {
                 specification = specification.and(buildStringSpecification(criteria.getDescription(), Visit_.description));
             }
+            if (criteria.getCreatedBy() != null) {
+                specification = specification.and(buildStringSpecification(criteria.getCreatedBy(), Visit_.createdBy));
+            }
+            if (criteria.getCreatedDate() != null) {
+                specification = specification.and(buildRangeSpecification(criteria.getCreatedDate(), Visit_.createdDate));
+            }
+            if (criteria.getLastModifiedBy() != null) {
+                specification = specification.and(buildStringSpecification(criteria.getLastModifiedBy(), Visit_.lastModifiedBy));
+            }
+            if (criteria.getLastModifiedDate() != null) {
+                specification = specification.and(buildRangeSpecification(criteria.getLastModifiedDate(), Visit_.lastModifiedDate));
+            }
             if (criteria.getPetId() != null) {
                 specification = specification.and(
                     buildSpecification(criteria.getPetId(), root -> root.join(Visit_.pet, JoinType.LEFT).get(Pet_.id))

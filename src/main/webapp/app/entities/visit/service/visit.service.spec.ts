@@ -11,6 +11,8 @@ import { RestVisit, VisitService } from './visit.service';
 const requireRestSample: RestVisit = {
   ...sampleWithRequiredData,
   visitDate: sampleWithRequiredData.visitDate?.format(DATE_FORMAT),
+  createdDate: sampleWithRequiredData.createdDate?.toJSON(),
+  lastModifiedDate: sampleWithRequiredData.lastModifiedDate?.toJSON(),
 };
 
 describe('Visit Service', () => {

@@ -1,6 +1,8 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpResponse } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, map } from 'rxjs';
+
+import dayjs from 'dayjs/esm';
 
 import { isPresent } from 'app/core/util/operators';
 import { ApplicationConfigService } from 'app/core/config/application-config.service';
@@ -8,6 +10,17 @@ import { createRequestOption } from 'app/core/request/request-util';
 import { IOwner, NewOwner } from '../owner.model';
 
 export type PartialUpdateOwner = Partial<IOwner> & Pick<IOwner, 'id'>;
+
+type RestOf<T extends IOwner | NewOwner> = Omit<T, 'createdDate' | 'lastModifiedDate'> & {
+  createdDate?: string | null;
+  lastModifiedDate?: string | null;
+};
+
+export type RestOwner = RestOf<IOwner>;
+
+export type NewRestOwner = RestOf<NewOwner>;
+
+export type PartialUpdateRestOwner = RestOf<PartialUpdateOwner>;
 
 export type EntityResponseType = HttpResponse<IOwner>;
 export type EntityArrayResponseType = HttpResponse<IOwner[]>;
@@ -20,24 +33,35 @@ export class OwnerService {
   protected resourceUrl = this.applicationConfigService.getEndpointFor('api/owners');
 
   create(owner: NewOwner): Observable<EntityResponseType> {
-    return this.http.post<IOwner>(this.resourceUrl, owner, { observe: 'response' });
+    const copy = this.convertDateFromClient(owner);
+    return this.http.post<RestOwner>(this.resourceUrl, copy, { observe: 'response' }).pipe(map(res => this.convertResponseFromServer(res)));
   }
 
   update(owner: IOwner): Observable<EntityResponseType> {
-    return this.http.put<IOwner>(`${this.resourceUrl}/${this.getOwnerIdentifier(owner)}`, owner, { observe: 'response' });
+    const copy = this.convertDateFromClient(owner);
+    return this.http
+      .put<RestOwner>(`${this.resourceUrl}/${this.getOwnerIdentifier(owner)}`, copy, { observe: 'response' })
+      .pipe(map(res => this.convertResponseFromServer(res)));
   }
 
   partialUpdate(owner: PartialUpdateOwner): Observable<EntityResponseType> {
-    return this.http.patch<IOwner>(`${this.resourceUrl}/${this.getOwnerIdentifier(owner)}`, owner, { observe: 'response' });
+    const copy = this.convertDateFromClient(owner);
+    return this.http
+      .patch<RestOwner>(`${this.resourceUrl}/${this.getOwnerIdentifier(owner)}`, copy, { observe: 'response' })
+      .pipe(map(res => this.convertResponseFromServer(res)));
   }
 
   find(id: number): Observable<EntityResponseType> {
-    return this.http.get<IOwner>(`${this.resourceUrl}/${id}`, { observe: 'response' });
+    return this.http
+      .get<RestOwner>(`${this.resourceUrl}/${id}`, { observe: 'response' })
+      .pipe(map(res => this.convertResponseFromServer(res)));
   }
 
   query(req?: any): Observable<EntityArrayResponseType> {
     const options = createRequestOption(req);
-    return this.http.get<IOwner[]>(this.resourceUrl, { params: options, observe: 'response' });
+    return this.http
+      .get<RestOwner[]>(this.resourceUrl, { params: options, observe: 'response' })
+      .pipe(map(res => this.convertResponseArrayFromServer(res)));
   }
 
   delete(id: number): Observable<HttpResponse<{}>> {
@@ -70,5 +94,33 @@ export class OwnerService {
       return [...ownersToAdd, ...ownerCollection];
     }
     return ownerCollection;
+  }
+
+  protected convertDateFromClient<T extends IOwner | NewOwner | PartialUpdateOwner>(owner: T): RestOf<T> {
+    return {
+      ...owner,
+      createdDate: owner.createdDate?.toJSON() ?? null,
+      lastModifiedDate: owner.lastModifiedDate?.toJSON() ?? null,
+    };
+  }
+
+  protected convertDateFromServer(restOwner: RestOwner): IOwner {
+    return {
+      ...restOwner,
+      createdDate: restOwner.createdDate ? dayjs(restOwner.createdDate) : undefined,
+      lastModifiedDate: restOwner.lastModifiedDate ? dayjs(restOwner.lastModifiedDate) : undefined,
+    };
+  }
+
+  protected convertResponseFromServer(res: HttpResponse<RestOwner>): HttpResponse<IOwner> {
+    return res.clone({
+      body: res.body ? this.convertDateFromServer(res.body) : null,
+    });
+  }
+
+  protected convertResponseArrayFromServer(res: HttpResponse<RestOwner[]>): HttpResponse<IOwner[]> {
+    return res.clone({
+      body: res.body ? res.body.map(item => this.convertDateFromServer(item)) : null,
+    });
   }
 }

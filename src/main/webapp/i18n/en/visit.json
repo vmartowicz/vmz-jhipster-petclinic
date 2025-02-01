@@ -20,6 +20,10 @@
       "id": "ID",
       "visitDate": "Visit Date",
       "description": "Description",
+      "createdBy": "Created By",
+      "createdDate": "Created Date",
+      "lastModifiedBy": "Last Modified By",
+      "lastModifiedDate": "Last Modified Date",
       "pet": "Pet"
     }
   }

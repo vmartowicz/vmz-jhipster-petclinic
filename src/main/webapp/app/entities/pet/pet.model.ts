@@ -6,6 +6,10 @@ export interface IPet {
   id: number;
   name?: string | null;
   birthDate?: dayjs.Dayjs | null;
+  createdBy?: string | null;
+  createdDate?: dayjs.Dayjs | null;
+  lastModifiedBy?: string | null;
+  lastModifiedDate?: dayjs.Dayjs | null;
   type?: Pick<IPetType, 'id' | 'name'> | null;
   owner?: Pick<IOwner, 'id' | 'lastName'> | null;
 }

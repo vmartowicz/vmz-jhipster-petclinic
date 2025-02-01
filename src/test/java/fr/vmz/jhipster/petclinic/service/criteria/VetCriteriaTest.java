@@ -78,6 +78,10 @@ class VetCriteriaTest {
         vetCriteria.id();
         vetCriteria.firstName();
         vetCriteria.lastName();
+        vetCriteria.createdBy();
+        vetCriteria.createdDate();
+        vetCriteria.lastModifiedBy();
+        vetCriteria.lastModifiedDate();
         vetCriteria.specialtiesId();
         vetCriteria.distinct();
     }
@@ -88,6 +92,10 @@ class VetCriteriaTest {
                 condition.apply(criteria.getId()) &&
                 condition.apply(criteria.getFirstName()) &&
                 condition.apply(criteria.getLastName()) &&
+                condition.apply(criteria.getCreatedBy()) &&
+                condition.apply(criteria.getCreatedDate()) &&
+                condition.apply(criteria.getLastModifiedBy()) &&
+                condition.apply(criteria.getLastModifiedDate()) &&
                 condition.apply(criteria.getSpecialtiesId()) &&
                 condition.apply(criteria.getDistinct()),
             "every filter matches"
@@ -100,6 +108,10 @@ class VetCriteriaTest {
                 condition.apply(criteria.getId(), copy.getId()) &&
                 condition.apply(criteria.getFirstName(), copy.getFirstName()) &&
                 condition.apply(criteria.getLastName(), copy.getLastName()) &&
+                condition.apply(criteria.getCreatedBy(), copy.getCreatedBy()) &&
+                condition.apply(criteria.getCreatedDate(), copy.getCreatedDate()) &&
+                condition.apply(criteria.getLastModifiedBy(), copy.getLastModifiedBy()) &&
+                condition.apply(criteria.getLastModifiedDate(), copy.getLastModifiedDate()) &&
                 condition.apply(criteria.getSpecialtiesId(), copy.getSpecialtiesId()) &&
                 condition.apply(criteria.getDistinct(), copy.getDistinct()),
             "every filter matches"

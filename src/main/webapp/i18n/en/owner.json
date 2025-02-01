@@ -23,6 +23,10 @@
       "address": "Address",
       "city": "City",
       "telephone": "Telephone",
+      "createdBy": "Created By",
+      "createdDate": "Created Date",
+      "lastModifiedBy": "Last Modified By",
+      "lastModifiedDate": "Last Modified Date",
       "pets": "Pets"
     }
   }

@@ -15,7 +15,7 @@ describe('Visit e2e test', () => {
   const visitPageUrlPattern = new RegExp('/visit(\\?.*)?$');
   const username = Cypress.env('E2E_USERNAME') ?? 'user';
   const password = Cypress.env('E2E_PASSWORD') ?? 'user';
-  const visitSample = { description: 'consequently joyfully' };
+  const visitSample = { description: 'obvious sell' };
 
   let visit;
 

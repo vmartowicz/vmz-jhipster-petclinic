@@ -78,6 +78,10 @@ class VisitCriteriaTest {
         visitCriteria.id();
         visitCriteria.visitDate();
         visitCriteria.description();
+        visitCriteria.createdBy();
+        visitCriteria.createdDate();
+        visitCriteria.lastModifiedBy();
+        visitCriteria.lastModifiedDate();
         visitCriteria.petId();
         visitCriteria.distinct();
     }
@@ -88,6 +92,10 @@ class VisitCriteriaTest {
                 condition.apply(criteria.getId()) &&
                 condition.apply(criteria.getVisitDate()) &&
                 condition.apply(criteria.getDescription()) &&
+                condition.apply(criteria.getCreatedBy()) &&
+                condition.apply(criteria.getCreatedDate()) &&
+                condition.apply(criteria.getLastModifiedBy()) &&
+                condition.apply(criteria.getLastModifiedDate()) &&
                 condition.apply(criteria.getPetId()) &&
                 condition.apply(criteria.getDistinct()),
             "every filter matches"
@@ -100,6 +108,10 @@ class VisitCriteriaTest {
                 condition.apply(criteria.getId(), copy.getId()) &&
                 condition.apply(criteria.getVisitDate(), copy.getVisitDate()) &&
                 condition.apply(criteria.getDescription(), copy.getDescription()) &&
+                condition.apply(criteria.getCreatedBy(), copy.getCreatedBy()) &&
+                condition.apply(criteria.getCreatedDate(), copy.getCreatedDate()) &&
+                condition.apply(criteria.getLastModifiedBy(), copy.getLastModifiedBy()) &&
+                condition.apply(criteria.getLastModifiedDate(), copy.getLastModifiedDate()) &&
                 condition.apply(criteria.getPetId(), copy.getPetId()) &&
                 condition.apply(criteria.getDistinct(), copy.getDistinct()),
             "every filter matches"

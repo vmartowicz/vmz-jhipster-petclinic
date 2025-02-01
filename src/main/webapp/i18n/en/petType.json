@@ -18,7 +18,11 @@
         "title": "Pet Type"
       },
       "id": "ID",
-      "name": "Name"
+      "name": "Name",
+      "createdBy": "Created By",
+      "createdDate": "Created Date",
+      "lastModifiedBy": "Last Modified By",
+      "lastModifiedDate": "Last Modified Date"
     }
   }
 }

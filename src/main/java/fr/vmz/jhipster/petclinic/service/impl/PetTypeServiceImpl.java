@@ -43,6 +43,7 @@ public class PetTypeServiceImpl implements PetTypeService {
     public PetTypeDTO update(PetTypeDTO petTypeDTO) {
         LOG.debug("Request to update PetType : {}", petTypeDTO);
         PetType petType = petTypeMapper.toEntity(petTypeDTO);
+        petType.setIsPersisted();
         petType = petTypeRepository.save(petType);
         return petTypeMapper.toDto(petType);
     }

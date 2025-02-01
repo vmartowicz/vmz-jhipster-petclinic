@@ -83,6 +83,18 @@ public class PetQueryService extends QueryService<Pet> {
             if (criteria.getBirthDate() != null) {
                 specification = specification.and(buildRangeSpecification(criteria.getBirthDate(), Pet_.birthDate));
             }
+            if (criteria.getCreatedBy() != null) {
+                specification = specification.and(buildStringSpecification(criteria.getCreatedBy(), Pet_.createdBy));
+            }
+            if (criteria.getCreatedDate() != null) {
+                specification = specification.and(buildRangeSpecification(criteria.getCreatedDate(), Pet_.createdDate));
+            }
+            if (criteria.getLastModifiedBy() != null) {
+                specification = specification.and(buildStringSpecification(criteria.getLastModifiedBy(), Pet_.lastModifiedBy));
+            }
+            if (criteria.getLastModifiedDate() != null) {
+                specification = specification.and(buildRangeSpecification(criteria.getLastModifiedDate(), Pet_.lastModifiedDate));
+            }
             if (criteria.getVisitsId() != null) {
                 specification = specification.and(
                     buildSpecification(criteria.getVisitsId(), root -> root.join(Pet_.visits, JoinType.LEFT).get(Visit_.id))

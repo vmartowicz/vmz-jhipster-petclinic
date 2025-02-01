@@ -35,6 +35,22 @@
           <dd>
             <span>{{ ownerRef.telephone }}</span>
           </dd>
+          <dt><span jhiTranslate="jhpetclinicApp.owner.createdBy">Created By</span></dt>
+          <dd>
+            <span>{{ ownerRef.createdBy }}</span>
+          </dd>
+          <dt><span jhiTranslate="jhpetclinicApp.owner.createdDate">Created Date</span></dt>
+          <dd>
+            <span>{{ ownerRef.createdDate | formatMediumDatetime }}</span>
+          </dd>
+          <dt><span jhiTranslate="jhpetclinicApp.owner.lastModifiedBy">Last Modified By</span></dt>
+          <dd>
+            <span>{{ ownerRef.lastModifiedBy }}</span>
+          </dd>
+          <dt><span jhiTranslate="jhpetclinicApp.owner.lastModifiedDate">Last Modified Date</span></dt>
+          <dd>
+            <span>{{ ownerRef.lastModifiedDate | formatMediumDatetime }}</span>
+          </dd>
         </dl>
 
         <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">

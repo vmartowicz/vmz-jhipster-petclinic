@@ -65,7 +65,17 @@ public class SpecialtyGatlingTest extends Simulation {
                     http("Create new specialty")
                         .post("/api/specialties")
                         .headers(headersHttpAuthenticated)
-                        .body(StringBody("{" + "\"name\": \"SAMPLE_TEXT\"" + "}"))
+                        .body(
+                            StringBody(
+                                "{" +
+                                "\"name\": \"SAMPLE_TEXT\"" +
+                                ", \"createdBy\": \"SAMPLE_TEXT\"" +
+                                ", \"createdDate\": \"2020-01-01T00:00:00.000Z\"" +
+                                ", \"lastModifiedBy\": \"SAMPLE_TEXT\"" +
+                                ", \"lastModifiedDate\": \"2020-01-01T00:00:00.000Z\"" +
+                                "}"
+                            )
+                        )
                         .asJson()
                         .check(status().is(201))
                         .check(headerRegex("Location", "(.*)").saveAs("new_specialty_url"))
