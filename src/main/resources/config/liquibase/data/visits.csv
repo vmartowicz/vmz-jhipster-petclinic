@@ -1,0 +1,5 @@
+id;pet_id;visit_date;description;created_by;created_date;last_modified_by;last_modified_date
+1;7;2010-03-04;rabies shot;jhipster;2025-02-01T00:00:00;jhipster;2025-02-01T00:00:00
+2;8;2011-03-04;rabies shot;jhipster;2025-02-01T00:00:00;jhipster;2025-02-01T00:00:00
+3;8;2009-06-04;neutered;jhipster;2025-02-01T00:00:00;jhipster;2025-02-01T00:00:00
+4;7;2008-09-04;spayed;jhipster;2025-02-01T00:00:00;jhipster;2025-02-01T00:00:00
