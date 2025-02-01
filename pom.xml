@@ -880,6 +880,15 @@
             </dependencies>
         </profile>
         <profile>
+            <id>e2e</id>
+            <properties>
+                <profile.e2e>,e2e</profile.e2e>
+            </properties>
+            <build>
+                <finalName>e2e</finalName>
+            </build>
+        </profile>
+        <profile>
             <!-- This is automatically activated when working in Eclipse -->
             <id>eclipse</id>
             <activation>
