@@ -15,7 +15,7 @@ application {
     packageName fr.vmz.jhipster.petclinic,
     prodDatabaseType postgresql,
     searchEngine no,
-    testFrameworks [cypress, cucumber]
+    testFrameworks [cypress, cucumber, gatling]
   }
   entities *
 }

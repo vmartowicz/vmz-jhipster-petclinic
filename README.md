@@ -153,6 +153,16 @@ To launch your application's tests, run:
 ./mvnw verify
 ```
 
+### Gatling
+
+Performance tests are run by [Gatling][] and written in Scala. They're located in [src/test/java/gatling/simulations](src/test/java/gatling/simulations).
+
+You can execute all Gatling tests with
+
+```
+./mvnw gatling:test
+```
+
 ### Client tests
 
 Unit tests are run by [Jest][]. They're located near components and can be run with:
@@ -266,6 +276,7 @@ To configure CI for your project, run the ci-cd sub-generator (`jhipster ci-cd`)
 [Setting up Continuous Integration]: https://www.jhipster.tech/documentation-archive/v8.8.0/setting-up-ci/
 [Node.js]: https://nodejs.org/
 [NPM]: https://www.npmjs.com/
+[Gatling]: https://gatling.io/
 [Webpack]: https://webpack.github.io/
 [BrowserSync]: https://www.browsersync.io/
 [Jest]: https://jestjs.io
