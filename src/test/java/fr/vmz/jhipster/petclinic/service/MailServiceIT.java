@@ -14,7 +14,6 @@ import jakarta.mail.internet.MimeMessage;
 import jakarta.mail.internet.MimeMultipart;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStreamReader;
-import java.net.URI;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
@@ -207,7 +206,7 @@ class MailServiceIT {
 
             String propertyFilePath = "i18n/messages_" + getMessageSourceSuffixForLanguage(langKey) + ".properties";
             URL resource = this.getClass().getClassLoader().getResource(propertyFilePath);
-            Path filePath = Path.of(new URI(resource.getFile()).getPath());
+            Path filePath = Path.of(resource.toURI());
             Properties properties = new Properties();
             properties.load(new InputStreamReader(Files.newInputStream(filePath), Charset.forName("UTF-8")));
 
