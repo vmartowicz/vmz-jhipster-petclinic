@@ -41,7 +41,7 @@
     },
     "searchEngine": "no",
     "serverPort": "8080",
-    "serviceDiscoveryType": false,
+    "serviceDiscoveryType": "eureka",
     "testFrameworks": ["cypress", "cucumber", "gatling"],
     "useSass": true,
     "websocket": false

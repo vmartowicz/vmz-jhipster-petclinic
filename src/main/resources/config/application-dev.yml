@@ -20,6 +20,22 @@ logging:
     org.hibernate.SQL: DEBUG
     fr.vmz.jhipster.petclinic: DEBUG
 
+eureka:
+  instance:
+    prefer-ip-address: true
+  client:
+    enabled: false # By default, the JHipster Registry is not used in the "dev" profile
+    service-url:
+      defaultZone: http://admin:${jhipster.registry.password}@localhost:8761/eureka/
+
+management:
+  zipkin: # Use the "zipkin" Maven profile to have the Spring Cloud Zipkin dependencies
+    tracing:
+      endpoint: http://localhost:9411/api/v2/spans
+  tracing:
+    sampling:
+      probability: 1.0 # report 100% of traces
+
 spring:
   devtools:
     restart:
@@ -29,12 +45,20 @@ spring:
       enabled: false # we use Webpack dev server + BrowserSync for livereload
   docker:
     compose:
-      enabled: false
+      enabled: true
       profiles:
         active: dev
   jackson:
     serialization:
       indent-output: true
+  cloud:
+    config:
+      uri: http://admin:${jhipster.registry.password}@localhost:8761/config
+      # name of the config server's property source (file.yml) that we want to use
+      name: jhpetclinic
+      profile: dev
+      label: main # toggle to switch to a different version of the configuration as stored in git
+      # it can be set to any label, branch or commit of the configuration source Git repository
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
     url: jdbc:h2:file:./target/h2db/db/jhpetclinic;DB_CLOSE_DELAY=-1
@@ -76,6 +100,8 @@ jhipster:
     ehcache: # Ehcache configuration
       time-to-live-seconds: 3600 # By default objects stay 1 hour in the cache
       max-entries: 100 # Number of objects in each cache entry
+  registry:
+    password: admin
   # CORS is only enabled by default with the "dev" profile
   cors:
     # Allow Ionic for JHipster by default (* no longer allowed in Spring Boot 2.4+)
