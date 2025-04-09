@@ -47,7 +47,7 @@ describe('Visit Management Update Component', () => {
   });
 
   describe('ngOnInit', () => {
-    it('Should call Pet query and add missing value', () => {
+    it('should call Pet query and add missing value', () => {
       const visit: IVisit = { id: 12148 };
       const pet: IPet = { id: 23154 };
       visit.pet = pet;
@@ -66,7 +66,7 @@ describe('Visit Management Update Component', () => {
       expect(comp.petsSharedCollection).toEqual(expectedCollection);
     });
 
-    it('Should update editForm', () => {
+    it('should update editForm', () => {
       const visit: IVisit = { id: 12148 };
       const pet: IPet = { id: 23154 };
       visit.pet = pet;
@@ -80,7 +80,7 @@ describe('Visit Management Update Component', () => {
   });
 
   describe('save', () => {
-    it('Should call update service on save for existing entity', () => {
+    it('should call update service on save for existing entity', () => {
       // GIVEN
       const saveSubject = new Subject<HttpResponse<IVisit>>();
       const visit = { id: 31581 };
@@ -103,7 +103,7 @@ describe('Visit Management Update Component', () => {
       expect(comp.isSaving).toEqual(false);
     });
 
-    it('Should call create service on save for new entity', () => {
+    it('should call create service on save for new entity', () => {
       // GIVEN
       const saveSubject = new Subject<HttpResponse<IVisit>>();
       const visit = { id: 31581 };
@@ -126,7 +126,7 @@ describe('Visit Management Update Component', () => {
       expect(comp.previousState).toHaveBeenCalled();
     });
 
-    it('Should set isSaving to false on error', () => {
+    it('should set isSaving to false on error', () => {
       // GIVEN
       const saveSubject = new Subject<HttpResponse<IVisit>>();
       const visit = { id: 31581 };
@@ -149,7 +149,7 @@ describe('Visit Management Update Component', () => {
 
   describe('Compare relationships', () => {
     describe('comparePet', () => {
-      it('Should forward to petService', () => {
+      it('should forward to petService', () => {
         const entity = { id: 23154 };
         const entity2 = { id: 28893 };
         jest.spyOn(petService, 'comparePet');

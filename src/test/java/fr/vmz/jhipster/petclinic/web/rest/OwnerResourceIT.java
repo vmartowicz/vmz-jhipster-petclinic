@@ -105,12 +105,12 @@ class OwnerResourceIT {
     }
 
     @BeforeEach
-    public void initTest() {
+    void initTest() {
         owner = createEntity();
     }
 
     @AfterEach
-    public void cleanup() {
+    void cleanup() {
         if (insertedOwner != null) {
             ownerRepository.delete(insertedOwner);
             insertedOwner = null;

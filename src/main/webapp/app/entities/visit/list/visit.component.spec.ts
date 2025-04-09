@@ -80,7 +80,7 @@ describe('Visit Management Component', () => {
       );
   });
 
-  it('Should call load all on init', () => {
+  it('should call load all on init', () => {
     // WHEN
     comp.ngOnInit();
 
@@ -90,7 +90,7 @@ describe('Visit Management Component', () => {
   });
 
   describe('trackId', () => {
-    it('Should forward to visitService', () => {
+    it('should forward to visitService', () => {
       const entity = { id: 31581 };
       jest.spyOn(service, 'getVisitIdentifier');
       const id = comp.trackId(entity);
