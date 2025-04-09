@@ -80,7 +80,7 @@ describe('Vet Management Component', () => {
       );
   });
 
-  it('Should call load all on init', () => {
+  it('should call load all on init', () => {
     // WHEN
     comp.ngOnInit();
 
@@ -90,7 +90,7 @@ describe('Vet Management Component', () => {
   });
 
   describe('trackId', () => {
-    it('Should forward to vetService', () => {
+    it('should forward to vetService', () => {
       const entity = { id: 31928 };
       jest.spyOn(service, 'getVetIdentifier');
       const id = comp.trackId(entity);

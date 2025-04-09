@@ -71,45 +71,19 @@ public class PetQueryService extends QueryService<Pet> {
         Specification<Pet> specification = Specification.where(null);
         if (criteria != null) {
             // This has to be called first, because the distinct method returns null
-            if (criteria.getDistinct() != null) {
-                specification = specification.and(distinct(criteria.getDistinct()));
-            }
-            if (criteria.getId() != null) {
-                specification = specification.and(buildRangeSpecification(criteria.getId(), Pet_.id));
-            }
-            if (criteria.getName() != null) {
-                specification = specification.and(buildStringSpecification(criteria.getName(), Pet_.name));
-            }
-            if (criteria.getBirthDate() != null) {
-                specification = specification.and(buildRangeSpecification(criteria.getBirthDate(), Pet_.birthDate));
-            }
-            if (criteria.getCreatedBy() != null) {
-                specification = specification.and(buildStringSpecification(criteria.getCreatedBy(), Pet_.createdBy));
-            }
-            if (criteria.getCreatedDate() != null) {
-                specification = specification.and(buildRangeSpecification(criteria.getCreatedDate(), Pet_.createdDate));
-            }
-            if (criteria.getLastModifiedBy() != null) {
-                specification = specification.and(buildStringSpecification(criteria.getLastModifiedBy(), Pet_.lastModifiedBy));
-            }
-            if (criteria.getLastModifiedDate() != null) {
-                specification = specification.and(buildRangeSpecification(criteria.getLastModifiedDate(), Pet_.lastModifiedDate));
-            }
-            if (criteria.getVisitsId() != null) {
-                specification = specification.and(
-                    buildSpecification(criteria.getVisitsId(), root -> root.join(Pet_.visits, JoinType.LEFT).get(Visit_.id))
-                );
-            }
-            if (criteria.getTypeId() != null) {
-                specification = specification.and(
-                    buildSpecification(criteria.getTypeId(), root -> root.join(Pet_.type, JoinType.LEFT).get(PetType_.id))
-                );
-            }
-            if (criteria.getOwnerId() != null) {
-                specification = specification.and(
-                    buildSpecification(criteria.getOwnerId(), root -> root.join(Pet_.owner, JoinType.LEFT).get(Owner_.id))
-                );
-            }
+            specification = Specification.allOf(
+                Boolean.TRUE.equals(criteria.getDistinct()) ? distinct(criteria.getDistinct()) : null,
+                buildRangeSpecification(criteria.getId(), Pet_.id),
+                buildStringSpecification(criteria.getName(), Pet_.name),
+                buildRangeSpecification(criteria.getBirthDate(), Pet_.birthDate),
+                buildStringSpecification(criteria.getCreatedBy(), Pet_.createdBy),
+                buildRangeSpecification(criteria.getCreatedDate(), Pet_.createdDate),
+                buildStringSpecification(criteria.getLastModifiedBy(), Pet_.lastModifiedBy),
+                buildRangeSpecification(criteria.getLastModifiedDate(), Pet_.lastModifiedDate),
+                buildSpecification(criteria.getVisitsId(), root -> root.join(Pet_.visits, JoinType.LEFT).get(Visit_.id)),
+                buildSpecification(criteria.getTypeId(), root -> root.join(Pet_.type, JoinType.LEFT).get(PetType_.id)),
+                buildSpecification(criteria.getOwnerId(), root -> root.join(Pet_.owner, JoinType.LEFT).get(Owner_.id))
+            );
         }
         return specification;
     }

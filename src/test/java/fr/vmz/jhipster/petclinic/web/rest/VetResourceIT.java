@@ -102,12 +102,12 @@ class VetResourceIT {
     }
 
     @BeforeEach
-    public void initTest() {
+    void initTest() {
         vet = createEntity();
     }
 
     @AfterEach
-    public void cleanup() {
+    void cleanup() {
         if (insertedVet != null) {
             vetRepository.delete(insertedVet);
             insertedVet = null;

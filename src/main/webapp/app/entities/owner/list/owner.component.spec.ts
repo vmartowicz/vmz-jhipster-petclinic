@@ -80,7 +80,7 @@ describe('Owner Management Component', () => {
       );
   });
 
-  it('Should call load all on init', () => {
+  it('should call load all on init', () => {
     // WHEN
     comp.ngOnInit();
 
@@ -90,7 +90,7 @@ describe('Owner Management Component', () => {
   });
 
   describe('trackId', () => {
-    it('Should forward to ownerService', () => {
+    it('should forward to ownerService', () => {
       const entity = { id: 25615 };
       jest.spyOn(service, 'getOwnerIdentifier');
       const id = comp.trackId(entity);

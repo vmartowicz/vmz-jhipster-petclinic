@@ -71,44 +71,20 @@ public class OwnerQueryService extends QueryService<Owner> {
         Specification<Owner> specification = Specification.where(null);
         if (criteria != null) {
             // This has to be called first, because the distinct method returns null
-            if (criteria.getDistinct() != null) {
-                specification = specification.and(distinct(criteria.getDistinct()));
-            }
-            if (criteria.getId() != null) {
-                specification = specification.and(buildRangeSpecification(criteria.getId(), Owner_.id));
-            }
-            if (criteria.getFirstName() != null) {
-                specification = specification.and(buildStringSpecification(criteria.getFirstName(), Owner_.firstName));
-            }
-            if (criteria.getLastName() != null) {
-                specification = specification.and(buildStringSpecification(criteria.getLastName(), Owner_.lastName));
-            }
-            if (criteria.getAddress() != null) {
-                specification = specification.and(buildStringSpecification(criteria.getAddress(), Owner_.address));
-            }
-            if (criteria.getCity() != null) {
-                specification = specification.and(buildStringSpecification(criteria.getCity(), Owner_.city));
-            }
-            if (criteria.getTelephone() != null) {
-                specification = specification.and(buildStringSpecification(criteria.getTelephone(), Owner_.telephone));
-            }
-            if (criteria.getCreatedBy() != null) {
-                specification = specification.and(buildStringSpecification(criteria.getCreatedBy(), Owner_.createdBy));
-            }
-            if (criteria.getCreatedDate() != null) {
-                specification = specification.and(buildRangeSpecification(criteria.getCreatedDate(), Owner_.createdDate));
-            }
-            if (criteria.getLastModifiedBy() != null) {
-                specification = specification.and(buildStringSpecification(criteria.getLastModifiedBy(), Owner_.lastModifiedBy));
-            }
-            if (criteria.getLastModifiedDate() != null) {
-                specification = specification.and(buildRangeSpecification(criteria.getLastModifiedDate(), Owner_.lastModifiedDate));
-            }
-            if (criteria.getPetsId() != null) {
-                specification = specification.and(
-                    buildSpecification(criteria.getPetsId(), root -> root.join(Owner_.pets, JoinType.LEFT).get(Pet_.id))
-                );
-            }
+            specification = Specification.allOf(
+                Boolean.TRUE.equals(criteria.getDistinct()) ? distinct(criteria.getDistinct()) : null,
+                buildRangeSpecification(criteria.getId(), Owner_.id),
+                buildStringSpecification(criteria.getFirstName(), Owner_.firstName),
+                buildStringSpecification(criteria.getLastName(), Owner_.lastName),
+                buildStringSpecification(criteria.getAddress(), Owner_.address),
+                buildStringSpecification(criteria.getCity(), Owner_.city),
+                buildStringSpecification(criteria.getTelephone(), Owner_.telephone),
+                buildStringSpecification(criteria.getCreatedBy(), Owner_.createdBy),
+                buildRangeSpecification(criteria.getCreatedDate(), Owner_.createdDate),
+                buildStringSpecification(criteria.getLastModifiedBy(), Owner_.lastModifiedBy),
+                buildRangeSpecification(criteria.getLastModifiedDate(), Owner_.lastModifiedDate),
+                buildSpecification(criteria.getPetsId(), root -> root.join(Owner_.pets, JoinType.LEFT).get(Pet_.id))
+            );
         }
         return specification;
     }

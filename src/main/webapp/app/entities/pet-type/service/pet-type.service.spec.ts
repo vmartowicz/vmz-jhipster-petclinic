@@ -157,7 +157,7 @@ describe('PetType Service', () => {
     });
 
     describe('comparePetType', () => {
-      it('Should return true if both entities are null', () => {
+      it('should return true if both entities are null', () => {
         const entity1 = null;
         const entity2 = null;
 
@@ -166,7 +166,7 @@ describe('PetType Service', () => {
         expect(compareResult).toEqual(true);
       });
 
-      it('Should return false if one entity is null', () => {
+      it('should return false if one entity is null', () => {
         const entity1 = { id: 13878 };
         const entity2 = null;
 
@@ -177,7 +177,7 @@ describe('PetType Service', () => {
         expect(compareResult2).toEqual(false);
       });
 
-      it('Should return false if primaryKey differs', () => {
+      it('should return false if primaryKey differs', () => {
         const entity1 = { id: 13878 };
         const entity2 = { id: 6067 };
 
@@ -188,7 +188,7 @@ describe('PetType Service', () => {
         expect(compareResult2).toEqual(false);
       });
 
-      it('Should return false if primaryKey matches', () => {
+      it('should return false if primaryKey matches', () => {
         const entity1 = { id: 13878 };
         const entity2 = { id: 13878 };
 
