@@ -1,0 +1,53 @@
+{
+  "generator-jhipster": {
+    "applicationType": "monolith",
+    "authenticationType": "jwt",
+    "baseName": "jhpetclinic",
+    "blueprints": [
+      {
+        "name": "generator-jhipster-entity-audit",
+        "version": "5.8.1"
+      }
+    ],
+    "buildTool": "maven",
+    "cacheProvider": "ehcache",
+    "clientFramework": "angular",
+    "clientPackageManager": "npm",
+    "clientTheme": "flatly",
+    "clientThemeVariant": "primary",
+    "creationTimestamp": 1593242106360,
+    "databaseType": "sql",
+    "devDatabaseType": "h2Disk",
+    "dtoSuffix": "DTO",
+    "embeddableLaunchScript": false,
+    "enableHibernateCache": true,
+    "enableSwaggerCodegen": false,
+    "enableTranslation": true,
+    "entities": ["PetType", "Specialty", "Vet", "Owner", "Pet", "Visit"],
+    "entitySuffix": "",
+    "jhiPrefix": "jhi",
+    "jhipsterVersion": "8.10.0",
+    "jwtSecretKey": "ZTE1Y2VjNGQ2OTAyOWFlMDNkNzg3YmQyMmI3YTI1ZThhMGVhMTM1ZjkzN2E5NDRkODU2ZGZkOTI1ZWVhZTk2Y2M2NjY1Y2M0NjZlMGU3ZmEyY2M0N2M1OGJiOGUzODE2M2YzNzgyOGUwYjNjZmE4NWNhNjAyMWRkY2E3MjIyMDQ=",
+    "languages": ["en"],
+    "messageBroker": false,
+    "nativeLanguage": "en",
+    "otherModules": [],
+    "packageFolder": "fr/vmz/jhipster/petclinic",
+    "packageName": "fr.vmz.jhipster.petclinic",
+    "prodDatabaseType": "postgresql",
+    "promptValues": {
+      "nativeLanguage": "en",
+      "packageName": "fr.vmz.jhipster.petclinic"
+    },
+    "searchEngine": "no",
+    "serverPort": "8080",
+    "serviceDiscoveryType": "eureka",
+    "testFrameworks": ["cypress", "cucumber", "gatling"],
+    "useSass": true,
+    "websocket": false
+  },
+  "generator-jhipster-entity-audit": {
+    "auditFramework": "javers",
+    "auditPage": true
+  }
+}
