@@ -37,9 +37,7 @@ public class OwnerAsserts {
             .as("Verify Owner auto generated properties")
             .satisfies(a -> assertThat(a.getId()).as("check id").isEqualTo(expected.getId()))
             .satisfies(a -> assertThat(a.getCreatedBy()).as("check createdBy").isEqualTo(expected.getCreatedBy()))
-            .satisfies(a -> assertThat(a.getCreatedDate()).as("check createdDate").isEqualTo(expected.getCreatedDate())
-            )//.satisfies(a -> assertThat(a.getLastModifiedDate()).as("check lastModifiedDate").isEqualTo(expected.getLastModifiedDate())) //.satisfies(a -> assertThat(a.getLastModifiedBy()).as("check lastModifiedBy").isEqualTo(expected.getLastModifiedBy())) // FIXME Following fields are automatically set by entity audit blueprint
-        ;
+            .satisfies(a -> assertThat(a.getCreatedDate()).as("check createdDate").isEqualTo(expected.getCreatedDate()));
     }
 
     /**

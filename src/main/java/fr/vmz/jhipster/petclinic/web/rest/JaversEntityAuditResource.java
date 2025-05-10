@@ -1,5 +1,6 @@
 package fr.vmz.jhipster.petclinic.web.rest;
 
+import fr.vmz.jhipster.petclinic.config.audit.AuditedEntity;
 import fr.vmz.jhipster.petclinic.security.AuthoritiesConstants;
 import fr.vmz.jhipster.petclinic.web.rest.dto.EntityAuditEvent;
 import jakarta.persistence.EntityManager;
@@ -57,8 +58,8 @@ public class JaversEntityAuditResource {
      */
     @RequestMapping(value = "/audits/entity/all", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasRole(\"" + AuthoritiesConstants.ADMIN + "\")")
-    public List<String> getAuditedEntities() {
-        return Arrays.asList("domain.PetType", "domain.Specialty", "domain.Vet", "domain.Owner", "domain.Pet", "domain.Visit");
+    public List<AuditedEntityRecord> getAuditedEntities() {
+        return Arrays.stream(AuditedEntity.values()).map(e -> new AuditedEntityRecord(e.getEventEntityType(), e.name())).toList();
     }
 
     /**
@@ -69,15 +70,14 @@ public class JaversEntityAuditResource {
     @RequestMapping(value = "/audits/entity/changes", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasRole(\"" + AuthoritiesConstants.ADMIN + "\")")
     public ResponseEntity<List<EntityAuditEvent>> getChanges(
-        @RequestParam(value = "entityType") String entityType,
+        @RequestParam(value = "entityType") AuditedEntity auditedEntity,
         @RequestParam(value = "limit") int limit,
         @RequestParam MultiValueMap<String, String> queryParams,
         UriComponentsBuilder uriBuilder
     ) throws ClassNotFoundException {
         log.debug("REST request to get a page of EntityAuditEvents");
 
-        var entityTypeToFetch = Class.forName("fr.vmz.jhipster.petclinic." + entityType);
-        QueryBuilder jqlQuery = QueryBuilder.byClass(entityTypeToFetch).limit(limit);
+        QueryBuilder jqlQuery = QueryBuilder.byClass(auditedEntity.getEntityClass()).limit(limit);
 
         List<CdoSnapshot> snapshots = javers.findSnapshots(jqlQuery.build());
 
@@ -85,7 +85,7 @@ public class JaversEntityAuditResource {
 
         snapshots.forEach(snapshot -> {
             EntityAuditEvent event = EntityAuditEvent.fromJaversSnapshot(snapshot);
-            event.setEntityType(entityType);
+            event.setEntityType(auditedEntity.getEventEntityType());
             auditEvents.add(event);
         });
 
@@ -108,17 +108,18 @@ public class JaversEntityAuditResource {
     )
     @PreAuthorize("hasRole(\"" + AuthoritiesConstants.ADMIN + "\")")
     public ResponseEntity<EntityAuditEvent> getPrevVersion(
-        @RequestParam(value = "qualifiedName") String qualifiedName,
+        @RequestParam(value = "qualifiedName") AuditedEntity auditedEntity,
         @RequestParam(value = "entityId") String entityId,
         @RequestParam(value = "commitVersion") Long commitVersion
     ) throws ClassNotFoundException {
-        var entityTypeToFetch = Class.forName("fr.vmz.jhipster.petclinic." + qualifiedName);
-        var entityInformation = JpaEntityInformationSupport.getEntityInformation(entityTypeToFetch, manager);
+        var entityInformation = JpaEntityInformationSupport.getEntityInformation(auditedEntity.getEntityClass(), manager);
         var id = conversionService.convert(entityId, entityInformation.getIdType());
 
-        var jqlQuery = QueryBuilder.byInstanceId(id, entityTypeToFetch).limit(1).withVersion(commitVersion - 1);
+        var jqlQuery = QueryBuilder.byInstanceId(id, auditedEntity.getEntityClass()).limit(1).withVersion(commitVersion - 1);
         var prev = EntityAuditEvent.fromJaversSnapshot(javers.findSnapshots(jqlQuery.build()).get(0));
 
         return new ResponseEntity<>(prev, HttpStatus.OK);
     }
+
+    public record AuditedEntityRecord(String name, String value) {}
 }

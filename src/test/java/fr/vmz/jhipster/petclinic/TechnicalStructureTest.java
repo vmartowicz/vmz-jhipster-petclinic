@@ -33,6 +33,7 @@ class TechnicalStructureTest {
         .ignoreDependency(belongToAnyOf(JhpetclinicApp.class), alwaysTrue())
         .ignoreDependency(alwaysTrue(), belongToAnyOf(
             fr.vmz.jhipster.petclinic.config.Constants.class,
+            fr.vmz.jhipster.petclinic.config.audit.AuditedEntity.class,
             fr.vmz.jhipster.petclinic.config.ApplicationProperties.class
         ));
 }
