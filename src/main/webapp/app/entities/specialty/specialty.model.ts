@@ -8,7 +8,7 @@ export interface ISpecialty {
   createdDate?: dayjs.Dayjs | null;
   lastModifiedBy?: string | null;
   lastModifiedDate?: dayjs.Dayjs | null;
-  vets?: Pick<IVet, 'id'>[] | null;
+  vets?: Pick<IVet, 'id' | 'lastName'>[] | null;
 }
 
 export type NewSpecialty = Omit<ISpecialty, 'id'> & { id: null };

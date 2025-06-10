@@ -64,7 +64,7 @@ entity Visit(visits) {
 
 // --- Relationships ----------------------------------------------
 relationship ManyToMany {
-  Vet{specialties(name)} to Specialty{vets}
+  Vet{specialties(name)} to Specialty{vets(lastName)}
 }
 
 relationship OneToMany {
