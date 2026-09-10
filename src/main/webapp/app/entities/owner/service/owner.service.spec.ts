@@ -1,0 +1,200 @@
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
+import { TestBed } from '@angular/core/testing';
+
+import { IOwner } from '../owner.model';
+import { sampleWithFullData, sampleWithNewData, sampleWithPartialData, sampleWithRequiredData } from '../owner.test-samples';
+
+import { OwnerService, RestOwner } from './owner.service';
+
+const requireRestSample: RestOwner = {
+  ...sampleWithRequiredData,
+  createdDate: sampleWithRequiredData.createdDate?.toJSON(),
+  lastModifiedDate: sampleWithRequiredData.lastModifiedDate?.toJSON(),
+};
+
+describe('Owner Service', () => {
+  let service: OwnerService;
+  let httpMock: HttpTestingController;
+  let expectedResult: IOwner | IOwner[] | boolean | null;
+
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      providers: [provideHttpClientTesting()],
+    });
+    expectedResult = null;
+    service = TestBed.inject(OwnerService);
+    httpMock = TestBed.inject(HttpTestingController);
+  });
+
+  describe('Service methods', () => {
+    it('should find an element', () => {
+      const returnedFromService = { ...requireRestSample };
+      const expected = { ...sampleWithRequiredData };
+
+      service.find(123).subscribe(resp => (expectedResult = resp));
+
+      const req = httpMock.expectOne({ method: 'GET' });
+      req.flush(returnedFromService);
+      expect(expectedResult).toMatchObject(expected);
+    });
+
+    it('should create a Owner', () => {
+      const owner = { ...sampleWithNewData };
+      const returnedFromService = { ...requireRestSample };
+      const expected = { ...sampleWithRequiredData };
+
+      service.create(owner).subscribe(resp => (expectedResult = resp));
+
+      const req = httpMock.expectOne({ method: 'POST' });
+      req.flush(returnedFromService);
+      expect(expectedResult).toMatchObject(expected);
+    });
+
+    it('should update a Owner', () => {
+      const owner = { ...sampleWithRequiredData };
+      const returnedFromService = { ...requireRestSample };
+      const expected = { ...sampleWithRequiredData };
+
+      service.update(owner).subscribe(resp => (expectedResult = resp));
+
+      const req = httpMock.expectOne({ method: 'PUT' });
+      req.flush(returnedFromService);
+      expect(expectedResult).toMatchObject(expected);
+    });
+
+    it('should partial update a Owner', () => {
+      const patchObject = { ...sampleWithPartialData };
+      const returnedFromService = { ...requireRestSample };
+      const expected = { ...sampleWithRequiredData };
+
+      service.partialUpdate(patchObject).subscribe(resp => (expectedResult = resp));
+
+      const req = httpMock.expectOne({ method: 'PATCH' });
+      req.flush(returnedFromService);
+      expect(expectedResult).toMatchObject(expected);
+    });
+
+    it('should return a list of Owner', () => {
+      const returnedFromService = { ...requireRestSample };
+
+      const expected = { ...sampleWithRequiredData };
+
+      service.query().subscribe(resp => (expectedResult = resp.body));
+
+      const req = httpMock.expectOne({ method: 'GET' });
+      req.flush([returnedFromService]);
+      httpMock.verify();
+      expect(expectedResult).toMatchObject([expected]);
+    });
+
+    it('should delete a Owner', () => {
+      service.delete(123).subscribe();
+
+      const requests = httpMock.match({ method: 'DELETE' });
+      expect(requests).toHaveLength(1);
+    });
+
+    describe('addOwnerToCollectionIfMissing', () => {
+      it('should add a Owner to an empty array', () => {
+        const owner: IOwner = sampleWithRequiredData;
+        expectedResult = service.addOwnerToCollectionIfMissing([], owner);
+        expect(expectedResult).toEqual([owner]);
+      });
+
+      it('should not add a Owner to an array that contains it', () => {
+        const owner: IOwner = sampleWithRequiredData;
+        const ownerCollection: IOwner[] = [
+          {
+            ...owner,
+          },
+          sampleWithPartialData,
+        ];
+        expectedResult = service.addOwnerToCollectionIfMissing(ownerCollection, owner);
+        expect(expectedResult).toHaveLength(2);
+      });
+
+      it("should add a Owner to an array that doesn't contain it", () => {
+        const owner: IOwner = sampleWithRequiredData;
+        const ownerCollection: IOwner[] = [sampleWithPartialData];
+        expectedResult = service.addOwnerToCollectionIfMissing(ownerCollection, owner);
+        expect(expectedResult).toHaveLength(2);
+        expect(expectedResult).toContain(owner);
+      });
+
+      it('should add only unique Owner to an array', () => {
+        const ownerArray: IOwner[] = [sampleWithRequiredData, sampleWithPartialData, sampleWithFullData];
+        const ownerCollection: IOwner[] = [sampleWithRequiredData];
+        expectedResult = service.addOwnerToCollectionIfMissing(ownerCollection, ...ownerArray);
+        expect(expectedResult).toHaveLength(3);
+      });
+
+      it('should accept varargs', () => {
+        const owner: IOwner = sampleWithRequiredData;
+        const owner2: IOwner = sampleWithPartialData;
+        expectedResult = service.addOwnerToCollectionIfMissing([], owner, owner2);
+        expect(expectedResult).toEqual([owner, owner2]);
+      });
+
+      it('should accept null and undefined values', () => {
+        const owner: IOwner = sampleWithRequiredData;
+        expectedResult = service.addOwnerToCollectionIfMissing([], null, owner, undefined);
+        expect(expectedResult).toEqual([owner]);
+      });
+
+      it('should return initial array if no Owner is added', () => {
+        const ownerCollection: IOwner[] = [sampleWithRequiredData];
+        expectedResult = service.addOwnerToCollectionIfMissing(ownerCollection, undefined, null);
+        expect(expectedResult).toEqual(ownerCollection);
+      });
+    });
+
+    describe('compareOwner', () => {
+      it('should return true if both entities are null', () => {
+        const entity1 = null;
+        const entity2 = null;
+
+        const compareResult = service.compareOwner(entity1, entity2);
+
+        expect(compareResult).toEqual(true);
+      });
+
+      it('should return false if one entity is null', () => {
+        const entity1 = { id: 25615 };
+        const entity2 = null;
+
+        const compareResult1 = service.compareOwner(entity1, entity2);
+        const compareResult2 = service.compareOwner(entity2, entity1);
+
+        expect(compareResult1).toEqual(false);
+        expect(compareResult2).toEqual(false);
+      });
+
+      it('should return false if primaryKey differs', () => {
+        const entity1 = { id: 25615 };
+        const entity2 = { id: 10278 };
+
+        const compareResult1 = service.compareOwner(entity1, entity2);
+        const compareResult2 = service.compareOwner(entity2, entity1);
+
+        expect(compareResult1).toEqual(false);
+        expect(compareResult2).toEqual(false);
+      });
+
+      it('should return false if primaryKey matches', () => {
+        const entity1 = { id: 25615 };
+        const entity2 = { id: 25615 };
+
+        const compareResult1 = service.compareOwner(entity1, entity2);
+        const compareResult2 = service.compareOwner(entity2, entity1);
+
+        expect(compareResult1).toEqual(true);
+        expect(compareResult2).toEqual(true);
+      });
+    });
+  });
+
+  afterEach(() => {
+    httpMock.verify();
+  });
+});
