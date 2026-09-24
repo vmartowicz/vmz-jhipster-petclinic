@@ -1,3 +1,4 @@
+import { beforeEach, describe, expect, it } from 'vitest';
 import { TestBed } from '@angular/core/testing';
 
 import { sampleWithNewData, sampleWithRequiredData } from '../specialty.test-samples';
@@ -8,7 +9,6 @@ describe('Specialty Form Service', () => {
   let service: SpecialtyFormService;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({});
     service = TestBed.inject(SpecialtyFormService);
   });
 
@@ -25,7 +25,7 @@ describe('Specialty Form Service', () => {
             createdDate: expect.any(Object),
             lastModifiedBy: expect.any(Object),
             lastModifiedDate: expect.any(Object),
-            vets: expect.any(Object),
+            vetses: expect.any(Object),
           }),
         );
       });
@@ -41,7 +41,7 @@ describe('Specialty Form Service', () => {
             createdDate: expect.any(Object),
             lastModifiedBy: expect.any(Object),
             lastModifiedDate: expect.any(Object),
-            vets: expect.any(Object),
+            vetses: expect.any(Object),
           }),
         );
       });
@@ -51,7 +51,7 @@ describe('Specialty Form Service', () => {
       it('should return NewSpecialty for default Specialty initial value', () => {
         const formGroup = service.createSpecialtyFormGroup(sampleWithNewData);
 
-        const specialty = service.getSpecialty(formGroup) as any;
+        const specialty = service.getSpecialty(formGroup);
 
         expect(specialty).toMatchObject(sampleWithNewData);
       });
@@ -59,7 +59,7 @@ describe('Specialty Form Service', () => {
       it('should return NewSpecialty for empty Specialty initial value', () => {
         const formGroup = service.createSpecialtyFormGroup();
 
-        const specialty = service.getSpecialty(formGroup) as any;
+        const specialty = service.getSpecialty(formGroup);
 
         expect(specialty).toMatchObject({});
       });
@@ -67,7 +67,7 @@ describe('Specialty Form Service', () => {
       it('should return ISpecialty', () => {
         const formGroup = service.createSpecialtyFormGroup(sampleWithRequiredData);
 
-        const specialty = service.getSpecialty(formGroup) as any;
+        const specialty = service.getSpecialty(formGroup);
 
         expect(specialty).toMatchObject(sampleWithRequiredData);
       });

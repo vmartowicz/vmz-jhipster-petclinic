@@ -4,7 +4,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.vmz.jhipster.petclinic.IntegrationTest;
 import fr.vmz.jhipster.petclinic.config.Constants;
 import fr.vmz.jhipster.petclinic.domain.User;
@@ -26,12 +25,13 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.http.MediaType;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
+import tools.jackson.databind.ObjectMapper;
 
 /**
  * Integration tests for the {@link AccountResource} REST controller.
@@ -68,7 +68,7 @@ class AccountResourceIT {
     }
 
     @AfterEach
-    void cleanupAndCheck() {
+    void checkUsers() {
         assertThat(userRepository.count()).isEqualTo(numberOfUsers);
         numberOfUsers = null;
     }
@@ -132,7 +132,7 @@ class AccountResourceIT {
         validUser.setEmail("test-register-valid@example.com");
         validUser.setImageUrl("http://placehold.it/50x50");
         validUser.setLangKey(Constants.DEFAULT_LANGUAGE);
-        validUser.setAuthorities(Collections.singleton(AuthoritiesConstants.USER));
+        validUser.setAuthorities(Set.of(AuthoritiesConstants.USER));
         assertThat(userRepository.findOneByLogin("test-register-valid")).isEmpty();
 
         restAccountMockMvc
@@ -156,7 +156,7 @@ class AccountResourceIT {
         invalidUser.setActivated(true);
         invalidUser.setImageUrl("http://placehold.it/50x50");
         invalidUser.setLangKey(Constants.DEFAULT_LANGUAGE);
-        invalidUser.setAuthorities(Collections.singleton(AuthoritiesConstants.USER));
+        invalidUser.setAuthorities(Set.of(AuthoritiesConstants.USER));
 
         restAccountMockMvc
             .perform(post("/api/register").contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(invalidUser)))
@@ -203,7 +203,7 @@ class AccountResourceIT {
         invalidUser.setActivated(activated);
         invalidUser.setImageUrl("http://placehold.it/50x50");
         invalidUser.setLangKey(Constants.DEFAULT_LANGUAGE);
-        invalidUser.setAuthorities(Collections.singleton(AuthoritiesConstants.USER));
+        invalidUser.setAuthorities(Set.of(AuthoritiesConstants.USER));
         return invalidUser;
     }
 
@@ -219,7 +219,7 @@ class AccountResourceIT {
         firstUser.setEmail("alice@example.com");
         firstUser.setImageUrl("http://placehold.it/50x50");
         firstUser.setLangKey(Constants.DEFAULT_LANGUAGE);
-        firstUser.setAuthorities(Collections.singleton(AuthoritiesConstants.USER));
+        firstUser.setAuthorities(Set.of(AuthoritiesConstants.USER));
 
         // Duplicate login, different email
         ManagedUserVM secondUser = new ManagedUserVM();
@@ -271,7 +271,7 @@ class AccountResourceIT {
         firstUser.setEmail("test-register-duplicate-email@example.com");
         firstUser.setImageUrl("http://placehold.it/50x50");
         firstUser.setLangKey(Constants.DEFAULT_LANGUAGE);
-        firstUser.setAuthorities(Collections.singleton(AuthoritiesConstants.USER));
+        firstUser.setAuthorities(Set.of(AuthoritiesConstants.USER));
 
         // Register first user
         restAccountMockMvc
@@ -325,7 +325,7 @@ class AccountResourceIT {
         assertThat(testUser4.orElseThrow().getEmail()).isEqualTo("test-register-duplicate-email@example.com");
 
         testUser4.orElseThrow().setActivated(true);
-        userService.updateUser((new AdminUserDTO(testUser4.orElseThrow())));
+        userService.updateUser(new AdminUserDTO(testUser4.orElseThrow()));
 
         // Register 4th (already activated) user
         restAccountMockMvc
@@ -347,7 +347,7 @@ class AccountResourceIT {
         validUser.setActivated(true);
         validUser.setImageUrl("http://placehold.it/50x50");
         validUser.setLangKey(Constants.DEFAULT_LANGUAGE);
-        validUser.setAuthorities(Collections.singleton(AuthoritiesConstants.ADMIN));
+        validUser.setAuthorities(Set.of(AuthoritiesConstants.ADMIN));
 
         restAccountMockMvc
             .perform(post("/api/register").contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(validUser)))
@@ -386,7 +386,7 @@ class AccountResourceIT {
     @Test
     @Transactional
     void testActivateAccountWithWrongKey() throws Exception {
-        restAccountMockMvc.perform(get("/api/activate?key=wrongActivationKey")).andExpect(status().isInternalServerError());
+        restAccountMockMvc.perform(get("/api/activate?key=wrongActivationKey")).andExpect(status().isBadRequest());
     }
 
     @Test
@@ -408,7 +408,7 @@ class AccountResourceIT {
         userDTO.setActivated(false);
         userDTO.setImageUrl("http://placehold.it/50x50");
         userDTO.setLangKey(Constants.DEFAULT_LANGUAGE);
-        userDTO.setAuthorities(Collections.singleton(AuthoritiesConstants.ADMIN));
+        userDTO.setAuthorities(Set.of(AuthoritiesConstants.ADMIN));
 
         restAccountMockMvc
             .perform(post("/api/account").contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(userDTO)))
@@ -447,7 +447,7 @@ class AccountResourceIT {
         userDTO.setActivated(false);
         userDTO.setImageUrl("http://placehold.it/50x50");
         userDTO.setLangKey(Constants.DEFAULT_LANGUAGE);
-        userDTO.setAuthorities(Collections.singleton(AuthoritiesConstants.ADMIN));
+        userDTO.setAuthorities(Set.of(AuthoritiesConstants.ADMIN));
 
         restAccountMockMvc
             .perform(post("/api/account").contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(userDTO)))
@@ -485,7 +485,7 @@ class AccountResourceIT {
         userDTO.setActivated(false);
         userDTO.setImageUrl("http://placehold.it/50x50");
         userDTO.setLangKey(Constants.DEFAULT_LANGUAGE);
-        userDTO.setAuthorities(Collections.singleton(AuthoritiesConstants.ADMIN));
+        userDTO.setAuthorities(Set.of(AuthoritiesConstants.ADMIN));
 
         restAccountMockMvc
             .perform(post("/api/account").contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(userDTO)))
@@ -517,7 +517,7 @@ class AccountResourceIT {
         userDTO.setActivated(false);
         userDTO.setImageUrl("http://placehold.it/50x50");
         userDTO.setLangKey(Constants.DEFAULT_LANGUAGE);
-        userDTO.setAuthorities(Collections.singleton(AuthoritiesConstants.ADMIN));
+        userDTO.setAuthorities(Set.of(AuthoritiesConstants.ADMIN));
 
         restAccountMockMvc
             .perform(post("/api/account").contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(userDTO)))
@@ -703,6 +703,18 @@ class AccountResourceIT {
     }
 
     @Test
+    void testRequestPasswordResetInvalidEmail() throws Exception {
+        restAccountMockMvc.perform(post("/api/account/reset-password/init").content("invalid-email")).andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void testRequestPasswordResetTooLongEmail() throws Exception {
+        restAccountMockMvc
+            .perform(post("/api/account/reset-password/init").content("a".repeat(250) + "@x.co"))
+            .andExpect(status().isBadRequest());
+    }
+
+    @Test
     @Transactional
     void testFinishPasswordReset() throws Exception {
         User user = new User();
@@ -773,6 +785,6 @@ class AccountResourceIT {
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(om.writeValueAsBytes(keyAndPassword))
             )
-            .andExpect(status().isInternalServerError());
+            .andExpect(status().isBadRequest());
     }
 }

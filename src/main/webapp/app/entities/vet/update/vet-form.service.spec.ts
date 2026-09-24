@@ -1,3 +1,4 @@
+import { beforeEach, describe, expect, it } from 'vitest';
 import { TestBed } from '@angular/core/testing';
 
 import { sampleWithNewData, sampleWithRequiredData } from '../vet.test-samples';
@@ -8,7 +9,6 @@ describe('Vet Form Service', () => {
   let service: VetFormService;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({});
     service = TestBed.inject(VetFormService);
   });
 
@@ -26,7 +26,7 @@ describe('Vet Form Service', () => {
             createdDate: expect.any(Object),
             lastModifiedBy: expect.any(Object),
             lastModifiedDate: expect.any(Object),
-            specialties: expect.any(Object),
+            specialtieses: expect.any(Object),
           }),
         );
       });
@@ -43,7 +43,7 @@ describe('Vet Form Service', () => {
             createdDate: expect.any(Object),
             lastModifiedBy: expect.any(Object),
             lastModifiedDate: expect.any(Object),
-            specialties: expect.any(Object),
+            specialtieses: expect.any(Object),
           }),
         );
       });
@@ -53,7 +53,7 @@ describe('Vet Form Service', () => {
       it('should return NewVet for default Vet initial value', () => {
         const formGroup = service.createVetFormGroup(sampleWithNewData);
 
-        const vet = service.getVet(formGroup) as any;
+        const vet = service.getVet(formGroup);
 
         expect(vet).toMatchObject(sampleWithNewData);
       });
@@ -61,7 +61,7 @@ describe('Vet Form Service', () => {
       it('should return NewVet for empty Vet initial value', () => {
         const formGroup = service.createVetFormGroup();
 
-        const vet = service.getVet(formGroup) as any;
+        const vet = service.getVet(formGroup);
 
         expect(vet).toMatchObject({});
       });
@@ -69,7 +69,7 @@ describe('Vet Form Service', () => {
       it('should return IVet', () => {
         const formGroup = service.createVetFormGroup(sampleWithRequiredData);
 
-        const vet = service.getVet(formGroup) as any;
+        const vet = service.getVet(formGroup);
 
         expect(vet).toMatchObject(sampleWithRequiredData);
       });

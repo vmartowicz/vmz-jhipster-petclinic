@@ -4,44 +4,44 @@ import { IOwner, NewOwner } from './owner.model';
 
 export const sampleWithRequiredData: IOwner = {
   id: 3581,
-  firstName: 'Bertrand',
-  lastName: 'Hoeger',
-  address: 'couch',
-  city: 'North Kacieside',
-  telephone: '1-983-289-0297',
+  firstName: 'Gregoria',
+  lastName: 'Erdman',
+  address: 'obediently',
+  city: 'Charlottesville',
+  telephone: '1-830-890-2979 x7402',
 };
 
 export const sampleWithPartialData: IOwner = {
   id: 15531,
-  firstName: 'Ernest',
-  lastName: 'Volkman',
-  address: 'whack',
-  city: 'Danbury',
-  telephone: '1-661-395-9771',
-  createdBy: 'drag',
-  createdDate: dayjs('2020-06-26T11:09'),
-  lastModifiedBy: 'absentmindedly',
+  firstName: 'Sydni',
+  lastName: 'Stroman',
+  address: 'dreamily',
+  city: 'Davionworth',
+  telephone: '(977) 307-3903',
+  createdBy: 'oof',
+  createdDate: dayjs('2020-06-27T04:48'),
+  lastModifiedBy: 'snack',
 };
 
 export const sampleWithFullData: IOwner = {
   id: 26949,
-  firstName: 'Janice',
-  lastName: 'Brakus',
-  address: 'readily',
-  city: 'Haagborough',
-  telephone: '920.647.6559',
-  createdBy: 'barring what toe',
-  createdDate: dayjs('2020-06-26T15:11'),
-  lastModifiedBy: 'yuck but invite',
-  lastModifiedDate: dayjs('2020-06-26T16:40'),
+  firstName: 'August',
+  lastName: 'Barton',
+  address: 'honestly when evenly',
+  city: 'Pocatello',
+  telephone: '1-422-319-2578 x483',
+  createdBy: 'substantiate',
+  createdDate: dayjs('2020-06-26T07:41'),
+  lastModifiedBy: 'sonata forenenst fooey',
+  lastModifiedDate: dayjs('2020-06-27T03:36'),
 };
 
 export const sampleWithNewData: NewOwner = {
-  firstName: 'Dallin',
-  lastName: "O'Kon",
-  address: 'despite',
-  city: 'Lake Camronstead',
-  telephone: '1-277-592-9009 x1385',
+  firstName: 'Mae',
+  lastName: 'Shanahan',
+  address: 'consequently youthfully',
+  city: 'Fort Yasmine',
+  telephone: '485-389-3348 x278',
   id: null,
 };
 

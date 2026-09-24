@@ -1,12 +1,11 @@
-import { Injectable, inject } from '@angular/core';
-import { HttpClient, HttpResponse } from '@angular/common/http';
-import { Observable, map } from 'rxjs';
+import { HttpClient, HttpResponse, httpResource } from '@angular/common/http';
+import { Service, computed, inject, signal } from '@angular/core';
 
 import dayjs from 'dayjs/esm';
+import { Observable, map } from 'rxjs';
 
-import { isPresent } from 'app/core/util/operators';
-import { ApplicationConfigService } from 'app/core/config/application-config.service';
-import { createRequestOption } from 'app/core/request/request-util';
+import { serverApiUrl } from 'app/config';
+import { createRequestOption } from 'app/core/request';
 import { IVet, NewVet } from '../vet.model';
 
 export type PartialUpdateVet = Partial<IVet> & Pick<IVet, 'id'>;
@@ -22,50 +21,70 @@ export type NewRestVet = RestOf<NewVet>;
 
 export type PartialUpdateRestVet = RestOf<PartialUpdateVet>;
 
-export type EntityResponseType = HttpResponse<IVet>;
-export type EntityArrayResponseType = HttpResponse<IVet[]>;
+@Service()
+export class VetsService {
+  readonly vetsParams = signal<Record<string, string | number | boolean | readonly (string | number | boolean)[]> | undefined>(undefined);
+  readonly vetsResource = httpResource<RestVet[]>(() => {
+    const params = this.vetsParams();
+    if (!params) {
+      return undefined;
+    }
+    return { url: this.resourceUrl, params };
+  });
+  /**
+   * This signal holds the list of vet that have been fetched. It is updated when the vetsResource emits a new value.
+   * In case of error while fetching the vets, the signal is set to an empty array.
+   */
+  readonly vets = computed(() =>
+    (this.vetsResource.hasValue() ? this.vetsResource.value() : []).map(item => this.convertValueFromServer(item)),
+  );
+  protected readonly resourceUrl = `${serverApiUrl}api/vets`;
 
-@Injectable({ providedIn: 'root' })
-export class VetService {
+  protected convertValueFromServer(restVet: RestVet): IVet {
+    return {
+      ...restVet,
+      createdDate: restVet.createdDate ? dayjs(restVet.createdDate) : undefined,
+      lastModifiedDate: restVet.lastModifiedDate ? dayjs(restVet.lastModifiedDate) : undefined,
+    };
+  }
+}
+
+@Service()
+export class VetService extends VetsService {
   protected readonly http = inject(HttpClient);
-  protected readonly applicationConfigService = inject(ApplicationConfigService);
 
-  protected resourceUrl = this.applicationConfigService.getEndpointFor('api/vets');
-
-  create(vet: NewVet): Observable<EntityResponseType> {
-    const copy = this.convertDateFromClient(vet);
-    return this.http.post<RestVet>(this.resourceUrl, copy, { observe: 'response' }).pipe(map(res => this.convertResponseFromServer(res)));
+  create(vet: NewVet): Observable<IVet> {
+    const copy = this.convertValueFromClient(vet);
+    return this.http.post<RestVet>(this.resourceUrl, copy).pipe(map(res => this.convertResponseFromServer(res)));
   }
 
-  update(vet: IVet): Observable<EntityResponseType> {
-    const copy = this.convertDateFromClient(vet);
+  update(vet: IVet): Observable<IVet> {
+    const copy = this.convertValueFromClient(vet);
     return this.http
-      .put<RestVet>(`${this.resourceUrl}/${this.getVetIdentifier(vet)}`, copy, { observe: 'response' })
+      .put<RestVet>(`${this.resourceUrl}/${encodeURIComponent(this.getVetIdentifier(vet))}`, copy)
       .pipe(map(res => this.convertResponseFromServer(res)));
   }
 
-  partialUpdate(vet: PartialUpdateVet): Observable<EntityResponseType> {
-    const copy = this.convertDateFromClient(vet);
+  partialUpdate(vet: PartialUpdateVet): Observable<IVet> {
+    const copy = this.convertValueFromClient(vet);
     return this.http
-      .patch<RestVet>(`${this.resourceUrl}/${this.getVetIdentifier(vet)}`, copy, { observe: 'response' })
+      .patch<RestVet>(`${this.resourceUrl}/${encodeURIComponent(this.getVetIdentifier(vet))}`, copy)
       .pipe(map(res => this.convertResponseFromServer(res)));
   }
 
-  find(id: number): Observable<EntityResponseType> {
-    return this.http
-      .get<RestVet>(`${this.resourceUrl}/${id}`, { observe: 'response' })
-      .pipe(map(res => this.convertResponseFromServer(res)));
+  find(id: number): Observable<IVet> {
+    return this.http.get<RestVet>(`${this.resourceUrl}/${encodeURIComponent(id)}`).pipe(map(res => this.convertResponseFromServer(res)));
   }
 
-  query(req?: any): Observable<EntityArrayResponseType> {
+  query(req?: any): Observable<HttpResponse<IVet[]>> {
     const options = createRequestOption(req);
     return this.http
       .get<RestVet[]>(this.resourceUrl, { params: options, observe: 'response' })
-      .pipe(map(res => this.convertResponseArrayFromServer(res)));
+      .pipe(map(res => res.clone({ body: this.convertResponseArrayFromServer(res.body!) })));
   }
 
-  delete(id: number): Observable<HttpResponse<{}>> {
-    return this.http.delete(`${this.resourceUrl}/${id}`, { observe: 'response' });
+  delete(id: number): Observable<undefined> {
+    return this.http.delete<undefined>(`${this.resourceUrl}/${encodeURIComponent(id)}`);
   }
 
   getVetIdentifier(vet: Pick<IVet, 'id'>): number {
@@ -77,7 +96,7 @@ export class VetService {
   }
 
   addVetToCollectionIfMissing<Type extends Pick<IVet, 'id'>>(vetCollection: Type[], ...vetsToCheck: (Type | null | undefined)[]): Type[] {
-    const vets: Type[] = vetsToCheck.filter(isPresent);
+    const vets: Type[] = vetsToCheck.filter(vetItem => vetItem !== null && vetItem !== undefined);
     if (vets.length > 0) {
       const vetCollectionIdentifiers = vetCollection.map(vetItem => this.getVetIdentifier(vetItem));
       const vetsToAdd = vets.filter(vetItem => {
@@ -93,7 +112,7 @@ export class VetService {
     return vetCollection;
   }
 
-  protected convertDateFromClient<T extends IVet | NewVet | PartialUpdateVet>(vet: T): RestOf<T> {
+  protected convertValueFromClient<T extends IVet | NewVet | PartialUpdateVet>(vet: T): RestOf<T> {
     return {
       ...vet,
       createdDate: vet.createdDate?.toJSON() ?? null,
@@ -101,23 +120,11 @@ export class VetService {
     };
   }
 
-  protected convertDateFromServer(restVet: RestVet): IVet {
-    return {
-      ...restVet,
-      createdDate: restVet.createdDate ? dayjs(restVet.createdDate) : undefined,
-      lastModifiedDate: restVet.lastModifiedDate ? dayjs(restVet.lastModifiedDate) : undefined,
-    };
+  protected convertResponseFromServer(res: RestVet): IVet {
+    return this.convertValueFromServer(res);
   }
 
-  protected convertResponseFromServer(res: HttpResponse<RestVet>): HttpResponse<IVet> {
-    return res.clone({
-      body: res.body ? this.convertDateFromServer(res.body) : null,
-    });
-  }
-
-  protected convertResponseArrayFromServer(res: HttpResponse<RestVet[]>): HttpResponse<IVet[]> {
-    return res.clone({
-      body: res.body ? res.body.map(item => this.convertDateFromServer(item)) : null,
-    });
+  protected convertResponseArrayFromServer(res: RestVet[]): IVet[] {
+    return res.map(item => this.convertValueFromServer(item));
   }
 }

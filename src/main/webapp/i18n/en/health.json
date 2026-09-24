@@ -16,6 +16,7 @@
       "clientConfigServer": "Microservice Config Server",
       "hystrix": "Hystrix",
       "diskSpace": "Disk space",
+      "ssl": "SSL",
       "mail": "Email",
       "livenessState": "Liveness state",
       "readinessState": "Readiness state",

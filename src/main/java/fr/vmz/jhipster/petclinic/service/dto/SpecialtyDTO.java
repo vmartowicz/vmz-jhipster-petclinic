@@ -27,7 +27,7 @@ public class SpecialtyDTO implements Serializable {
 
     private Instant lastModifiedDate;
 
-    private Set<VetDTO> vets = new HashSet<>();
+    private Set<VetDTO> vetses = new HashSet<>();
 
     public Long getId() {
         return id;
@@ -77,12 +77,12 @@ public class SpecialtyDTO implements Serializable {
         this.lastModifiedDate = lastModifiedDate;
     }
 
-    public Set<VetDTO> getVets() {
-        return vets;
+    public Set<VetDTO> getVetses() {
+        return vetses;
     }
 
-    public void setVets(Set<VetDTO> vets) {
-        this.vets = vets;
+    public void setVetses(Set<VetDTO> vetses) {
+        this.vetses = vetses;
     }
 
     @Override
@@ -116,7 +116,7 @@ public class SpecialtyDTO implements Serializable {
             ", createdDate='" + getCreatedDate() + "'" +
             ", lastModifiedBy='" + getLastModifiedBy() + "'" +
             ", lastModifiedDate='" + getLastModifiedDate() + "'" +
-            ", vets=" + getVets() +
+            ", vetses=" + getVetses() +
             "}";
     }
 }

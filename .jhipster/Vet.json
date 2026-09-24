@@ -4,7 +4,6 @@
     "enableAudit": true
   },
   "applications": ["jhpetclinic"],
-  "changelogDate": "20200627072427",
   "clientRootFolder": "",
   "dto": "mapstruct",
   "entityTableName": "vets",

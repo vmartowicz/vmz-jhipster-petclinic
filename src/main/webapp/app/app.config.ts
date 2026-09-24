@@ -1,5 +1,6 @@
-import { ApplicationConfig, LOCALE_ID, importProvidersFrom, inject } from '@angular/core';
-import { BrowserModule, Title } from '@angular/platform-browser';
+import { provideHttpClient, withInterceptors } from '@angular/common/http';
+import { ApplicationConfig, LOCALE_ID, inject } from '@angular/core';
+import { Title } from '@angular/platform-browser';
 import {
   NavigationError,
   Router,
@@ -10,19 +11,22 @@ import {
   withDebugTracing,
   withNavigationErrorHandler,
 } from '@angular/router';
-import { ServiceWorkerModule } from '@angular/service-worker';
-import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { provideServiceWorker } from '@angular/service-worker';
 
-import { NgbDateAdapter } from '@ng-bootstrap/ng-bootstrap';
+import { NgbDateAdapter } from '@ng-bootstrap/ng-bootstrap/datepicker';
+import { environment } from 'environments/environment';
+
+import { authExpiredInterceptor } from 'app/core/interceptor/auth-expired.interceptor';
+import { authInterceptor } from 'app/core/interceptor/auth.interceptor';
+import { errorHandlerInterceptor } from 'app/core/interceptor/error-handler.interceptor';
+import { notificationInterceptor } from 'app/core/interceptor/notification.interceptor';
 
 import './config/dayjs';
-import { TranslationModule } from 'app/shared/language/translation.module';
-import { environment } from 'environments/environment';
-import { httpInterceptorProviders } from './core/interceptor';
-import routes from './app.routes';
-// jhipster-needle-angular-add-module-import JHipster will add new module here
-import { NgbDateDayjsAdapter } from './config/datepicker-adapter';
+import { provideTranslation } from 'app/shared/language';
+
 import { AppPageTitleStrategy } from './app-page-title-strategy';
+import routes from './app.routes';
+import { NgbDateDayjsAdapter } from './config/datepicker-adapter';
 
 const routerFeatures: RouterFeatures[] = [
   withComponentInputBinding(),
@@ -45,17 +49,14 @@ if (environment.DEBUG_INFO_ENABLED) {
 
 export const appConfig: ApplicationConfig = {
   providers: [
+    provideTranslation(),
     provideRouter(routes, ...routerFeatures),
-    importProvidersFrom(BrowserModule),
     // Set this to true to enable service worker (PWA)
-    importProvidersFrom(ServiceWorkerModule.register('ngsw-worker.js', { enabled: false })),
-    importProvidersFrom(TranslationModule),
-    provideHttpClient(withInterceptorsFromDi()),
+    provideServiceWorker('ngsw-worker.js', { enabled: false }),
+    provideHttpClient(withInterceptors([authInterceptor, authExpiredInterceptor, errorHandlerInterceptor, notificationInterceptor])),
     Title,
     { provide: LOCALE_ID, useValue: 'en' },
     { provide: NgbDateAdapter, useClass: NgbDateDayjsAdapter },
-    httpInterceptorProviders,
     { provide: TitleStrategy, useClass: AppPageTitleStrategy },
-    // jhipster-needle-angular-add-module JHipster will add new module here
   ],
 };

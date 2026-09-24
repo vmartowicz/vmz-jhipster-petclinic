@@ -1,8 +1,9 @@
-import { Injectable } from '@angular/core';
+import { Service } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 
 import dayjs from 'dayjs/esm';
-import { DATE_TIME_FORMAT } from 'app/config/input.constants';
+
+import { DATE_TIME_FORMAT } from 'app/config';
 import { IPetType, NewPetType } from '../pet-type.model';
 
 /**
@@ -41,13 +42,14 @@ type PetTypeFormGroupContent = {
 
 export type PetTypeFormGroup = FormGroup<PetTypeFormGroupContent>;
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class PetTypeFormService {
-  createPetTypeFormGroup(petType: PetTypeFormGroupInput = { id: null }): PetTypeFormGroup {
+  createPetTypeFormGroup(petType?: PetTypeFormGroupInput): PetTypeFormGroup {
     const petTypeRawValue = this.convertPetTypeToPetTypeRawValue({
       ...this.getFormDefaults(),
-      ...petType,
+      ...(petType ?? { id: null }),
     });
+
     return new FormGroup<PetTypeFormGroupContent>({
       id: new FormControl(
         { value: petTypeRawValue.id, disabled: true },
@@ -67,17 +69,15 @@ export class PetTypeFormService {
   }
 
   getPetType(form: PetTypeFormGroup): IPetType | NewPetType {
-    return this.convertPetTypeRawValueToPetType(form.getRawValue() as PetTypeFormRawValue | NewPetTypeFormRawValue);
+    return this.convertPetTypeRawValueToPetType(form.getRawValue());
   }
 
   resetForm(form: PetTypeFormGroup, petType: PetTypeFormGroupInput): void {
     const petTypeRawValue = this.convertPetTypeToPetTypeRawValue({ ...this.getFormDefaults(), ...petType });
-    form.reset(
-      {
-        ...petTypeRawValue,
-        id: { value: petTypeRawValue.id, disabled: true },
-      } as any /* cast to workaround https://github.com/angular/angular/issues/46458 */,
-    );
+    form.reset({
+      ...petTypeRawValue,
+      id: { value: petTypeRawValue.id, disabled: true },
+    });
   }
 
   private getFormDefaults(): PetTypeFormDefaults {

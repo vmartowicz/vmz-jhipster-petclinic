@@ -1,6 +1,6 @@
-import { TestBed } from '@angular/core/testing';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
-import { provideHttpClient } from '@angular/common/http';
+import { TestBed } from '@angular/core/testing';
 
 import { ISpecialty } from '../specialty.model';
 import { sampleWithFullData, sampleWithNewData, sampleWithPartialData, sampleWithRequiredData } from '../specialty.test-samples';
@@ -20,7 +20,7 @@ describe('Specialty Service', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [provideHttpClient(), provideHttpClientTesting()],
+      providers: [provideHttpClientTesting()],
     });
     expectedResult = null;
     service = TestBed.inject(SpecialtyService);
@@ -32,7 +32,7 @@ describe('Specialty Service', () => {
       const returnedFromService = { ...requireRestSample };
       const expected = { ...sampleWithRequiredData };
 
-      service.find(123).subscribe(resp => (expectedResult = resp.body));
+      service.find(123).subscribe(resp => (expectedResult = resp));
 
       const req = httpMock.expectOne({ method: 'GET' });
       req.flush(returnedFromService);
@@ -44,7 +44,7 @@ describe('Specialty Service', () => {
       const returnedFromService = { ...requireRestSample };
       const expected = { ...sampleWithRequiredData };
 
-      service.create(specialty).subscribe(resp => (expectedResult = resp.body));
+      service.create(specialty).subscribe(resp => (expectedResult = resp));
 
       const req = httpMock.expectOne({ method: 'POST' });
       req.flush(returnedFromService);
@@ -56,7 +56,7 @@ describe('Specialty Service', () => {
       const returnedFromService = { ...requireRestSample };
       const expected = { ...sampleWithRequiredData };
 
-      service.update(specialty).subscribe(resp => (expectedResult = resp.body));
+      service.update(specialty).subscribe(resp => (expectedResult = resp));
 
       const req = httpMock.expectOne({ method: 'PUT' });
       req.flush(returnedFromService);
@@ -68,7 +68,7 @@ describe('Specialty Service', () => {
       const returnedFromService = { ...requireRestSample };
       const expected = { ...sampleWithRequiredData };
 
-      service.partialUpdate(patchObject).subscribe(resp => (expectedResult = resp.body));
+      service.partialUpdate(patchObject).subscribe(resp => (expectedResult = resp));
 
       const req = httpMock.expectOne({ method: 'PATCH' });
       req.flush(returnedFromService);
@@ -84,26 +84,21 @@ describe('Specialty Service', () => {
 
       const req = httpMock.expectOne({ method: 'GET' });
       req.flush([returnedFromService]);
-      httpMock.verify();
       expect(expectedResult).toMatchObject([expected]);
     });
 
     it('should delete a Specialty', () => {
-      const expected = true;
+      service.delete(123).subscribe();
 
-      service.delete(123).subscribe(resp => (expectedResult = resp.ok));
-
-      const req = httpMock.expectOne({ method: 'DELETE' });
-      req.flush({ status: 200 });
-      expect(expectedResult).toBe(expected);
+      const requests = httpMock.match({ method: 'DELETE' });
+      expect(requests).toHaveLength(1);
     });
 
     describe('addSpecialtyToCollectionIfMissing', () => {
       it('should add a Specialty to an empty array', () => {
         const specialty: ISpecialty = sampleWithRequiredData;
         expectedResult = service.addSpecialtyToCollectionIfMissing([], specialty);
-        expect(expectedResult).toHaveLength(1);
-        expect(expectedResult).toContain(specialty);
+        expect(expectedResult).toEqual([specialty]);
       });
 
       it('should not add a Specialty to an array that contains it', () => {
@@ -137,16 +132,13 @@ describe('Specialty Service', () => {
         const specialty: ISpecialty = sampleWithRequiredData;
         const specialty2: ISpecialty = sampleWithPartialData;
         expectedResult = service.addSpecialtyToCollectionIfMissing([], specialty, specialty2);
-        expect(expectedResult).toHaveLength(2);
-        expect(expectedResult).toContain(specialty);
-        expect(expectedResult).toContain(specialty2);
+        expect(expectedResult).toEqual([specialty, specialty2]);
       });
 
       it('should accept null and undefined values', () => {
         const specialty: ISpecialty = sampleWithRequiredData;
         expectedResult = service.addSpecialtyToCollectionIfMissing([], null, specialty, undefined);
-        expect(expectedResult).toHaveLength(1);
-        expect(expectedResult).toContain(specialty);
+        expect(expectedResult).toEqual([specialty]);
       });
 
       it('should return initial array if no Specialty is added', () => {
@@ -188,7 +180,7 @@ describe('Specialty Service', () => {
         expect(compareResult2).toEqual(false);
       });
 
-      it('should return false if primaryKey matches', () => {
+      it('should return true if primaryKey matches', () => {
         const entity1 = { id: 29362 };
         const entity2 = { id: 29362 };
 

@@ -1,6 +1,6 @@
-import { TestBed } from '@angular/core/testing';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
-import { provideHttpClient } from '@angular/common/http';
+import { TestBed } from '@angular/core/testing';
 
 import { IOwner } from '../owner.model';
 import { sampleWithFullData, sampleWithNewData, sampleWithPartialData, sampleWithRequiredData } from '../owner.test-samples';
@@ -20,7 +20,7 @@ describe('Owner Service', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [provideHttpClient(), provideHttpClientTesting()],
+      providers: [provideHttpClientTesting()],
     });
     expectedResult = null;
     service = TestBed.inject(OwnerService);
@@ -32,7 +32,7 @@ describe('Owner Service', () => {
       const returnedFromService = { ...requireRestSample };
       const expected = { ...sampleWithRequiredData };
 
-      service.find(123).subscribe(resp => (expectedResult = resp.body));
+      service.find(123).subscribe(resp => (expectedResult = resp));
 
       const req = httpMock.expectOne({ method: 'GET' });
       req.flush(returnedFromService);
@@ -44,7 +44,7 @@ describe('Owner Service', () => {
       const returnedFromService = { ...requireRestSample };
       const expected = { ...sampleWithRequiredData };
 
-      service.create(owner).subscribe(resp => (expectedResult = resp.body));
+      service.create(owner).subscribe(resp => (expectedResult = resp));
 
       const req = httpMock.expectOne({ method: 'POST' });
       req.flush(returnedFromService);
@@ -56,7 +56,7 @@ describe('Owner Service', () => {
       const returnedFromService = { ...requireRestSample };
       const expected = { ...sampleWithRequiredData };
 
-      service.update(owner).subscribe(resp => (expectedResult = resp.body));
+      service.update(owner).subscribe(resp => (expectedResult = resp));
 
       const req = httpMock.expectOne({ method: 'PUT' });
       req.flush(returnedFromService);
@@ -68,7 +68,7 @@ describe('Owner Service', () => {
       const returnedFromService = { ...requireRestSample };
       const expected = { ...sampleWithRequiredData };
 
-      service.partialUpdate(patchObject).subscribe(resp => (expectedResult = resp.body));
+      service.partialUpdate(patchObject).subscribe(resp => (expectedResult = resp));
 
       const req = httpMock.expectOne({ method: 'PATCH' });
       req.flush(returnedFromService);
@@ -84,26 +84,21 @@ describe('Owner Service', () => {
 
       const req = httpMock.expectOne({ method: 'GET' });
       req.flush([returnedFromService]);
-      httpMock.verify();
       expect(expectedResult).toMatchObject([expected]);
     });
 
     it('should delete a Owner', () => {
-      const expected = true;
+      service.delete(123).subscribe();
 
-      service.delete(123).subscribe(resp => (expectedResult = resp.ok));
-
-      const req = httpMock.expectOne({ method: 'DELETE' });
-      req.flush({ status: 200 });
-      expect(expectedResult).toBe(expected);
+      const requests = httpMock.match({ method: 'DELETE' });
+      expect(requests).toHaveLength(1);
     });
 
     describe('addOwnerToCollectionIfMissing', () => {
       it('should add a Owner to an empty array', () => {
         const owner: IOwner = sampleWithRequiredData;
         expectedResult = service.addOwnerToCollectionIfMissing([], owner);
-        expect(expectedResult).toHaveLength(1);
-        expect(expectedResult).toContain(owner);
+        expect(expectedResult).toEqual([owner]);
       });
 
       it('should not add a Owner to an array that contains it', () => {
@@ -137,16 +132,13 @@ describe('Owner Service', () => {
         const owner: IOwner = sampleWithRequiredData;
         const owner2: IOwner = sampleWithPartialData;
         expectedResult = service.addOwnerToCollectionIfMissing([], owner, owner2);
-        expect(expectedResult).toHaveLength(2);
-        expect(expectedResult).toContain(owner);
-        expect(expectedResult).toContain(owner2);
+        expect(expectedResult).toEqual([owner, owner2]);
       });
 
       it('should accept null and undefined values', () => {
         const owner: IOwner = sampleWithRequiredData;
         expectedResult = service.addOwnerToCollectionIfMissing([], null, owner, undefined);
-        expect(expectedResult).toHaveLength(1);
-        expect(expectedResult).toContain(owner);
+        expect(expectedResult).toEqual([owner]);
       });
 
       it('should return initial array if no Owner is added', () => {
@@ -188,7 +180,7 @@ describe('Owner Service', () => {
         expect(compareResult2).toEqual(false);
       });
 
-      it('should return false if primaryKey matches', () => {
+      it('should return true if primaryKey matches', () => {
         const entity1 = { id: 25615 };
         const entity2 = { id: 25615 };
 

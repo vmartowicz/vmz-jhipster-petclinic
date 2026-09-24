@@ -10,7 +10,7 @@
 # ===================================================================
 # Standard Spring Boot properties.
 # Full reference is available at:
-# http://docs.spring.io/spring-boot/docs/current/reference/html/common-application-properties.html
+# https://docs.spring.io/spring-boot/appendix/application-properties/index.html
 # ===================================================================
 
 logging:
@@ -59,8 +59,6 @@ spring:
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
     url: jdbc:postgresql://localhost:5432/jhpetclinic
-    username: jhpetclinic
-    password:
     hikari:
       poolName: Hikari
       auto-commit: false
@@ -70,8 +68,6 @@ spring:
   mail:
     host: localhost
     port: 25
-    username:
-    password:
   thymeleaf:
     cache: true
 
@@ -96,7 +92,7 @@ spring:
 # ===================================================================
 server:
   port: 8080
-  shutdown: graceful # see https://docs.spring.io/spring-boot/docs/current/reference/html/spring-boot-features.html#boot-features-graceful-shutdown
+  shutdown: graceful # see https://docs.spring.io/spring-boot/reference/web/graceful-shutdown.html#web.graceful-shutdown
   compression:
     enabled: true
     mime-types: text/html,text/xml,text/plain,text/css,application/javascript,application/json,image/svg+xml
@@ -116,17 +112,9 @@ jhipster:
     ehcache: # Ehcache configuration
       time-to-live-seconds: 3600 # By default objects stay 1 hour in the cache
       max-entries: 1000 # Number of objects in each cache entry
-  registry:
-    password: admin
   security:
     authentication:
       jwt:
-        # This token must be encoded using Base64 and be at least 256 bits long (you can type `openssl rand -base64 64` on your command line to generate a 512 bits one)
-        # As this is the PRODUCTION configuration, you MUST change the default key, and store it securely:
-        # - In the JHipster Registry (which includes a Spring Cloud Config server)
-        # - In a separate `application-prod.yml` file, in the same folder as your executable JAR file
-        # - In the `JHIPSTER_SECURITY_AUTHENTICATION_JWT_BASE64_SECRET` environment variable
-        base64-secret: ZTE1Y2VjNGQ2OTAyOWFlMDNkNzg3YmQyMmI3YTI1ZThhMGVhMTM1ZjkzN2E5NDRkODU2ZGZkOTI1ZWVhZTk2Y2M2NjY1Y2M0NjZlMGU3ZmEyY2M0N2M1OGJiOGUzODE2M2YzNzgyOGUwYjNjZmE4NWNhNjAyMWRkY2E3MjIyMDQ=
         # Token is valid 24 hours
         token-validity-in-seconds: 86400
         token-validity-in-seconds-for-remember-me: 2592000

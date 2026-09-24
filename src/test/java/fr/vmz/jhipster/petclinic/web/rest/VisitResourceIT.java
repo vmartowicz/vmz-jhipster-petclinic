@@ -8,7 +8,6 @@ import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.vmz.jhipster.petclinic.IntegrationTest;
 import fr.vmz.jhipster.petclinic.domain.Pet;
 import fr.vmz.jhipster.petclinic.domain.Visit;
@@ -18,7 +17,6 @@ import fr.vmz.jhipster.petclinic.service.dto.VisitDTO;
 import fr.vmz.jhipster.petclinic.service.mapper.VisitMapper;
 import jakarta.persistence.EntityManager;
 import java.time.LocalDate;
-import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicLong;
@@ -29,13 +27,14 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
+import tools.jackson.databind.ObjectMapper;
 
 /**
  * Integration tests for the {@link VisitResource} REST controller.
@@ -47,7 +46,7 @@ import org.springframework.transaction.annotation.Transactional;
 class VisitResourceIT {
 
     private static final LocalDate DEFAULT_VISIT_DATE = LocalDate.ofEpochDay(0L);
-    private static final LocalDate UPDATED_VISIT_DATE = LocalDate.now(ZoneId.systemDefault());
+    private static final LocalDate UPDATED_VISIT_DATE = LocalDate.parse("2020-06-27");
     private static final LocalDate SMALLER_VISIT_DATE = LocalDate.ofEpochDay(-1L);
 
     private static final String DEFAULT_DESCRIPTION = "AAAAAAAAAA";
@@ -56,8 +55,8 @@ class VisitResourceIT {
     private static final String ENTITY_API_URL = "/api/visits";
     private static final String ENTITY_API_URL_ID = ENTITY_API_URL + "/{id}";
 
-    private static Random random = new Random();
-    private static AtomicLong longCount = new AtomicLong(random.nextInt() + (2 * Integer.MAX_VALUE));
+    private static final Random random = new Random();
+    private static final AtomicLong longCount = new AtomicLong(random.nextInt() + 2L * Integer.MAX_VALUE);
 
     @Autowired
     private ObjectMapper om;
@@ -368,7 +367,7 @@ class VisitResourceIT {
             visitRepository.saveAndFlush(visit);
             pet = PetResourceIT.createEntity();
         } else {
-            pet = TestUtil.findAll(em, Pet.class).get(0);
+            pet = TestUtil.findAll(em, Pet.class).getFirst();
         }
         em.persist(pet);
         em.flush();
@@ -531,7 +530,7 @@ class VisitResourceIT {
         Visit partialUpdatedVisit = new Visit();
         partialUpdatedVisit.setId(visit.getId());
 
-        partialUpdatedVisit.visitDate(UPDATED_VISIT_DATE).description(UPDATED_DESCRIPTION);
+        partialUpdatedVisit.visitDate(UPDATED_VISIT_DATE);
 
         restVisitMockMvc
             .perform(

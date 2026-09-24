@@ -1,41 +1,42 @@
 import { Routes } from '@angular/router';
 
-import { UserRouteAccessService } from 'app/core/auth/user-route-access.service';
-import { ASC } from 'app/config/navigation.constants';
+import { ASC } from 'app/config';
+import { userRouteAccessService } from 'app/core/auth';
+
 import VetResolve from './route/vet-routing-resolve.service';
 
 const vetRoute: Routes = [
   {
     path: '',
-    loadComponent: () => import('./list/vet.component').then(m => m.VetComponent),
+    loadComponent: () => import('./list/vet').then(m => m.Vet),
     data: {
       defaultSort: `id,${ASC}`,
     },
-    canActivate: [UserRouteAccessService],
+    canActivate: [userRouteAccessService],
   },
   {
     path: ':id/view',
-    loadComponent: () => import('./detail/vet-detail.component').then(m => m.VetDetailComponent),
+    loadComponent: () => import('./detail/vet-detail').then(m => m.VetDetail),
     resolve: {
       vet: VetResolve,
     },
-    canActivate: [UserRouteAccessService],
+    canActivate: [userRouteAccessService],
   },
   {
     path: 'new',
-    loadComponent: () => import('./update/vet-update.component').then(m => m.VetUpdateComponent),
+    loadComponent: () => import('./update/vet-update').then(m => m.VetUpdate),
     resolve: {
       vet: VetResolve,
     },
-    canActivate: [UserRouteAccessService],
+    canActivate: [userRouteAccessService],
   },
   {
     path: ':id/edit',
-    loadComponent: () => import('./update/vet-update.component').then(m => m.VetUpdateComponent),
+    loadComponent: () => import('./update/vet-update').then(m => m.VetUpdate),
     resolve: {
       vet: VetResolve,
     },
-    canActivate: [UserRouteAccessService],
+    canActivate: [userRouteAccessService],
   },
 ];
 

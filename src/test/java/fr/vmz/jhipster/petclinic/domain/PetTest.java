@@ -33,19 +33,19 @@ class PetTest {
         Visit visitBack = getVisitRandomSampleGenerator();
 
         pet.addVisits(visitBack);
-        assertThat(pet.getVisits()).containsOnly(visitBack);
+        assertThat(pet.getVisitses()).containsOnly(visitBack);
         assertThat(visitBack.getPet()).isEqualTo(pet);
 
         pet.removeVisits(visitBack);
-        assertThat(pet.getVisits()).doesNotContain(visitBack);
+        assertThat(pet.getVisitses()).doesNotContain(visitBack);
         assertThat(visitBack.getPet()).isNull();
 
-        pet.visits(new HashSet<>(Set.of(visitBack)));
-        assertThat(pet.getVisits()).containsOnly(visitBack);
+        pet.visitses(new HashSet<>(Set.of(visitBack)));
+        assertThat(pet.getVisitses()).containsOnly(visitBack);
         assertThat(visitBack.getPet()).isEqualTo(pet);
 
-        pet.setVisits(new HashSet<>());
-        assertThat(pet.getVisits()).doesNotContain(visitBack);
+        pet.setVisitses(new HashSet<>());
+        assertThat(pet.getVisitses()).doesNotContain(visitBack);
         assertThat(visitBack.getPet()).isNull();
     }
 

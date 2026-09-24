@@ -3,6 +3,7 @@ package fr.vmz.jhipster.petclinic.domain;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
+import java.io.Serial;
 import java.io.Serializable;
 import java.time.Instant;
 import java.util.HashSet;
@@ -21,6 +22,7 @@ import org.springframework.data.domain.Persistable;
 @SuppressWarnings("common-java:DuplicatedBlocks")
 public class Owner extends AbstractAuditingEntity<Long> implements Serializable, Persistable<Long> {
 
+    @Serial
     private static final long serialVersionUID = 1L;
 
     @Id
@@ -64,8 +66,8 @@ public class Owner extends AbstractAuditingEntity<Long> implements Serializable,
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "owner")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    @JsonIgnoreProperties(value = { "visits", "type", "owner" }, allowSetters = true)
-    private Set<Pet> pets = new HashSet<>();
+    @JsonIgnoreProperties(value = { "visitses", "type", "owner" }, allowSetters = true)
+    private Set<Pet> petses = new HashSet<>();
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
@@ -189,33 +191,33 @@ public class Owner extends AbstractAuditingEntity<Long> implements Serializable,
         return this;
     }
 
-    public Set<Pet> getPets() {
-        return this.pets;
+    public Set<Pet> getPetses() {
+        return this.petses;
     }
 
-    public void setPets(Set<Pet> pets) {
-        if (this.pets != null) {
-            this.pets.forEach(i -> i.setOwner(null));
+    public void setPetses(Set<Pet> pets) {
+        if (this.petses != null) {
+            this.petses.forEach(i -> i.setOwner(null));
         }
         if (pets != null) {
             pets.forEach(i -> i.setOwner(this));
         }
-        this.pets = pets;
+        this.petses = pets;
     }
 
-    public Owner pets(Set<Pet> pets) {
-        this.setPets(pets);
+    public Owner petses(Set<Pet> pets) {
+        this.setPetses(pets);
         return this;
     }
 
     public Owner addPets(Pet pet) {
-        this.pets.add(pet);
+        this.petses.add(pet);
         pet.setOwner(this);
         return this;
     }
 
     public Owner removePets(Pet pet) {
-        this.pets.remove(pet);
+        this.petses.remove(pet);
         pet.setOwner(null);
         return this;
     }

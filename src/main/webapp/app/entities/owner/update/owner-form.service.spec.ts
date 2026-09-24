@@ -1,3 +1,4 @@
+import { beforeEach, describe, expect, it } from 'vitest';
 import { TestBed } from '@angular/core/testing';
 
 import { sampleWithNewData, sampleWithRequiredData } from '../owner.test-samples';
@@ -8,7 +9,6 @@ describe('Owner Form Service', () => {
   let service: OwnerFormService;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({});
     service = TestBed.inject(OwnerFormService);
   });
 
@@ -57,7 +57,7 @@ describe('Owner Form Service', () => {
       it('should return NewOwner for default Owner initial value', () => {
         const formGroup = service.createOwnerFormGroup(sampleWithNewData);
 
-        const owner = service.getOwner(formGroup) as any;
+        const owner = service.getOwner(formGroup);
 
         expect(owner).toMatchObject(sampleWithNewData);
       });
@@ -65,7 +65,7 @@ describe('Owner Form Service', () => {
       it('should return NewOwner for empty Owner initial value', () => {
         const formGroup = service.createOwnerFormGroup();
 
-        const owner = service.getOwner(formGroup) as any;
+        const owner = service.getOwner(formGroup);
 
         expect(owner).toMatchObject({});
       });
@@ -73,7 +73,7 @@ describe('Owner Form Service', () => {
       it('should return IOwner', () => {
         const formGroup = service.createOwnerFormGroup(sampleWithRequiredData);
 
-        const owner = service.getOwner(formGroup) as any;
+        const owner = service.getOwner(formGroup);
 
         expect(owner).toMatchObject(sampleWithRequiredData);
       });

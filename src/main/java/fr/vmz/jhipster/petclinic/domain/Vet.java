@@ -3,6 +3,7 @@ package fr.vmz.jhipster.petclinic.domain;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
+import java.io.Serial;
 import java.io.Serializable;
 import java.time.Instant;
 import java.util.HashSet;
@@ -21,6 +22,7 @@ import org.springframework.data.domain.Persistable;
 @SuppressWarnings("common-java:DuplicatedBlocks")
 public class Vet extends AbstractAuditingEntity<Long> implements Serializable, Persistable<Long> {
 
+    @Serial
     private static final long serialVersionUID = 1L;
 
     @Id
@@ -54,8 +56,8 @@ public class Vet extends AbstractAuditingEntity<Long> implements Serializable, P
         inverseJoinColumns = @JoinColumn(name = "specialties_id")
     )
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    @JsonIgnoreProperties(value = { "vets" }, allowSetters = true)
-    private Set<Specialty> specialties = new HashSet<>();
+    @JsonIgnoreProperties(value = { "vetses" }, allowSetters = true)
+    private Set<Specialty> specialtieses = new HashSet<>();
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
@@ -140,26 +142,26 @@ public class Vet extends AbstractAuditingEntity<Long> implements Serializable, P
         return this;
     }
 
-    public Set<Specialty> getSpecialties() {
-        return this.specialties;
+    public Set<Specialty> getSpecialtieses() {
+        return this.specialtieses;
     }
 
-    public void setSpecialties(Set<Specialty> specialties) {
-        this.specialties = specialties;
+    public void setSpecialtieses(Set<Specialty> specialties) {
+        this.specialtieses = specialties;
     }
 
-    public Vet specialties(Set<Specialty> specialties) {
-        this.setSpecialties(specialties);
+    public Vet specialtieses(Set<Specialty> specialties) {
+        this.setSpecialtieses(specialties);
         return this;
     }
 
     public Vet addSpecialties(Specialty specialty) {
-        this.specialties.add(specialty);
+        this.specialtieses.add(specialty);
         return this;
     }
 
     public Vet removeSpecialties(Specialty specialty) {
-        this.specialties.remove(specialty);
+        this.specialtieses.remove(specialty);
         return this;
     }
 

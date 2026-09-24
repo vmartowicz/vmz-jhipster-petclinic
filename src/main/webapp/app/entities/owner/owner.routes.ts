@@ -1,41 +1,42 @@
 import { Routes } from '@angular/router';
 
-import { UserRouteAccessService } from 'app/core/auth/user-route-access.service';
-import { ASC } from 'app/config/navigation.constants';
+import { ASC } from 'app/config';
+import { userRouteAccessService } from 'app/core/auth';
+
 import OwnerResolve from './route/owner-routing-resolve.service';
 
 const ownerRoute: Routes = [
   {
     path: '',
-    loadComponent: () => import('./list/owner.component').then(m => m.OwnerComponent),
+    loadComponent: () => import('./list/owner').then(m => m.Owner),
     data: {
       defaultSort: `id,${ASC}`,
     },
-    canActivate: [UserRouteAccessService],
+    canActivate: [userRouteAccessService],
   },
   {
     path: ':id/view',
-    loadComponent: () => import('./detail/owner-detail.component').then(m => m.OwnerDetailComponent),
+    loadComponent: () => import('./detail/owner-detail').then(m => m.OwnerDetail),
     resolve: {
       owner: OwnerResolve,
     },
-    canActivate: [UserRouteAccessService],
+    canActivate: [userRouteAccessService],
   },
   {
     path: 'new',
-    loadComponent: () => import('./update/owner-update.component').then(m => m.OwnerUpdateComponent),
+    loadComponent: () => import('./update/owner-update').then(m => m.OwnerUpdate),
     resolve: {
       owner: OwnerResolve,
     },
-    canActivate: [UserRouteAccessService],
+    canActivate: [userRouteAccessService],
   },
   {
     path: ':id/edit',
-    loadComponent: () => import('./update/owner-update.component').then(m => m.OwnerUpdateComponent),
+    loadComponent: () => import('./update/owner-update').then(m => m.OwnerUpdate),
     resolve: {
       owner: OwnerResolve,
     },
-    canActivate: [UserRouteAccessService],
+    canActivate: [userRouteAccessService],
   },
 ];
 

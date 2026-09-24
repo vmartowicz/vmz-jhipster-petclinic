@@ -3,6 +3,7 @@ package fr.vmz.jhipster.petclinic.domain;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
+import java.io.Serial;
 import java.io.Serializable;
 import java.time.Instant;
 import java.time.LocalDate;
@@ -22,6 +23,7 @@ import org.springframework.data.domain.Persistable;
 @SuppressWarnings("common-java:DuplicatedBlocks")
 public class Pet extends AbstractAuditingEntity<Long> implements Serializable, Persistable<Long> {
 
+    @Serial
     private static final long serialVersionUID = 1L;
 
     @Id
@@ -49,13 +51,13 @@ public class Pet extends AbstractAuditingEntity<Long> implements Serializable, P
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "pet")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JsonIgnoreProperties(value = { "pet" }, allowSetters = true)
-    private Set<Visit> visits = new HashSet<>();
+    private Set<Visit> visitses = new HashSet<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
     private PetType type;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JsonIgnoreProperties(value = { "pets" }, allowSetters = true)
+    @JsonIgnoreProperties(value = { "petses" }, allowSetters = true)
     private Owner owner;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
@@ -141,33 +143,33 @@ public class Pet extends AbstractAuditingEntity<Long> implements Serializable, P
         return this;
     }
 
-    public Set<Visit> getVisits() {
-        return this.visits;
+    public Set<Visit> getVisitses() {
+        return this.visitses;
     }
 
-    public void setVisits(Set<Visit> visits) {
-        if (this.visits != null) {
-            this.visits.forEach(i -> i.setPet(null));
+    public void setVisitses(Set<Visit> visits) {
+        if (this.visitses != null) {
+            this.visitses.forEach(i -> i.setPet(null));
         }
         if (visits != null) {
             visits.forEach(i -> i.setPet(this));
         }
-        this.visits = visits;
+        this.visitses = visits;
     }
 
-    public Pet visits(Set<Visit> visits) {
-        this.setVisits(visits);
+    public Pet visitses(Set<Visit> visits) {
+        this.setVisitses(visits);
         return this;
     }
 
     public Pet addVisits(Visit visit) {
-        this.visits.add(visit);
+        this.visitses.add(visit);
         visit.setPet(this);
         return this;
     }
 
     public Pet removeVisits(Visit visit) {
-        this.visits.remove(visit);
+        this.visitses.remove(visit);
         visit.setPet(null);
         return this;
     }

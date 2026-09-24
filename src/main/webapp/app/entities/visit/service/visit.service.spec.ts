@@ -1,8 +1,8 @@
-import { TestBed } from '@angular/core/testing';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
-import { provideHttpClient } from '@angular/common/http';
+import { TestBed } from '@angular/core/testing';
 
-import { DATE_FORMAT } from 'app/config/input.constants';
+import { DATE_FORMAT } from 'app/config';
 import { IVisit } from '../visit.model';
 import { sampleWithFullData, sampleWithNewData, sampleWithPartialData, sampleWithRequiredData } from '../visit.test-samples';
 
@@ -22,7 +22,7 @@ describe('Visit Service', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [provideHttpClient(), provideHttpClientTesting()],
+      providers: [provideHttpClientTesting()],
     });
     expectedResult = null;
     service = TestBed.inject(VisitService);
@@ -34,7 +34,7 @@ describe('Visit Service', () => {
       const returnedFromService = { ...requireRestSample };
       const expected = { ...sampleWithRequiredData };
 
-      service.find(123).subscribe(resp => (expectedResult = resp.body));
+      service.find(123).subscribe(resp => (expectedResult = resp));
 
       const req = httpMock.expectOne({ method: 'GET' });
       req.flush(returnedFromService);
@@ -46,7 +46,7 @@ describe('Visit Service', () => {
       const returnedFromService = { ...requireRestSample };
       const expected = { ...sampleWithRequiredData };
 
-      service.create(visit).subscribe(resp => (expectedResult = resp.body));
+      service.create(visit).subscribe(resp => (expectedResult = resp));
 
       const req = httpMock.expectOne({ method: 'POST' });
       req.flush(returnedFromService);
@@ -58,7 +58,7 @@ describe('Visit Service', () => {
       const returnedFromService = { ...requireRestSample };
       const expected = { ...sampleWithRequiredData };
 
-      service.update(visit).subscribe(resp => (expectedResult = resp.body));
+      service.update(visit).subscribe(resp => (expectedResult = resp));
 
       const req = httpMock.expectOne({ method: 'PUT' });
       req.flush(returnedFromService);
@@ -70,7 +70,7 @@ describe('Visit Service', () => {
       const returnedFromService = { ...requireRestSample };
       const expected = { ...sampleWithRequiredData };
 
-      service.partialUpdate(patchObject).subscribe(resp => (expectedResult = resp.body));
+      service.partialUpdate(patchObject).subscribe(resp => (expectedResult = resp));
 
       const req = httpMock.expectOne({ method: 'PATCH' });
       req.flush(returnedFromService);
@@ -86,26 +86,21 @@ describe('Visit Service', () => {
 
       const req = httpMock.expectOne({ method: 'GET' });
       req.flush([returnedFromService]);
-      httpMock.verify();
       expect(expectedResult).toMatchObject([expected]);
     });
 
     it('should delete a Visit', () => {
-      const expected = true;
+      service.delete(123).subscribe();
 
-      service.delete(123).subscribe(resp => (expectedResult = resp.ok));
-
-      const req = httpMock.expectOne({ method: 'DELETE' });
-      req.flush({ status: 200 });
-      expect(expectedResult).toBe(expected);
+      const requests = httpMock.match({ method: 'DELETE' });
+      expect(requests).toHaveLength(1);
     });
 
     describe('addVisitToCollectionIfMissing', () => {
       it('should add a Visit to an empty array', () => {
         const visit: IVisit = sampleWithRequiredData;
         expectedResult = service.addVisitToCollectionIfMissing([], visit);
-        expect(expectedResult).toHaveLength(1);
-        expect(expectedResult).toContain(visit);
+        expect(expectedResult).toEqual([visit]);
       });
 
       it('should not add a Visit to an array that contains it', () => {
@@ -139,16 +134,13 @@ describe('Visit Service', () => {
         const visit: IVisit = sampleWithRequiredData;
         const visit2: IVisit = sampleWithPartialData;
         expectedResult = service.addVisitToCollectionIfMissing([], visit, visit2);
-        expect(expectedResult).toHaveLength(2);
-        expect(expectedResult).toContain(visit);
-        expect(expectedResult).toContain(visit2);
+        expect(expectedResult).toEqual([visit, visit2]);
       });
 
       it('should accept null and undefined values', () => {
         const visit: IVisit = sampleWithRequiredData;
         expectedResult = service.addVisitToCollectionIfMissing([], null, visit, undefined);
-        expect(expectedResult).toHaveLength(1);
-        expect(expectedResult).toContain(visit);
+        expect(expectedResult).toEqual([visit]);
       });
 
       it('should return initial array if no Visit is added', () => {
@@ -190,7 +182,7 @@ describe('Visit Service', () => {
         expect(compareResult2).toEqual(false);
       });
 
-      it('should return false if primaryKey matches', () => {
+      it('should return true if primaryKey matches', () => {
         const entity1 = { id: 31581 };
         const entity2 = { id: 31581 };
 

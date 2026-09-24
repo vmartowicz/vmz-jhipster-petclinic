@@ -1,12 +1,13 @@
-import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams, HttpResponse } from '@angular/common/http';
+import { Injectable, inject } from '@angular/core';
+
 import { Observable } from 'rxjs';
 
 import { EntityAuditEntityChoice, EntityAuditEvent } from './entity-audit-event.model';
 
 @Injectable({ providedIn: 'root' })
 export class EntityAuditService {
-  constructor(private http: HttpClient) {}
+  private http = inject(HttpClient);
 
   getAllAudited(): Observable<EntityAuditEntityChoice[]> {
     return this.http.get<EntityAuditEntityChoice[]>('api/audits/entity/all');

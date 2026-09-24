@@ -59,7 +59,9 @@ public class JaversEntityAuditResource {
     @RequestMapping(value = "/audits/entity/all", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasRole(\"" + AuthoritiesConstants.ADMIN + "\")")
     public List<AuditedEntityRecord> getAuditedEntities() {
-        return Arrays.stream(AuditedEntity.values()).map(e -> new AuditedEntityRecord(e.getEventEntityType(), e.name())).toList();
+        return Arrays.stream(AuditedEntity.values())
+            .map(e -> new AuditedEntityRecord(e.getEventEntityType(), e.name()))
+            .toList();
     }
 
     /**
@@ -85,7 +87,7 @@ public class JaversEntityAuditResource {
 
         snapshots.forEach(snapshot -> {
             EntityAuditEvent event = EntityAuditEvent.fromJaversSnapshot(snapshot);
-            event.setEntityType(auditedEntity.getEventEntityType());
+            event.setEntityType(auditedEntity.name());
             auditEvents.add(event);
         });
 
@@ -115,7 +117,9 @@ public class JaversEntityAuditResource {
         var entityInformation = JpaEntityInformationSupport.getEntityInformation(auditedEntity.getEntityClass(), manager);
         var id = conversionService.convert(entityId, entityInformation.getIdType());
 
-        var jqlQuery = QueryBuilder.byInstanceId(id, auditedEntity.getEntityClass()).limit(1).withVersion(commitVersion - 1);
+        var jqlQuery = QueryBuilder.byInstanceId(id, auditedEntity.getEntityClass())
+            .limit(1)
+            .withVersion(commitVersion - 1);
         var prev = EntityAuditEvent.fromJaversSnapshot(javers.findSnapshots(jqlQuery.build()).get(0));
 
         return new ResponseEntity<>(prev, HttpStatus.OK);

@@ -4,27 +4,21 @@ import java.time.Duration;
 import org.ehcache.config.builders.*;
 import org.ehcache.jsr107.Eh107Configuration;
 import org.hibernate.cache.jcache.ConfigSettings;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.cache.JCacheManagerCustomizer;
-import org.springframework.boot.autoconfigure.orm.jpa.HibernatePropertiesCustomizer;
-import org.springframework.boot.info.BuildProperties;
-import org.springframework.boot.info.GitProperties;
+import org.springframework.boot.cache.autoconfigure.JCacheManagerCustomizer;
+import org.springframework.boot.hibernate.autoconfigure.HibernatePropertiesCustomizer;
 import org.springframework.cache.annotation.EnableCaching;
-import org.springframework.cache.interceptor.KeyGenerator;
-import org.springframework.context.annotation.*;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import tech.jhipster.config.JHipsterProperties;
-import tech.jhipster.config.cache.PrefixedKeyGenerator;
 
 @Configuration
 @EnableCaching
 public class CacheConfiguration {
 
-    private GitProperties gitProperties;
-    private BuildProperties buildProperties;
     private final javax.cache.configuration.Configuration<Object, Object> jcacheConfiguration;
 
     public CacheConfiguration(JHipsterProperties jHipsterProperties) {
-        JHipsterProperties.Cache.Ehcache ehcache = jHipsterProperties.getCache().getEhcache();
+        var ehcache = jHipsterProperties.getCache().getEhcache();
 
         jcacheConfiguration = Eh107Configuration.fromEhcacheCacheConfiguration(
             CacheConfigurationBuilder.newCacheConfigurationBuilder(
@@ -52,13 +46,13 @@ public class CacheConfiguration {
             createCache(cm, fr.vmz.jhipster.petclinic.domain.User.class.getName() + ".authorities");
             createCache(cm, fr.vmz.jhipster.petclinic.domain.PetType.class.getName());
             createCache(cm, fr.vmz.jhipster.petclinic.domain.Specialty.class.getName());
-            createCache(cm, fr.vmz.jhipster.petclinic.domain.Specialty.class.getName() + ".vets");
+            createCache(cm, fr.vmz.jhipster.petclinic.domain.Specialty.class.getName() + ".vetses");
             createCache(cm, fr.vmz.jhipster.petclinic.domain.Vet.class.getName());
-            createCache(cm, fr.vmz.jhipster.petclinic.domain.Vet.class.getName() + ".specialties");
+            createCache(cm, fr.vmz.jhipster.petclinic.domain.Vet.class.getName() + ".specialtieses");
             createCache(cm, fr.vmz.jhipster.petclinic.domain.Owner.class.getName());
-            createCache(cm, fr.vmz.jhipster.petclinic.domain.Owner.class.getName() + ".pets");
+            createCache(cm, fr.vmz.jhipster.petclinic.domain.Owner.class.getName() + ".petses");
             createCache(cm, fr.vmz.jhipster.petclinic.domain.Pet.class.getName());
-            createCache(cm, fr.vmz.jhipster.petclinic.domain.Pet.class.getName() + ".visits");
+            createCache(cm, fr.vmz.jhipster.petclinic.domain.Pet.class.getName() + ".visitses");
             createCache(cm, fr.vmz.jhipster.petclinic.domain.Visit.class.getName());
             // jhipster-needle-ehcache-add-entry
         };
@@ -71,20 +65,5 @@ public class CacheConfiguration {
         } else {
             cm.createCache(cacheName, jcacheConfiguration);
         }
-    }
-
-    @Autowired(required = false)
-    public void setGitProperties(GitProperties gitProperties) {
-        this.gitProperties = gitProperties;
-    }
-
-    @Autowired(required = false)
-    public void setBuildProperties(BuildProperties buildProperties) {
-        this.buildProperties = buildProperties;
-    }
-
-    @Bean
-    public KeyGenerator keyGenerator() {
-        return new PrefixedKeyGenerator(this.gitProperties, this.buildProperties);
     }
 }

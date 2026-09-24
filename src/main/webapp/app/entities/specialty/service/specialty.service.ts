@@ -1,12 +1,11 @@
-import { Injectable, inject } from '@angular/core';
-import { HttpClient, HttpResponse } from '@angular/common/http';
-import { Observable, map } from 'rxjs';
+import { HttpClient, HttpResponse, httpResource } from '@angular/common/http';
+import { Service, computed, inject, signal } from '@angular/core';
 
 import dayjs from 'dayjs/esm';
+import { Observable, map } from 'rxjs';
 
-import { isPresent } from 'app/core/util/operators';
-import { ApplicationConfigService } from 'app/core/config/application-config.service';
-import { createRequestOption } from 'app/core/request/request-util';
+import { serverApiUrl } from 'app/config';
+import { createRequestOption } from 'app/core/request';
 import { ISpecialty, NewSpecialty } from '../specialty.model';
 
 export type PartialUpdateSpecialty = Partial<ISpecialty> & Pick<ISpecialty, 'id'>;
@@ -22,52 +21,74 @@ export type NewRestSpecialty = RestOf<NewSpecialty>;
 
 export type PartialUpdateRestSpecialty = RestOf<PartialUpdateSpecialty>;
 
-export type EntityResponseType = HttpResponse<ISpecialty>;
-export type EntityArrayResponseType = HttpResponse<ISpecialty[]>;
+@Service()
+export class SpecialtiesService {
+  readonly specialtiesParams = signal<Record<string, string | number | boolean | readonly (string | number | boolean)[]> | undefined>(
+    undefined,
+  );
+  readonly specialtiesResource = httpResource<RestSpecialty[]>(() => {
+    const params = this.specialtiesParams();
+    if (!params) {
+      return undefined;
+    }
+    return { url: this.resourceUrl, params };
+  });
+  /**
+   * This signal holds the list of specialty that have been fetched. It is updated when the specialtiesResource emits a new value.
+   * In case of error while fetching the specialties, the signal is set to an empty array.
+   */
+  readonly specialties = computed(() =>
+    (this.specialtiesResource.hasValue() ? this.specialtiesResource.value() : []).map(item => this.convertValueFromServer(item)),
+  );
+  protected readonly resourceUrl = `${serverApiUrl}api/specialties`;
 
-@Injectable({ providedIn: 'root' })
-export class SpecialtyService {
+  protected convertValueFromServer(restSpecialty: RestSpecialty): ISpecialty {
+    return {
+      ...restSpecialty,
+      createdDate: restSpecialty.createdDate ? dayjs(restSpecialty.createdDate) : undefined,
+      lastModifiedDate: restSpecialty.lastModifiedDate ? dayjs(restSpecialty.lastModifiedDate) : undefined,
+    };
+  }
+}
+
+@Service()
+export class SpecialtyService extends SpecialtiesService {
   protected readonly http = inject(HttpClient);
-  protected readonly applicationConfigService = inject(ApplicationConfigService);
 
-  protected resourceUrl = this.applicationConfigService.getEndpointFor('api/specialties');
+  create(specialty: NewSpecialty): Observable<ISpecialty> {
+    const copy = this.convertValueFromClient(specialty);
+    return this.http.post<RestSpecialty>(this.resourceUrl, copy).pipe(map(res => this.convertResponseFromServer(res)));
+  }
 
-  create(specialty: NewSpecialty): Observable<EntityResponseType> {
-    const copy = this.convertDateFromClient(specialty);
+  update(specialty: ISpecialty): Observable<ISpecialty> {
+    const copy = this.convertValueFromClient(specialty);
     return this.http
-      .post<RestSpecialty>(this.resourceUrl, copy, { observe: 'response' })
+      .put<RestSpecialty>(`${this.resourceUrl}/${encodeURIComponent(this.getSpecialtyIdentifier(specialty))}`, copy)
       .pipe(map(res => this.convertResponseFromServer(res)));
   }
 
-  update(specialty: ISpecialty): Observable<EntityResponseType> {
-    const copy = this.convertDateFromClient(specialty);
+  partialUpdate(specialty: PartialUpdateSpecialty): Observable<ISpecialty> {
+    const copy = this.convertValueFromClient(specialty);
     return this.http
-      .put<RestSpecialty>(`${this.resourceUrl}/${this.getSpecialtyIdentifier(specialty)}`, copy, { observe: 'response' })
+      .patch<RestSpecialty>(`${this.resourceUrl}/${encodeURIComponent(this.getSpecialtyIdentifier(specialty))}`, copy)
       .pipe(map(res => this.convertResponseFromServer(res)));
   }
 
-  partialUpdate(specialty: PartialUpdateSpecialty): Observable<EntityResponseType> {
-    const copy = this.convertDateFromClient(specialty);
+  find(id: number): Observable<ISpecialty> {
     return this.http
-      .patch<RestSpecialty>(`${this.resourceUrl}/${this.getSpecialtyIdentifier(specialty)}`, copy, { observe: 'response' })
+      .get<RestSpecialty>(`${this.resourceUrl}/${encodeURIComponent(id)}`)
       .pipe(map(res => this.convertResponseFromServer(res)));
   }
 
-  find(id: number): Observable<EntityResponseType> {
-    return this.http
-      .get<RestSpecialty>(`${this.resourceUrl}/${id}`, { observe: 'response' })
-      .pipe(map(res => this.convertResponseFromServer(res)));
-  }
-
-  query(req?: any): Observable<EntityArrayResponseType> {
+  query(req?: any): Observable<HttpResponse<ISpecialty[]>> {
     const options = createRequestOption(req);
     return this.http
       .get<RestSpecialty[]>(this.resourceUrl, { params: options, observe: 'response' })
-      .pipe(map(res => this.convertResponseArrayFromServer(res)));
+      .pipe(map(res => res.clone({ body: this.convertResponseArrayFromServer(res.body!) })));
   }
 
-  delete(id: number): Observable<HttpResponse<{}>> {
-    return this.http.delete(`${this.resourceUrl}/${id}`, { observe: 'response' });
+  delete(id: number): Observable<undefined> {
+    return this.http.delete<undefined>(`${this.resourceUrl}/${encodeURIComponent(id)}`);
   }
 
   getSpecialtyIdentifier(specialty: Pick<ISpecialty, 'id'>): number {
@@ -82,7 +103,7 @@ export class SpecialtyService {
     specialtyCollection: Type[],
     ...specialtiesToCheck: (Type | null | undefined)[]
   ): Type[] {
-    const specialties: Type[] = specialtiesToCheck.filter(isPresent);
+    const specialties: Type[] = specialtiesToCheck.filter(specialtyItem => specialtyItem !== null && specialtyItem !== undefined);
     if (specialties.length > 0) {
       const specialtyCollectionIdentifiers = specialtyCollection.map(specialtyItem => this.getSpecialtyIdentifier(specialtyItem));
       const specialtiesToAdd = specialties.filter(specialtyItem => {
@@ -98,7 +119,7 @@ export class SpecialtyService {
     return specialtyCollection;
   }
 
-  protected convertDateFromClient<T extends ISpecialty | NewSpecialty | PartialUpdateSpecialty>(specialty: T): RestOf<T> {
+  protected convertValueFromClient<T extends ISpecialty | NewSpecialty | PartialUpdateSpecialty>(specialty: T): RestOf<T> {
     return {
       ...specialty,
       createdDate: specialty.createdDate?.toJSON() ?? null,
@@ -106,23 +127,11 @@ export class SpecialtyService {
     };
   }
 
-  protected convertDateFromServer(restSpecialty: RestSpecialty): ISpecialty {
-    return {
-      ...restSpecialty,
-      createdDate: restSpecialty.createdDate ? dayjs(restSpecialty.createdDate) : undefined,
-      lastModifiedDate: restSpecialty.lastModifiedDate ? dayjs(restSpecialty.lastModifiedDate) : undefined,
-    };
+  protected convertResponseFromServer(res: RestSpecialty): ISpecialty {
+    return this.convertValueFromServer(res);
   }
 
-  protected convertResponseFromServer(res: HttpResponse<RestSpecialty>): HttpResponse<ISpecialty> {
-    return res.clone({
-      body: res.body ? this.convertDateFromServer(res.body) : null,
-    });
-  }
-
-  protected convertResponseArrayFromServer(res: HttpResponse<RestSpecialty[]>): HttpResponse<ISpecialty[]> {
-    return res.clone({
-      body: res.body ? res.body.map(item => this.convertDateFromServer(item)) : null,
-    });
+  protected convertResponseArrayFromServer(res: RestSpecialty[]): ISpecialty[] {
+    return res.map(item => this.convertValueFromServer(item));
   }
 }

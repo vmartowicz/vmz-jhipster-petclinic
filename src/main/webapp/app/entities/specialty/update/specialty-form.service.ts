@@ -1,8 +1,9 @@
-import { Injectable } from '@angular/core';
+import { Service } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 
 import dayjs from 'dayjs/esm';
-import { DATE_TIME_FORMAT } from 'app/config/input.constants';
+
+import { DATE_TIME_FORMAT } from 'app/config';
 import { ISpecialty, NewSpecialty } from '../specialty.model';
 
 /**
@@ -28,7 +29,7 @@ type SpecialtyFormRawValue = FormValueOf<ISpecialty>;
 
 type NewSpecialtyFormRawValue = FormValueOf<NewSpecialty>;
 
-type SpecialtyFormDefaults = Pick<NewSpecialty, 'id' | 'createdDate' | 'lastModifiedDate' | 'vets'>;
+type SpecialtyFormDefaults = Pick<NewSpecialty, 'id' | 'createdDate' | 'lastModifiedDate' | 'vetses'>;
 
 type SpecialtyFormGroupContent = {
   id: FormControl<SpecialtyFormRawValue['id'] | NewSpecialty['id']>;
@@ -37,18 +38,19 @@ type SpecialtyFormGroupContent = {
   createdDate: FormControl<SpecialtyFormRawValue['createdDate']>;
   lastModifiedBy: FormControl<SpecialtyFormRawValue['lastModifiedBy']>;
   lastModifiedDate: FormControl<SpecialtyFormRawValue['lastModifiedDate']>;
-  vets: FormControl<SpecialtyFormRawValue['vets']>;
+  vetses: FormControl<SpecialtyFormRawValue['vetses']>;
 };
 
 export type SpecialtyFormGroup = FormGroup<SpecialtyFormGroupContent>;
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class SpecialtyFormService {
-  createSpecialtyFormGroup(specialty: SpecialtyFormGroupInput = { id: null }): SpecialtyFormGroup {
+  createSpecialtyFormGroup(specialty?: SpecialtyFormGroupInput): SpecialtyFormGroup {
     const specialtyRawValue = this.convertSpecialtyToSpecialtyRawValue({
       ...this.getFormDefaults(),
-      ...specialty,
+      ...(specialty ?? { id: null }),
     });
+
     return new FormGroup<SpecialtyFormGroupContent>({
       id: new FormControl(
         { value: specialtyRawValue.id, disabled: true },
@@ -64,22 +66,20 @@ export class SpecialtyFormService {
       createdDate: new FormControl(specialtyRawValue.createdDate),
       lastModifiedBy: new FormControl(specialtyRawValue.lastModifiedBy),
       lastModifiedDate: new FormControl(specialtyRawValue.lastModifiedDate),
-      vets: new FormControl(specialtyRawValue.vets ?? []),
+      vetses: new FormControl(specialtyRawValue.vetses ?? []),
     });
   }
 
   getSpecialty(form: SpecialtyFormGroup): ISpecialty | NewSpecialty {
-    return this.convertSpecialtyRawValueToSpecialty(form.getRawValue() as SpecialtyFormRawValue | NewSpecialtyFormRawValue);
+    return this.convertSpecialtyRawValueToSpecialty(form.getRawValue());
   }
 
   resetForm(form: SpecialtyFormGroup, specialty: SpecialtyFormGroupInput): void {
     const specialtyRawValue = this.convertSpecialtyToSpecialtyRawValue({ ...this.getFormDefaults(), ...specialty });
-    form.reset(
-      {
-        ...specialtyRawValue,
-        id: { value: specialtyRawValue.id, disabled: true },
-      } as any /* cast to workaround https://github.com/angular/angular/issues/46458 */,
-    );
+    form.reset({
+      ...specialtyRawValue,
+      id: { value: specialtyRawValue.id, disabled: true },
+    });
   }
 
   private getFormDefaults(): SpecialtyFormDefaults {
@@ -89,7 +89,7 @@ export class SpecialtyFormService {
       id: null,
       createdDate: currentTime,
       lastModifiedDate: currentTime,
-      vets: [],
+      vetses: [],
     };
   }
 
@@ -108,7 +108,7 @@ export class SpecialtyFormService {
       ...specialty,
       createdDate: specialty.createdDate ? specialty.createdDate.format(DATE_TIME_FORMAT) : undefined,
       lastModifiedDate: specialty.lastModifiedDate ? specialty.lastModifiedDate.format(DATE_TIME_FORMAT) : undefined,
-      vets: specialty.vets ?? [],
+      vetses: specialty.vetses ?? [],
     };
   }
 }

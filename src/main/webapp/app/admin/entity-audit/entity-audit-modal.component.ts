@@ -1,17 +1,20 @@
-import { Component } from '@angular/core';
 import { HttpResponse } from '@angular/common/http';
+import { Component, inject } from '@angular/core';
+
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import { TranslatePipe } from '@ngx-translate/core';
 import { UnifiedDiffComponent } from 'ngx-diff';
 
-import SharedModule from 'app/shared/shared.module';
-import { EntityAuditService } from './entity-audit.service';
+import { TranslateDirective } from 'app/shared/language';
+
 import { EntityAuditEvent } from './entity-audit-event.model';
+import { EntityAuditService } from './entity-audit.service';
 
 @Component({
   standalone: true,
   selector: 'jhi-entity-audit-modal',
   templateUrl: './entity-audit-modal.component.html',
-  imports: [SharedModule, UnifiedDiffComponent],
+  imports: [UnifiedDiffComponent, TranslateDirective, TranslatePipe],
   styles: [
     `
       @import 'ngx-diff/styles/default-theme';
@@ -29,14 +32,12 @@ import { EntityAuditEvent } from './entity-audit-event.model';
   ],
 })
 export default class EntityAuditModalComponent {
+  public activeModal = inject(NgbActiveModal);
   action?: string;
   left?: string;
   right?: string;
 
-  constructor(
-    private service: EntityAuditService,
-    public activeModal: NgbActiveModal,
-  ) {}
+  private service = inject(EntityAuditService);
 
   openChange(audit: EntityAuditEvent): void {
     this.service.getPrevVersion(audit.entityType, audit.entityId, audit.commitVersion!).subscribe((res: HttpResponse<EntityAuditEvent>) => {

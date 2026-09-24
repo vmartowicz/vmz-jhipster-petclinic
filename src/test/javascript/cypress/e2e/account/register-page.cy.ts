@@ -20,7 +20,7 @@ describe('/account/register', () => {
   it('should be accessible through menu', () => {
     cy.visit('');
     cy.clickOnRegisterItem();
-    cy.url().should('match', /\/account\/register$/);
+    cy.location('pathname').should('eq', '/account/register');
   });
 
   it('should load the register page', () => {
@@ -77,8 +77,8 @@ describe('/account/register', () => {
   });
 
   it('register a valid user', () => {
-    const randomEmail = 'Gordon_Mohr@hotmail.com';
-    const randomUsername = 'Therese.Franey1';
+    const randomEmail = 'Lisa_McLaughlin66@yahoo.com';
+    const randomUsername = 'Dawn_Marvin-Leuschke';
     cy.get(usernameRegisterSelector).type(randomUsername);
     cy.get(emailRegisterSelector).type(randomEmail);
     cy.get(firstPasswordRegisterSelector).type('jondoe');

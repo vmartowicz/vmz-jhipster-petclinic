@@ -68,19 +68,21 @@ public class VetQueryService extends QueryService<Vet> {
      * @return the matching {@link Specification} of the entity.
      */
     protected Specification<Vet> createSpecification(VetCriteria criteria) {
-        Specification<Vet> specification = Specification.where(null);
+        Specification<Vet> specification = Specification.unrestricted();
         if (criteria != null) {
             // This has to be called first, because the distinct method returns null
-            specification = Specification.allOf(
-                Boolean.TRUE.equals(criteria.getDistinct()) ? distinct(criteria.getDistinct()) : null,
-                buildRangeSpecification(criteria.getId(), Vet_.id),
-                buildStringSpecification(criteria.getFirstName(), Vet_.firstName),
-                buildStringSpecification(criteria.getLastName(), Vet_.lastName),
-                buildStringSpecification(criteria.getCreatedBy(), Vet_.createdBy),
-                buildRangeSpecification(criteria.getCreatedDate(), Vet_.createdDate),
-                buildStringSpecification(criteria.getLastModifiedBy(), Vet_.lastModifiedBy),
-                buildRangeSpecification(criteria.getLastModifiedDate(), Vet_.lastModifiedDate),
-                buildSpecification(criteria.getSpecialtiesId(), root -> root.join(Vet_.specialties, JoinType.LEFT).get(Specialty_.id))
+            specification = specification.and(
+                Specification.allOf(
+                    Boolean.TRUE.equals(criteria.getDistinct()) ? distinct(criteria.getDistinct()) : Specification.unrestricted(),
+                    buildRangeSpecification(criteria.getId(), Vet_.id),
+                    buildStringSpecification(criteria.getFirstName(), Vet_.firstName),
+                    buildStringSpecification(criteria.getLastName(), Vet_.lastName),
+                    buildStringSpecification(criteria.getCreatedBy(), Vet_.createdBy),
+                    buildRangeSpecification(criteria.getCreatedDate(), Vet_.createdDate),
+                    buildStringSpecification(criteria.getLastModifiedBy(), Vet_.lastModifiedBy),
+                    buildRangeSpecification(criteria.getLastModifiedDate(), Vet_.lastModifiedDate),
+                    buildSpecification(criteria.getSpecialtiesId(), root -> root.join(Vet_.specialtieses, JoinType.LEFT).get(Specialty_.id))
+                )
             );
         }
         return specification;

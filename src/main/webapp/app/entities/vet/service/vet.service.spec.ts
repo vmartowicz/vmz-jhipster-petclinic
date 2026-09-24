@@ -1,6 +1,6 @@
-import { TestBed } from '@angular/core/testing';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
-import { provideHttpClient } from '@angular/common/http';
+import { TestBed } from '@angular/core/testing';
 
 import { IVet } from '../vet.model';
 import { sampleWithFullData, sampleWithNewData, sampleWithPartialData, sampleWithRequiredData } from '../vet.test-samples';
@@ -20,7 +20,7 @@ describe('Vet Service', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [provideHttpClient(), provideHttpClientTesting()],
+      providers: [provideHttpClientTesting()],
     });
     expectedResult = null;
     service = TestBed.inject(VetService);
@@ -32,7 +32,7 @@ describe('Vet Service', () => {
       const returnedFromService = { ...requireRestSample };
       const expected = { ...sampleWithRequiredData };
 
-      service.find(123).subscribe(resp => (expectedResult = resp.body));
+      service.find(123).subscribe(resp => (expectedResult = resp));
 
       const req = httpMock.expectOne({ method: 'GET' });
       req.flush(returnedFromService);
@@ -44,7 +44,7 @@ describe('Vet Service', () => {
       const returnedFromService = { ...requireRestSample };
       const expected = { ...sampleWithRequiredData };
 
-      service.create(vet).subscribe(resp => (expectedResult = resp.body));
+      service.create(vet).subscribe(resp => (expectedResult = resp));
 
       const req = httpMock.expectOne({ method: 'POST' });
       req.flush(returnedFromService);
@@ -56,7 +56,7 @@ describe('Vet Service', () => {
       const returnedFromService = { ...requireRestSample };
       const expected = { ...sampleWithRequiredData };
 
-      service.update(vet).subscribe(resp => (expectedResult = resp.body));
+      service.update(vet).subscribe(resp => (expectedResult = resp));
 
       const req = httpMock.expectOne({ method: 'PUT' });
       req.flush(returnedFromService);
@@ -68,7 +68,7 @@ describe('Vet Service', () => {
       const returnedFromService = { ...requireRestSample };
       const expected = { ...sampleWithRequiredData };
 
-      service.partialUpdate(patchObject).subscribe(resp => (expectedResult = resp.body));
+      service.partialUpdate(patchObject).subscribe(resp => (expectedResult = resp));
 
       const req = httpMock.expectOne({ method: 'PATCH' });
       req.flush(returnedFromService);
@@ -84,26 +84,21 @@ describe('Vet Service', () => {
 
       const req = httpMock.expectOne({ method: 'GET' });
       req.flush([returnedFromService]);
-      httpMock.verify();
       expect(expectedResult).toMatchObject([expected]);
     });
 
     it('should delete a Vet', () => {
-      const expected = true;
+      service.delete(123).subscribe();
 
-      service.delete(123).subscribe(resp => (expectedResult = resp.ok));
-
-      const req = httpMock.expectOne({ method: 'DELETE' });
-      req.flush({ status: 200 });
-      expect(expectedResult).toBe(expected);
+      const requests = httpMock.match({ method: 'DELETE' });
+      expect(requests).toHaveLength(1);
     });
 
     describe('addVetToCollectionIfMissing', () => {
       it('should add a Vet to an empty array', () => {
         const vet: IVet = sampleWithRequiredData;
         expectedResult = service.addVetToCollectionIfMissing([], vet);
-        expect(expectedResult).toHaveLength(1);
-        expect(expectedResult).toContain(vet);
+        expect(expectedResult).toEqual([vet]);
       });
 
       it('should not add a Vet to an array that contains it', () => {
@@ -137,16 +132,13 @@ describe('Vet Service', () => {
         const vet: IVet = sampleWithRequiredData;
         const vet2: IVet = sampleWithPartialData;
         expectedResult = service.addVetToCollectionIfMissing([], vet, vet2);
-        expect(expectedResult).toHaveLength(2);
-        expect(expectedResult).toContain(vet);
-        expect(expectedResult).toContain(vet2);
+        expect(expectedResult).toEqual([vet, vet2]);
       });
 
       it('should accept null and undefined values', () => {
         const vet: IVet = sampleWithRequiredData;
         expectedResult = service.addVetToCollectionIfMissing([], null, vet, undefined);
-        expect(expectedResult).toHaveLength(1);
-        expect(expectedResult).toContain(vet);
+        expect(expectedResult).toEqual([vet]);
       });
 
       it('should return initial array if no Vet is added', () => {
@@ -188,7 +180,7 @@ describe('Vet Service', () => {
         expect(compareResult2).toEqual(false);
       });
 
-      it('should return false if primaryKey matches', () => {
+      it('should return true if primaryKey matches', () => {
         const entity1 = { id: 31928 };
         const entity2 = { id: 31928 };
 

@@ -8,12 +8,18 @@ import {
 } from '../../support/commands';
 
 describe('forgot your password', () => {
-  const username = Cypress.env('E2E_USERNAME') ?? 'user';
+  let username: string;
+
+  before(() => {
+    cy.credentials().then(credentials => {
+      ({ username } = credentials);
+    });
+  });
 
   beforeEach(() => {
     cy.visit('');
     cy.clickOnLoginItem();
-    cy.get(usernameLoginSelector).type(username);
+    cy.get(usernameLoginSelector).should('be.visible').type(username);
     cy.get(forgetYourPasswordSelector).click();
   });
 
@@ -29,7 +35,7 @@ describe('forgot your password', () => {
 
   it('should be able to init reset password', () => {
     cy.get(emailResetPasswordSelector).type('user@gmail.com');
-    cy.get(submitInitResetPasswordSelector).click({ force: true });
+    cy.get(submitInitResetPasswordSelector).click();
     cy.wait('@initResetPassword').then(({ response }) => expect(response?.statusCode).to.equal(200));
   });
 });

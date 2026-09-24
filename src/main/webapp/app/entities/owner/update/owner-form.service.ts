@@ -1,8 +1,9 @@
-import { Injectable } from '@angular/core';
+import { Service } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 
 import dayjs from 'dayjs/esm';
-import { DATE_TIME_FORMAT } from 'app/config/input.constants';
+
+import { DATE_TIME_FORMAT } from 'app/config';
 import { IOwner, NewOwner } from '../owner.model';
 
 /**
@@ -45,13 +46,14 @@ type OwnerFormGroupContent = {
 
 export type OwnerFormGroup = FormGroup<OwnerFormGroupContent>;
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class OwnerFormService {
-  createOwnerFormGroup(owner: OwnerFormGroupInput = { id: null }): OwnerFormGroup {
+  createOwnerFormGroup(owner?: OwnerFormGroupInput): OwnerFormGroup {
     const ownerRawValue = this.convertOwnerToOwnerRawValue({
       ...this.getFormDefaults(),
-      ...owner,
+      ...(owner ?? { id: null }),
     });
+
     return new FormGroup<OwnerFormGroupContent>({
       id: new FormControl(
         { value: ownerRawValue.id, disabled: true },
@@ -83,17 +85,15 @@ export class OwnerFormService {
   }
 
   getOwner(form: OwnerFormGroup): IOwner | NewOwner {
-    return this.convertOwnerRawValueToOwner(form.getRawValue() as OwnerFormRawValue | NewOwnerFormRawValue);
+    return this.convertOwnerRawValueToOwner(form.getRawValue());
   }
 
   resetForm(form: OwnerFormGroup, owner: OwnerFormGroupInput): void {
     const ownerRawValue = this.convertOwnerToOwnerRawValue({ ...this.getFormDefaults(), ...owner });
-    form.reset(
-      {
-        ...ownerRawValue,
-        id: { value: ownerRawValue.id, disabled: true },
-      } as any /* cast to workaround https://github.com/angular/angular/issues/46458 */,
-    );
+    form.reset({
+      ...ownerRawValue,
+      id: { value: ownerRawValue.id, disabled: true },
+    });
   }
 
   private getFormDefaults(): OwnerFormDefaults {

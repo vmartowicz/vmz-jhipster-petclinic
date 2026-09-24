@@ -10,7 +10,7 @@
 # ===================================================================
 # Standard Spring Boot properties.
 # Full reference is available at:
-# http://docs.spring.io/spring-boot/docs/current/reference/html/common-application-properties.html
+# https://docs.spring.io/spring-boot/appendix/application-properties/index.html
 # ===================================================================
 
 logging:
@@ -42,7 +42,7 @@ spring:
       enabled: true
       additional-exclude: static/**,.h2.server.properties
     livereload:
-      enabled: false # we use Webpack dev server + BrowserSync for livereload
+      enabled: false # we use bundler for livereload
   docker:
     compose:
       enabled: true
@@ -62,8 +62,6 @@ spring:
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
     url: jdbc:h2:file:./target/h2db/db/jhpetclinic;DB_CLOSE_DELAY=-1
-    username: jhpetclinic
-    password:
     hikari:
       poolName: Hikari
       auto-commit: false
@@ -77,8 +75,6 @@ spring:
   mail:
     host: localhost
     port: 25
-    username:
-    password:
   messages:
     cache-duration: PT1S # 1 second, see the ISO 8601 standard
   thymeleaf:
@@ -100,12 +96,10 @@ jhipster:
     ehcache: # Ehcache configuration
       time-to-live-seconds: 3600 # By default objects stay 1 hour in the cache
       max-entries: 100 # Number of objects in each cache entry
-  registry:
-    password: admin
   # CORS is only enabled by default with the "dev" profile
   cors:
     # Allow Ionic for JHipster by default (* no longer allowed in Spring Boot 2.4+)
-    allowed-origins: 'http://localhost:8100,https://localhost:8100,http://localhost:9000,https://localhost:9000,http://localhost:4200,https://localhost:4200'
+    allowed-origins: 'http://localhost:8100,https://localhost:8100,http://localhost:4200,https://localhost:4200'
     # Enable CORS when running in GitHub Codespaces
     allowed-origin-patterns: 'https://*.githubpreview.dev'
     allowed-methods: '*'
@@ -116,8 +110,6 @@ jhipster:
   security:
     authentication:
       jwt:
-        # This token must be encoded using Base64 and be at least 256 bits long (you can type `openssl rand -base64 64` on your command line to generate a 512 bits one)
-        base64-secret: ZTE1Y2VjNGQ2OTAyOWFlMDNkNzg3YmQyMmI3YTI1ZThhMGVhMTM1ZjkzN2E5NDRkODU2ZGZkOTI1ZWVhZTk2Y2M2NjY1Y2M0NjZlMGU3ZmEyY2M0N2M1OGJiOGUzODE2M2YzNzgyOGUwYjNjZmE4NWNhNjAyMWRkY2E3MjIyMDQ=
         # Token is valid 24 hours
         token-validity-in-seconds: 86400
         token-validity-in-seconds-for-remember-me: 2592000

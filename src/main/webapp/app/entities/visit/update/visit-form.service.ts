@@ -1,8 +1,9 @@
-import { Injectable } from '@angular/core';
+import { Service } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 
 import dayjs from 'dayjs/esm';
-import { DATE_TIME_FORMAT } from 'app/config/input.constants';
+
+import { DATE_TIME_FORMAT } from 'app/config';
 import { IVisit, NewVisit } from '../visit.model';
 
 /**
@@ -43,13 +44,14 @@ type VisitFormGroupContent = {
 
 export type VisitFormGroup = FormGroup<VisitFormGroupContent>;
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class VisitFormService {
-  createVisitFormGroup(visit: VisitFormGroupInput = { id: null }): VisitFormGroup {
+  createVisitFormGroup(visit?: VisitFormGroupInput): VisitFormGroup {
     const visitRawValue = this.convertVisitToVisitRawValue({
       ...this.getFormDefaults(),
-      ...visit,
+      ...(visit ?? { id: null }),
     });
+
     return new FormGroup<VisitFormGroupContent>({
       id: new FormControl(
         { value: visitRawValue.id, disabled: true },
@@ -71,17 +73,15 @@ export class VisitFormService {
   }
 
   getVisit(form: VisitFormGroup): IVisit | NewVisit {
-    return this.convertVisitRawValueToVisit(form.getRawValue() as VisitFormRawValue | NewVisitFormRawValue);
+    return this.convertVisitRawValueToVisit(form.getRawValue());
   }
 
   resetForm(form: VisitFormGroup, visit: VisitFormGroupInput): void {
     const visitRawValue = this.convertVisitToVisitRawValue({ ...this.getFormDefaults(), ...visit });
-    form.reset(
-      {
-        ...visitRawValue,
-        id: { value: visitRawValue.id, disabled: true },
-      } as any /* cast to workaround https://github.com/angular/angular/issues/46458 */,
-    );
+    form.reset({
+      ...visitRawValue,
+      id: { value: visitRawValue.id, disabled: true },
+    });
   }
 
   private getFormDefaults(): VisitFormDefaults {

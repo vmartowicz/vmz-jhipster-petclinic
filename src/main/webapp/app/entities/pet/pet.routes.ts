@@ -1,41 +1,42 @@
 import { Routes } from '@angular/router';
 
-import { UserRouteAccessService } from 'app/core/auth/user-route-access.service';
-import { ASC } from 'app/config/navigation.constants';
+import { ASC } from 'app/config';
+import { userRouteAccessService } from 'app/core/auth';
+
 import PetResolve from './route/pet-routing-resolve.service';
 
 const petRoute: Routes = [
   {
     path: '',
-    loadComponent: () => import('./list/pet.component').then(m => m.PetComponent),
+    loadComponent: () => import('./list/pet').then(m => m.Pet),
     data: {
       defaultSort: `id,${ASC}`,
     },
-    canActivate: [UserRouteAccessService],
+    canActivate: [userRouteAccessService],
   },
   {
     path: ':id/view',
-    loadComponent: () => import('./detail/pet-detail.component').then(m => m.PetDetailComponent),
+    loadComponent: () => import('./detail/pet-detail').then(m => m.PetDetail),
     resolve: {
       pet: PetResolve,
     },
-    canActivate: [UserRouteAccessService],
+    canActivate: [userRouteAccessService],
   },
   {
     path: 'new',
-    loadComponent: () => import('./update/pet-update.component').then(m => m.PetUpdateComponent),
+    loadComponent: () => import('./update/pet-update').then(m => m.PetUpdate),
     resolve: {
       pet: PetResolve,
     },
-    canActivate: [UserRouteAccessService],
+    canActivate: [userRouteAccessService],
   },
   {
     path: ':id/edit',
-    loadComponent: () => import('./update/pet-update.component').then(m => m.PetUpdateComponent),
+    loadComponent: () => import('./update/pet-update').then(m => m.PetUpdate),
     resolve: {
       pet: PetResolve,
     },
-    canActivate: [UserRouteAccessService],
+    canActivate: [userRouteAccessService],
   },
 ];
 

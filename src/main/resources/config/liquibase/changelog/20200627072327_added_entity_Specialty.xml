@@ -47,7 +47,8 @@
     -->
     <changeSet id="20200627072327-1-data" author="jhipster" context="faker">
         <loadData
-                  file="config/liquibase/fake-data/specialties.csv"
+                  file="../fake-data/specialties.csv"
+                  relativeToChangelogFile="true"
                   separator=";"
                   tableName="specialties"
                   usePreparedStatements="true">

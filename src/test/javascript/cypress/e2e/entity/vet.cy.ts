@@ -12,12 +12,17 @@ import {
 
 describe('Vet e2e test', () => {
   const vetPageUrl = '/vet';
-  const vetPageUrlPattern = new RegExp('/vet(\\?.*)?$');
-  const username = Cypress.env('E2E_USERNAME') ?? 'user';
-  const password = Cypress.env('E2E_PASSWORD') ?? 'user';
-  const vetSample = { firstName: 'Lowell', lastName: 'Hegmann' };
+  let username: string;
+  let password: string;
+  const vetSample = { firstName: 'Reyes', lastName: 'Goodwin' };
 
   let vet;
+
+  before(() => {
+    cy.credentials().then(credentials => {
+      ({ username, password } = credentials);
+    });
+  });
 
   beforeEach(() => {
     cy.login(username, password);
@@ -51,10 +56,15 @@ describe('Vet e2e test', () => {
       }
     });
     cy.getEntityHeading('Vet').should('exist');
-    cy.url().should('match', vetPageUrlPattern);
+    cy.location('pathname').should('eq', vetPageUrl);
   });
 
   describe('Vet page', () => {
+    it('should have translated page title', () => {
+      cy.visit(vetPageUrl);
+      cy.getEntityHeading('Vet').should('not.contain', 'jhpetclinicApp.vet.home.title');
+    });
+
     describe('create button click', () => {
       beforeEach(() => {
         cy.visit(vetPageUrl);
@@ -63,14 +73,14 @@ describe('Vet e2e test', () => {
 
       it('should load create Vet page', () => {
         cy.get(entityCreateButtonSelector).click();
-        cy.url().should('match', new RegExp('/vet/new$'));
+        cy.location('pathname').should('eq', `${vetPageUrl}/new`);
         cy.getEntityCreateUpdateHeading('Vet');
         cy.get(entityCreateSaveButtonSelector).should('exist');
         cy.get(entityCreateCancelButtonSelector).click();
         cy.wait('@entitiesRequest').then(({ response }) => {
           expect(response?.statusCode).to.equal(200);
         });
-        cy.url().should('match', vetPageUrlPattern);
+        cy.location('pathname').should('eq', vetPageUrl);
       });
     });
 
@@ -111,7 +121,7 @@ describe('Vet e2e test', () => {
         cy.wait('@entitiesRequest').then(({ response }) => {
           expect(response?.statusCode).to.equal(200);
         });
-        cy.url().should('match', vetPageUrlPattern);
+        cy.location('pathname').should('eq', vetPageUrl);
       });
 
       it('edit button click should load edit Vet page and go back', () => {
@@ -122,7 +132,7 @@ describe('Vet e2e test', () => {
         cy.wait('@entitiesRequest').then(({ response }) => {
           expect(response?.statusCode).to.equal(200);
         });
-        cy.url().should('match', vetPageUrlPattern);
+        cy.location('pathname').should('eq', vetPageUrl);
       });
 
       it('edit button click should load edit Vet page and save', () => {
@@ -132,7 +142,7 @@ describe('Vet e2e test', () => {
         cy.wait('@entitiesRequest').then(({ response }) => {
           expect(response?.statusCode).to.equal(200);
         });
-        cy.url().should('match', vetPageUrlPattern);
+        cy.location('pathname').should('eq', vetPageUrl);
       });
 
       it('last delete button click should delete instance of Vet', () => {
@@ -145,7 +155,7 @@ describe('Vet e2e test', () => {
         cy.wait('@entitiesRequest').then(({ response }) => {
           expect(response?.statusCode).to.equal(200);
         });
-        cy.url().should('match', vetPageUrlPattern);
+        cy.location('pathname').should('eq', vetPageUrl);
 
         vet = undefined;
       });
@@ -154,17 +164,17 @@ describe('Vet e2e test', () => {
 
   describe('new Vet page', () => {
     beforeEach(() => {
-      cy.visit(`${vetPageUrl}`);
+      cy.visit(vetPageUrl);
       cy.get(entityCreateButtonSelector).click();
       cy.getEntityCreateUpdateHeading('Vet');
     });
 
     it('should create an instance of Vet', () => {
-      cy.get(`[data-cy="firstName"]`).type('Brown');
-      cy.get(`[data-cy="firstName"]`).should('have.value', 'Brown');
+      cy.get(`[data-cy="firstName"]`).type('Gustave');
+      cy.get(`[data-cy="firstName"]`).should('have.value', 'Gustave');
 
-      cy.get(`[data-cy="lastName"]`).type('Abshire');
-      cy.get(`[data-cy="lastName"]`).should('have.value', 'Abshire');
+      cy.get(`[data-cy="lastName"]`).type('Luettgen');
+      cy.get(`[data-cy="lastName"]`).should('have.value', 'Luettgen');
 
       cy.get(entityCreateSaveButtonSelector).click();
 
@@ -175,7 +185,7 @@ describe('Vet e2e test', () => {
       cy.wait('@entitiesRequest').then(({ response }) => {
         expect(response?.statusCode).to.equal(200);
       });
-      cy.url().should('match', vetPageUrlPattern);
+      cy.location('pathname').should('eq', vetPageUrl);
     });
   });
 });

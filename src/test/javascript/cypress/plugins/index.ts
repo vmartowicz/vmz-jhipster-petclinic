@@ -10,16 +10,21 @@
 
 // This function is called when a project is opened or re-opened (e.g. due to
 // the project's config changing)
-import { existsSync, mkdirSync, writeFileSync } from 'fs';
-import { lighthouse, pa11y, prepareAudit } from 'cypress-audit';
+import installLogsPrinter from 'cypress-terminal-report/src/installLogsPrinter';
 
 export default (on: Cypress.PluginEvents, config: Cypress.PluginConfigOptions) => {
+  installLogsPrinter(on);
   on('before:browser:launch', (browser, launchOptions) => {
-    prepareAudit(launchOptions);
     if (browser.name === 'chrome' && browser.isHeadless) {
-      launchOptions.args.push('--disable-gpu');
-      return launchOptions;
+      launchOptions.args.push('--disable-gpu', '--no-sandbox', '--disable-dev-shm-usage');
     }
+    if (browser.family === 'chromium' && browser.name !== 'electron') {
+      launchOptions.args.push(
+        // Forces Chrome/Edge to open a large window so the viewport doesn't scale down
+        '--window-size=1920,1080',
+      );
+    }
+    return launchOptions;
   });
 
   // Allows logging with cy.task('log', 'message') or cy.task('table', object)
@@ -34,15 +39,5 @@ export default (on: Cypress.PluginEvents, config: Cypress.PluginConfigOptions) =
     },
   });
 
-  on('task', {
-    lighthouse: lighthouse(async lighthouseReport => {
-      const { default: ReportGenerator } = await import('lighthouse/report/generator/report-generator');
-      if (!existsSync('target/cypress/')) {
-        mkdirSync('target/cypress/', { recursive: true });
-      }
-      writeFileSync('target/cypress/lhreport.html', ReportGenerator.generateReport(lighthouseReport.lhr, 'html'));
-    }),
-    pa11y: pa11y(),
-  });
   return config;
 };

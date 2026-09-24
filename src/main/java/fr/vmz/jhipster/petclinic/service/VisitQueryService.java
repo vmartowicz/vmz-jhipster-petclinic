@@ -68,19 +68,27 @@ public class VisitQueryService extends QueryService<Visit> {
      * @return the matching {@link Specification} of the entity.
      */
     protected Specification<Visit> createSpecification(VisitCriteria criteria) {
-        Specification<Visit> specification = Specification.where(null);
+        Specification<Visit> specification = Specification.unrestricted();
+        specification = specification.and((root, query, builder) -> {
+            if (Long.class != query.getResultType()) {
+                root.fetch(Visit_.pet, JoinType.LEFT);
+            }
+            return null;
+        });
         if (criteria != null) {
             // This has to be called first, because the distinct method returns null
-            specification = Specification.allOf(
-                Boolean.TRUE.equals(criteria.getDistinct()) ? distinct(criteria.getDistinct()) : null,
-                buildRangeSpecification(criteria.getId(), Visit_.id),
-                buildRangeSpecification(criteria.getVisitDate(), Visit_.visitDate),
-                buildStringSpecification(criteria.getDescription(), Visit_.description),
-                buildStringSpecification(criteria.getCreatedBy(), Visit_.createdBy),
-                buildRangeSpecification(criteria.getCreatedDate(), Visit_.createdDate),
-                buildStringSpecification(criteria.getLastModifiedBy(), Visit_.lastModifiedBy),
-                buildRangeSpecification(criteria.getLastModifiedDate(), Visit_.lastModifiedDate),
-                buildSpecification(criteria.getPetId(), root -> root.join(Visit_.pet, JoinType.LEFT).get(Pet_.id))
+            specification = specification.and(
+                Specification.allOf(
+                    Boolean.TRUE.equals(criteria.getDistinct()) ? distinct(criteria.getDistinct()) : Specification.unrestricted(),
+                    buildRangeSpecification(criteria.getId(), Visit_.id),
+                    buildRangeSpecification(criteria.getVisitDate(), Visit_.visitDate),
+                    buildStringSpecification(criteria.getDescription(), Visit_.description),
+                    buildStringSpecification(criteria.getCreatedBy(), Visit_.createdBy),
+                    buildRangeSpecification(criteria.getCreatedDate(), Visit_.createdDate),
+                    buildStringSpecification(criteria.getLastModifiedBy(), Visit_.lastModifiedBy),
+                    buildRangeSpecification(criteria.getLastModifiedDate(), Visit_.lastModifiedDate),
+                    buildSpecification(criteria.getPetId(), root -> root.join(Visit_.pet, JoinType.LEFT).get(Pet_.id))
+                )
             );
         }
         return specification;

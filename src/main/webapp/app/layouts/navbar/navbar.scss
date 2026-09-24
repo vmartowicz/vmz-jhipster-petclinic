@@ -1,6 +1,6 @@
-@import '~bootstrap/scss/functions';
-@import '~bootswatch/dist/flatly/variables';
-@import '~bootstrap/scss/variables';
+@import 'bootstrap/scss/functions';
+@import 'bootswatch/dist/flatly/variables';
+@import 'bootstrap/scss/variables';
 
 /* ==========================================================================
 Navbar
@@ -24,12 +24,6 @@ Navbar
     background-color: $dark;
   }
 
-  ul.navbar-nav {
-    .nav-item {
-      margin-left: 0.5em;
-    }
-  }
-
   a.nav-link {
     font-weight: 400;
   }
@@ -49,6 +43,6 @@ Logo styles
   width: 45px;
   display: inline-block;
   vertical-align: middle;
-  background: url('../../../content/images/logo-jhipster.png') no-repeat center center;
+  background: url('/content/images/logo-jhipster.png') no-repeat center center;
   background-size: contain;
 }

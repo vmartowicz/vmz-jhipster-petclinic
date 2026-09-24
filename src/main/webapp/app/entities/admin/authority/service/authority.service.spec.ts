@@ -1,6 +1,6 @@
-import { TestBed } from '@angular/core/testing';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
-import { provideHttpClient } from '@angular/common/http';
+import { TestBed } from '@angular/core/testing';
 
 import { IAuthority } from '../authority.model';
 import { sampleWithFullData, sampleWithNewData, sampleWithPartialData, sampleWithRequiredData } from '../authority.test-samples';
@@ -18,7 +18,7 @@ describe('Authority Service', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [provideHttpClient(), provideHttpClientTesting()],
+      providers: [provideHttpClientTesting()],
     });
     expectedResult = null;
     service = TestBed.inject(AuthorityService);
@@ -30,7 +30,7 @@ describe('Authority Service', () => {
       const returnedFromService = { ...requireRestSample };
       const expected = { ...sampleWithRequiredData };
 
-      service.find('ABC').subscribe(resp => (expectedResult = resp.body));
+      service.find('ABC').subscribe(resp => (expectedResult = resp));
 
       const req = httpMock.expectOne({ method: 'GET' });
       req.flush(returnedFromService);
@@ -42,7 +42,7 @@ describe('Authority Service', () => {
       const returnedFromService = { ...requireRestSample };
       const expected = { ...sampleWithRequiredData };
 
-      service.create(authority).subscribe(resp => (expectedResult = resp.body));
+      service.create(authority).subscribe(resp => (expectedResult = resp));
 
       const req = httpMock.expectOne({ method: 'POST' });
       req.flush(returnedFromService);
@@ -58,26 +58,21 @@ describe('Authority Service', () => {
 
       const req = httpMock.expectOne({ method: 'GET' });
       req.flush([returnedFromService]);
-      httpMock.verify();
       expect(expectedResult).toMatchObject([expected]);
     });
 
     it('should delete a Authority', () => {
-      const expected = true;
+      service.delete('ABC').subscribe();
 
-      service.delete('ABC').subscribe(resp => (expectedResult = resp.ok));
-
-      const req = httpMock.expectOne({ method: 'DELETE' });
-      req.flush({ status: 200 });
-      expect(expectedResult).toBe(expected);
+      const requests = httpMock.match({ method: 'DELETE' });
+      expect(requests).toHaveLength(1);
     });
 
     describe('addAuthorityToCollectionIfMissing', () => {
       it('should add a Authority to an empty array', () => {
         const authority: IAuthority = sampleWithRequiredData;
         expectedResult = service.addAuthorityToCollectionIfMissing([], authority);
-        expect(expectedResult).toHaveLength(1);
-        expect(expectedResult).toContain(authority);
+        expect(expectedResult).toEqual([authority]);
       });
 
       it('should not add a Authority to an array that contains it', () => {
@@ -111,16 +106,13 @@ describe('Authority Service', () => {
         const authority: IAuthority = sampleWithRequiredData;
         const authority2: IAuthority = sampleWithPartialData;
         expectedResult = service.addAuthorityToCollectionIfMissing([], authority, authority2);
-        expect(expectedResult).toHaveLength(2);
-        expect(expectedResult).toContain(authority);
-        expect(expectedResult).toContain(authority2);
+        expect(expectedResult).toEqual([authority, authority2]);
       });
 
       it('should accept null and undefined values', () => {
         const authority: IAuthority = sampleWithRequiredData;
         expectedResult = service.addAuthorityToCollectionIfMissing([], null, authority, undefined);
-        expect(expectedResult).toHaveLength(1);
-        expect(expectedResult).toContain(authority);
+        expect(expectedResult).toEqual([authority]);
       });
 
       it('should return initial array if no Authority is added', () => {
@@ -162,7 +154,7 @@ describe('Authority Service', () => {
         expect(compareResult2).toEqual(false);
       });
 
-      it('should return false if primaryKey matches', () => {
+      it('should return true if primaryKey matches', () => {
         const entity1 = { name: '572a7ecc-bf76-43f4-8026-46b42fba586d' };
         const entity2 = { name: '572a7ecc-bf76-43f4-8026-46b42fba586d' };
 

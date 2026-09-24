@@ -1,8 +1,9 @@
-import { Injectable } from '@angular/core';
+import { Service } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 
 import dayjs from 'dayjs/esm';
-import { DATE_TIME_FORMAT } from 'app/config/input.constants';
+
+import { DATE_TIME_FORMAT } from 'app/config';
 import { IVet, NewVet } from '../vet.model';
 
 /**
@@ -28,7 +29,7 @@ type VetFormRawValue = FormValueOf<IVet>;
 
 type NewVetFormRawValue = FormValueOf<NewVet>;
 
-type VetFormDefaults = Pick<NewVet, 'id' | 'createdDate' | 'lastModifiedDate' | 'specialties'>;
+type VetFormDefaults = Pick<NewVet, 'id' | 'createdDate' | 'lastModifiedDate' | 'specialtieses'>;
 
 type VetFormGroupContent = {
   id: FormControl<VetFormRawValue['id'] | NewVet['id']>;
@@ -38,18 +39,19 @@ type VetFormGroupContent = {
   createdDate: FormControl<VetFormRawValue['createdDate']>;
   lastModifiedBy: FormControl<VetFormRawValue['lastModifiedBy']>;
   lastModifiedDate: FormControl<VetFormRawValue['lastModifiedDate']>;
-  specialties: FormControl<VetFormRawValue['specialties']>;
+  specialtieses: FormControl<VetFormRawValue['specialtieses']>;
 };
 
 export type VetFormGroup = FormGroup<VetFormGroupContent>;
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class VetFormService {
-  createVetFormGroup(vet: VetFormGroupInput = { id: null }): VetFormGroup {
+  createVetFormGroup(vet?: VetFormGroupInput): VetFormGroup {
     const vetRawValue = this.convertVetToVetRawValue({
       ...this.getFormDefaults(),
-      ...vet,
+      ...(vet ?? { id: null }),
     });
+
     return new FormGroup<VetFormGroupContent>({
       id: new FormControl(
         { value: vetRawValue.id, disabled: true },
@@ -68,22 +70,20 @@ export class VetFormService {
       createdDate: new FormControl(vetRawValue.createdDate),
       lastModifiedBy: new FormControl(vetRawValue.lastModifiedBy),
       lastModifiedDate: new FormControl(vetRawValue.lastModifiedDate),
-      specialties: new FormControl(vetRawValue.specialties ?? []),
+      specialtieses: new FormControl(vetRawValue.specialtieses ?? []),
     });
   }
 
   getVet(form: VetFormGroup): IVet | NewVet {
-    return this.convertVetRawValueToVet(form.getRawValue() as VetFormRawValue | NewVetFormRawValue);
+    return this.convertVetRawValueToVet(form.getRawValue());
   }
 
   resetForm(form: VetFormGroup, vet: VetFormGroupInput): void {
     const vetRawValue = this.convertVetToVetRawValue({ ...this.getFormDefaults(), ...vet });
-    form.reset(
-      {
-        ...vetRawValue,
-        id: { value: vetRawValue.id, disabled: true },
-      } as any /* cast to workaround https://github.com/angular/angular/issues/46458 */,
-    );
+    form.reset({
+      ...vetRawValue,
+      id: { value: vetRawValue.id, disabled: true },
+    });
   }
 
   private getFormDefaults(): VetFormDefaults {
@@ -93,7 +93,7 @@ export class VetFormService {
       id: null,
       createdDate: currentTime,
       lastModifiedDate: currentTime,
-      specialties: [],
+      specialtieses: [],
     };
   }
 
@@ -112,7 +112,7 @@ export class VetFormService {
       ...vet,
       createdDate: vet.createdDate ? vet.createdDate.format(DATE_TIME_FORMAT) : undefined,
       lastModifiedDate: vet.lastModifiedDate ? vet.lastModifiedDate.format(DATE_TIME_FORMAT) : undefined,
-      specialties: vet.specialties ?? [],
+      specialtieses: vet.specialtieses ?? [],
     };
   }
 }

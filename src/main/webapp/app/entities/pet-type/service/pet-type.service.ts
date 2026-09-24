@@ -1,12 +1,11 @@
-import { Injectable, inject } from '@angular/core';
-import { HttpClient, HttpResponse } from '@angular/common/http';
-import { Observable, map } from 'rxjs';
+import { HttpClient, HttpResponse, httpResource } from '@angular/common/http';
+import { Service, computed, inject, signal } from '@angular/core';
 
 import dayjs from 'dayjs/esm';
+import { Observable, map } from 'rxjs';
 
-import { isPresent } from 'app/core/util/operators';
-import { ApplicationConfigService } from 'app/core/config/application-config.service';
-import { createRequestOption } from 'app/core/request/request-util';
+import { serverApiUrl } from 'app/config';
+import { createRequestOption } from 'app/core/request';
 import { IPetType, NewPetType } from '../pet-type.model';
 
 export type PartialUpdatePetType = Partial<IPetType> & Pick<IPetType, 'id'>;
@@ -22,52 +21,74 @@ export type NewRestPetType = RestOf<NewPetType>;
 
 export type PartialUpdateRestPetType = RestOf<PartialUpdatePetType>;
 
-export type EntityResponseType = HttpResponse<IPetType>;
-export type EntityArrayResponseType = HttpResponse<IPetType[]>;
+@Service()
+export class PetTypesService {
+  readonly petTypesParams = signal<Record<string, string | number | boolean | readonly (string | number | boolean)[]> | undefined>(
+    undefined,
+  );
+  readonly petTypesResource = httpResource<RestPetType[]>(() => {
+    const params = this.petTypesParams();
+    if (!params) {
+      return undefined;
+    }
+    return { url: this.resourceUrl, params };
+  });
+  /**
+   * This signal holds the list of petType that have been fetched. It is updated when the petTypesResource emits a new value.
+   * In case of error while fetching the petTypes, the signal is set to an empty array.
+   */
+  readonly petTypes = computed(() =>
+    (this.petTypesResource.hasValue() ? this.petTypesResource.value() : []).map(item => this.convertValueFromServer(item)),
+  );
+  protected readonly resourceUrl = `${serverApiUrl}api/pet-types`;
 
-@Injectable({ providedIn: 'root' })
-export class PetTypeService {
+  protected convertValueFromServer(restPetType: RestPetType): IPetType {
+    return {
+      ...restPetType,
+      createdDate: restPetType.createdDate ? dayjs(restPetType.createdDate) : undefined,
+      lastModifiedDate: restPetType.lastModifiedDate ? dayjs(restPetType.lastModifiedDate) : undefined,
+    };
+  }
+}
+
+@Service()
+export class PetTypeService extends PetTypesService {
   protected readonly http = inject(HttpClient);
-  protected readonly applicationConfigService = inject(ApplicationConfigService);
 
-  protected resourceUrl = this.applicationConfigService.getEndpointFor('api/pet-types');
+  create(petType: NewPetType): Observable<IPetType> {
+    const copy = this.convertValueFromClient(petType);
+    return this.http.post<RestPetType>(this.resourceUrl, copy).pipe(map(res => this.convertResponseFromServer(res)));
+  }
 
-  create(petType: NewPetType): Observable<EntityResponseType> {
-    const copy = this.convertDateFromClient(petType);
+  update(petType: IPetType): Observable<IPetType> {
+    const copy = this.convertValueFromClient(petType);
     return this.http
-      .post<RestPetType>(this.resourceUrl, copy, { observe: 'response' })
+      .put<RestPetType>(`${this.resourceUrl}/${encodeURIComponent(this.getPetTypeIdentifier(petType))}`, copy)
       .pipe(map(res => this.convertResponseFromServer(res)));
   }
 
-  update(petType: IPetType): Observable<EntityResponseType> {
-    const copy = this.convertDateFromClient(petType);
+  partialUpdate(petType: PartialUpdatePetType): Observable<IPetType> {
+    const copy = this.convertValueFromClient(petType);
     return this.http
-      .put<RestPetType>(`${this.resourceUrl}/${this.getPetTypeIdentifier(petType)}`, copy, { observe: 'response' })
+      .patch<RestPetType>(`${this.resourceUrl}/${encodeURIComponent(this.getPetTypeIdentifier(petType))}`, copy)
       .pipe(map(res => this.convertResponseFromServer(res)));
   }
 
-  partialUpdate(petType: PartialUpdatePetType): Observable<EntityResponseType> {
-    const copy = this.convertDateFromClient(petType);
+  find(id: number): Observable<IPetType> {
     return this.http
-      .patch<RestPetType>(`${this.resourceUrl}/${this.getPetTypeIdentifier(petType)}`, copy, { observe: 'response' })
+      .get<RestPetType>(`${this.resourceUrl}/${encodeURIComponent(id)}`)
       .pipe(map(res => this.convertResponseFromServer(res)));
   }
 
-  find(id: number): Observable<EntityResponseType> {
-    return this.http
-      .get<RestPetType>(`${this.resourceUrl}/${id}`, { observe: 'response' })
-      .pipe(map(res => this.convertResponseFromServer(res)));
-  }
-
-  query(req?: any): Observable<EntityArrayResponseType> {
+  query(req?: any): Observable<HttpResponse<IPetType[]>> {
     const options = createRequestOption(req);
     return this.http
       .get<RestPetType[]>(this.resourceUrl, { params: options, observe: 'response' })
-      .pipe(map(res => this.convertResponseArrayFromServer(res)));
+      .pipe(map(res => res.clone({ body: this.convertResponseArrayFromServer(res.body!) })));
   }
 
-  delete(id: number): Observable<HttpResponse<{}>> {
-    return this.http.delete(`${this.resourceUrl}/${id}`, { observe: 'response' });
+  delete(id: number): Observable<undefined> {
+    return this.http.delete<undefined>(`${this.resourceUrl}/${encodeURIComponent(id)}`);
   }
 
   getPetTypeIdentifier(petType: Pick<IPetType, 'id'>): number {
@@ -82,7 +103,7 @@ export class PetTypeService {
     petTypeCollection: Type[],
     ...petTypesToCheck: (Type | null | undefined)[]
   ): Type[] {
-    const petTypes: Type[] = petTypesToCheck.filter(isPresent);
+    const petTypes: Type[] = petTypesToCheck.filter(petTypeItem => petTypeItem !== null && petTypeItem !== undefined);
     if (petTypes.length > 0) {
       const petTypeCollectionIdentifiers = petTypeCollection.map(petTypeItem => this.getPetTypeIdentifier(petTypeItem));
       const petTypesToAdd = petTypes.filter(petTypeItem => {
@@ -98,7 +119,7 @@ export class PetTypeService {
     return petTypeCollection;
   }
 
-  protected convertDateFromClient<T extends IPetType | NewPetType | PartialUpdatePetType>(petType: T): RestOf<T> {
+  protected convertValueFromClient<T extends IPetType | NewPetType | PartialUpdatePetType>(petType: T): RestOf<T> {
     return {
       ...petType,
       createdDate: petType.createdDate?.toJSON() ?? null,
@@ -106,23 +127,11 @@ export class PetTypeService {
     };
   }
 
-  protected convertDateFromServer(restPetType: RestPetType): IPetType {
-    return {
-      ...restPetType,
-      createdDate: restPetType.createdDate ? dayjs(restPetType.createdDate) : undefined,
-      lastModifiedDate: restPetType.lastModifiedDate ? dayjs(restPetType.lastModifiedDate) : undefined,
-    };
+  protected convertResponseFromServer(res: RestPetType): IPetType {
+    return this.convertValueFromServer(res);
   }
 
-  protected convertResponseFromServer(res: HttpResponse<RestPetType>): HttpResponse<IPetType> {
-    return res.clone({
-      body: res.body ? this.convertDateFromServer(res.body) : null,
-    });
-  }
-
-  protected convertResponseArrayFromServer(res: HttpResponse<RestPetType[]>): HttpResponse<IPetType[]> {
-    return res.clone({
-      body: res.body ? res.body.map(item => this.convertDateFromServer(item)) : null,
-    });
+  protected convertResponseArrayFromServer(res: RestPetType[]): IPetType[] {
+    return res.map(item => this.convertValueFromServer(item));
   }
 }

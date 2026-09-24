@@ -1,6 +1,6 @@
-import { TestBed } from '@angular/core/testing';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
-import { provideHttpClient } from '@angular/common/http';
+import { TestBed } from '@angular/core/testing';
 
 import { IPetType } from '../pet-type.model';
 import { sampleWithFullData, sampleWithNewData, sampleWithPartialData, sampleWithRequiredData } from '../pet-type.test-samples';
@@ -20,7 +20,7 @@ describe('PetType Service', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [provideHttpClient(), provideHttpClientTesting()],
+      providers: [provideHttpClientTesting()],
     });
     expectedResult = null;
     service = TestBed.inject(PetTypeService);
@@ -32,7 +32,7 @@ describe('PetType Service', () => {
       const returnedFromService = { ...requireRestSample };
       const expected = { ...sampleWithRequiredData };
 
-      service.find(123).subscribe(resp => (expectedResult = resp.body));
+      service.find(123).subscribe(resp => (expectedResult = resp));
 
       const req = httpMock.expectOne({ method: 'GET' });
       req.flush(returnedFromService);
@@ -44,7 +44,7 @@ describe('PetType Service', () => {
       const returnedFromService = { ...requireRestSample };
       const expected = { ...sampleWithRequiredData };
 
-      service.create(petType).subscribe(resp => (expectedResult = resp.body));
+      service.create(petType).subscribe(resp => (expectedResult = resp));
 
       const req = httpMock.expectOne({ method: 'POST' });
       req.flush(returnedFromService);
@@ -56,7 +56,7 @@ describe('PetType Service', () => {
       const returnedFromService = { ...requireRestSample };
       const expected = { ...sampleWithRequiredData };
 
-      service.update(petType).subscribe(resp => (expectedResult = resp.body));
+      service.update(petType).subscribe(resp => (expectedResult = resp));
 
       const req = httpMock.expectOne({ method: 'PUT' });
       req.flush(returnedFromService);
@@ -68,7 +68,7 @@ describe('PetType Service', () => {
       const returnedFromService = { ...requireRestSample };
       const expected = { ...sampleWithRequiredData };
 
-      service.partialUpdate(patchObject).subscribe(resp => (expectedResult = resp.body));
+      service.partialUpdate(patchObject).subscribe(resp => (expectedResult = resp));
 
       const req = httpMock.expectOne({ method: 'PATCH' });
       req.flush(returnedFromService);
@@ -84,26 +84,21 @@ describe('PetType Service', () => {
 
       const req = httpMock.expectOne({ method: 'GET' });
       req.flush([returnedFromService]);
-      httpMock.verify();
       expect(expectedResult).toMatchObject([expected]);
     });
 
     it('should delete a PetType', () => {
-      const expected = true;
+      service.delete(123).subscribe();
 
-      service.delete(123).subscribe(resp => (expectedResult = resp.ok));
-
-      const req = httpMock.expectOne({ method: 'DELETE' });
-      req.flush({ status: 200 });
-      expect(expectedResult).toBe(expected);
+      const requests = httpMock.match({ method: 'DELETE' });
+      expect(requests).toHaveLength(1);
     });
 
     describe('addPetTypeToCollectionIfMissing', () => {
       it('should add a PetType to an empty array', () => {
         const petType: IPetType = sampleWithRequiredData;
         expectedResult = service.addPetTypeToCollectionIfMissing([], petType);
-        expect(expectedResult).toHaveLength(1);
-        expect(expectedResult).toContain(petType);
+        expect(expectedResult).toEqual([petType]);
       });
 
       it('should not add a PetType to an array that contains it', () => {
@@ -137,16 +132,13 @@ describe('PetType Service', () => {
         const petType: IPetType = sampleWithRequiredData;
         const petType2: IPetType = sampleWithPartialData;
         expectedResult = service.addPetTypeToCollectionIfMissing([], petType, petType2);
-        expect(expectedResult).toHaveLength(2);
-        expect(expectedResult).toContain(petType);
-        expect(expectedResult).toContain(petType2);
+        expect(expectedResult).toEqual([petType, petType2]);
       });
 
       it('should accept null and undefined values', () => {
         const petType: IPetType = sampleWithRequiredData;
         expectedResult = service.addPetTypeToCollectionIfMissing([], null, petType, undefined);
-        expect(expectedResult).toHaveLength(1);
-        expect(expectedResult).toContain(petType);
+        expect(expectedResult).toEqual([petType]);
       });
 
       it('should return initial array if no PetType is added', () => {
@@ -188,7 +180,7 @@ describe('PetType Service', () => {
         expect(compareResult2).toEqual(false);
       });
 
-      it('should return false if primaryKey matches', () => {
+      it('should return true if primaryKey matches', () => {
         const entity1 = { id: 13878 };
         const entity2 = { id: 13878 };
 

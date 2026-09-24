@@ -18,25 +18,32 @@
       "prefix": "jhi",
       "architect": {
         "build": {
-          "builder": "@angular-builders/custom-webpack:browser",
+          "builder": "@angular-builders/custom-esbuild:application",
           "options": {
-            "customWebpackConfig": {
-              "path": "./webpack/webpack.custom.js"
+            "plugins": ["build-plugins/i18n-esbuild.ts", "build-plugins/define-esbuild.ts"],
+            "outputPath": {
+              "base": "target/classes/static/",
+              "browser": "",
+              "server": "node-server",
+              "media": "resources"
             },
-            "outputPath": "target/classes/static/",
             "index": "src/main/webapp/index.html",
-            "main": "src/main/webapp/main.ts",
-            "polyfills": ["zone.js"],
+            "browser": "src/main/webapp/main.ts",
+            "polyfills": ["@angular/localize/init"],
             "tsConfig": "tsconfig.app.json",
             "inlineStyleLanguage": "scss",
             "assets": [
               "src/main/webapp/content",
               "src/main/webapp/favicon.ico",
               "src/main/webapp/manifest.webapp",
-              "src/main/webapp/robots.txt"
+              "src/main/webapp/robots.txt",
+              "src/main/webapp/swagger-ui"
             ],
             "styles": ["src/main/webapp/content/scss/vendor.scss", "src/main/webapp/content/scss/global.scss"],
-            "scripts": []
+            "scripts": [],
+            "define": {
+              "SERVER_API_URL": "''"
+            }
           },
           "configurations": {
             "production": {
@@ -45,10 +52,6 @@
               "sourceMap": false,
               "namedChunks": false,
               "extractLicenses": true,
-              "vendorChunk": false,
-              "buildOptimizer": true,
-              "serviceWorker": true,
-              "ngswConfigPath": "ngsw-config.json",
               "budgets": [
                 {
                   "type": "initial",
@@ -63,9 +66,7 @@
               ]
             },
             "development": {
-              "buildOptimizer": false,
               "optimization": false,
-              "vendorChunk": true,
               "extractLicenses": false,
               "sourceMap": true,
               "namedChunks": true,
@@ -80,10 +81,12 @@
           "defaultConfiguration": "production"
         },
         "serve": {
-          "builder": "@angular-builders/custom-webpack:dev-server",
+          "builder": "@angular-builders/custom-esbuild:dev-server",
           "options": {
             "buildTarget": "jhpetclinic:build:development",
-            "port": 4200
+            "open": true,
+            "proxyConfig": "proxy.config.mjs",
+            "port": 9060
           },
           "configurations": {
             "production": {
@@ -96,11 +99,53 @@
           "defaultConfiguration": "development"
         },
         "test": {
-          "builder": "@angular-builders/jest:run",
+          "builder": "@angular/build:unit-test",
           "options": {
-            "configPath": "jest.conf.js",
+            "runner": "vitest",
+            "buildTarget": "::development",
+            "runnerConfig": true,
+            "coverageReporters": ["text", "lcov"],
+            "reporters": [
+              "default",
+              [
+                "vitest-sonar-reporter",
+                {
+                  "outputFile": "./target/test-results/TESTS-results-sonar-vitest.xml"
+                }
+              ]
+            ],
+            "watch": false,
             "tsConfig": "tsconfig.spec.json"
           }
+        },
+        "e2e": {
+          "builder": "@cypress/schematic:cypress",
+          "options": {
+            "browser": "chrome"
+          },
+          "configurations": {
+            "baseHref": {
+              "headless": true,
+              "baseUrl": "http://localhost:8080"
+            },
+            "open": {
+              "watch": true,
+              "devServerTarget": "jhpetclinic:serve"
+            },
+            "openProduction": {
+              "watch": true,
+              "devServerTarget": "jhpetclinic:serve:production"
+            },
+            "run": {
+              "headless": true,
+              "devServerTarget": "jhpetclinic:serve"
+            },
+            "runProduction": {
+              "headless": true,
+              "devServerTarget": "jhpetclinic:serve:production"
+            }
+          },
+          "defaultConfiguration": "open"
         }
       }
     }

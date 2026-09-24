@@ -1,4 +1,5 @@
 import dayjs from 'dayjs/esm';
+
 import { ISpecialty } from 'app/entities/specialty/specialty.model';
 
 export interface IVet {
@@ -9,7 +10,7 @@ export interface IVet {
   createdDate?: dayjs.Dayjs | null;
   lastModifiedBy?: string | null;
   lastModifiedDate?: dayjs.Dayjs | null;
-  specialties?: Pick<ISpecialty, 'id' | 'name'>[] | null;
+  specialtieses?: Pick<ISpecialty, 'id' | 'name'>[] | null;
 }
 
 export type NewVet = Omit<IVet, 'id'> & { id: null };
