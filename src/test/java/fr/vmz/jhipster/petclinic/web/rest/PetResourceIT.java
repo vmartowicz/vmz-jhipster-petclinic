@@ -8,7 +8,6 @@ import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.vmz.jhipster.petclinic.IntegrationTest;
 import fr.vmz.jhipster.petclinic.domain.Owner;
 import fr.vmz.jhipster.petclinic.domain.Pet;
@@ -36,6 +35,7 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
+import tools.jackson.databind.ObjectMapper;
 
 /**
  * Integration tests for the {@link PetResource} REST controller.
@@ -368,7 +368,7 @@ class PetResourceIT {
             petRepository.saveAndFlush(pet);
             type = PetTypeResourceIT.createEntity();
         } else {
-            type = TestUtil.findAll(em, PetType.class).get(0);
+            type = TestUtil.findAll(em, PetType.class).getFirst();
         }
         em.persist(type);
         em.flush();
@@ -390,7 +390,7 @@ class PetResourceIT {
             petRepository.saveAndFlush(pet);
             owner = OwnerResourceIT.createEntity();
         } else {
-            owner = TestUtil.findAll(em, Owner.class).get(0);
+            owner = TestUtil.findAll(em, Owner.class).getFirst();
         }
         em.persist(owner);
         em.flush();

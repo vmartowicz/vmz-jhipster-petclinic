@@ -2,7 +2,7 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 
-import { DATE_FORMAT } from 'app/config/input.constants';
+import { DATE_FORMAT } from 'app/config';
 import { IPet } from '../pet.model';
 import { sampleWithFullData, sampleWithNewData, sampleWithPartialData, sampleWithRequiredData } from '../pet.test-samples';
 
@@ -86,7 +86,6 @@ describe('Pet Service', () => {
 
       const req = httpMock.expectOne({ method: 'GET' });
       req.flush([returnedFromService]);
-      httpMock.verify();
       expect(expectedResult).toMatchObject([expected]);
     });
 
@@ -183,7 +182,7 @@ describe('Pet Service', () => {
         expect(compareResult2).toEqual(false);
       });
 
-      it('should return false if primaryKey matches', () => {
+      it('should return true if primaryKey matches', () => {
         const entity1 = { id: 23154 };
         const entity2 = { id: 23154 };
 

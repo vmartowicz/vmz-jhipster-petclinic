@@ -1,9 +1,9 @@
-import { Injectable } from '@angular/core';
+import { Service } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 
 import dayjs from 'dayjs/esm';
 
-import { DATE_TIME_FORMAT } from 'app/config/input.constants';
+import { DATE_TIME_FORMAT } from 'app/config';
 import { IOwner, NewOwner } from '../owner.model';
 
 /**
@@ -46,7 +46,7 @@ type OwnerFormGroupContent = {
 
 export type OwnerFormGroup = FormGroup<OwnerFormGroupContent>;
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class OwnerFormService {
   createOwnerFormGroup(owner?: OwnerFormGroupInput): OwnerFormGroup {
     const ownerRawValue = this.convertOwnerToOwnerRawValue({

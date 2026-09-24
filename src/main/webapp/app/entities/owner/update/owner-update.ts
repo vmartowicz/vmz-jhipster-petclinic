@@ -1,12 +1,11 @@
-import { ChangeDetectionStrategy, Component, OnInit, inject, signal } from '@angular/core';
+import { Component, OnInit, inject, signal } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { TranslatePipe } from '@ngx-translate/core';
 import { Observable, finalize } from 'rxjs';
 
-import { AlertError } from 'app/shared/alert/alert-error';
+import { AlertError } from 'app/shared/alert';
 import { TranslateDirective } from 'app/shared/language';
 import { IOwner } from '../owner.model';
 import { OwnerService } from '../service/owner.service';
@@ -14,10 +13,9 @@ import { OwnerService } from '../service/owner.service';
 import { OwnerFormGroup, OwnerFormService } from './owner-form.service';
 
 @Component({
-  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'jhi-owner-update',
   templateUrl: './owner-update.html',
-  imports: [TranslateDirective, TranslatePipe, FontAwesomeModule, AlertError, ReactiveFormsModule],
+  imports: [TranslateDirective, FontAwesomeModule, AlertError, ReactiveFormsModule],
 })
 export class OwnerUpdate implements OnInit {
   readonly isSaving = signal(false);

@@ -1,15 +1,14 @@
 import { HttpResponse } from '@angular/common/http';
-import { ChangeDetectionStrategy, Component, OnInit, inject, signal } from '@angular/core';
+import { Component, OnInit, inject, signal } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { TranslatePipe } from '@ngx-translate/core';
 import { Observable, finalize, map } from 'rxjs';
 
 import { SpecialtyService } from 'app/entities/specialty/service/specialty.service';
 import { ISpecialty } from 'app/entities/specialty/specialty.model';
-import { AlertError } from 'app/shared/alert/alert-error';
+import { AlertError } from 'app/shared/alert';
 import { TranslateDirective } from 'app/shared/language';
 import { VetService } from '../service/vet.service';
 import { IVet } from '../vet.model';
@@ -17,10 +16,9 @@ import { IVet } from '../vet.model';
 import { VetFormGroup, VetFormService } from './vet-form.service';
 
 @Component({
-  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'jhi-vet-update',
   templateUrl: './vet-update.html',
-  imports: [TranslateDirective, TranslatePipe, FontAwesomeModule, AlertError, ReactiveFormsModule],
+  imports: [TranslateDirective, FontAwesomeModule, AlertError, ReactiveFormsModule],
 })
 export class VetUpdate implements OnInit {
   readonly isSaving = signal(false);

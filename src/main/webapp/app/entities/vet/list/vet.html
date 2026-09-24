@@ -38,49 +38,42 @@
             <th scope="col" jhiSortBy="id">
               <div class="d-flex">
                 <span jhiTranslate="global.field.id">ID</span>
-
                 <fa-icon class="p-1" icon="sort" />
               </div>
             </th>
             <th scope="col" jhiSortBy="firstName">
               <div class="d-flex">
                 <span jhiTranslate="jhpetclinicApp.vet.firstName">First Name</span>
-
                 <fa-icon class="p-1" icon="sort" />
               </div>
             </th>
             <th scope="col" jhiSortBy="lastName">
               <div class="d-flex">
                 <span jhiTranslate="jhpetclinicApp.vet.lastName">Last Name</span>
-
                 <fa-icon class="p-1" icon="sort" />
               </div>
             </th>
             <th scope="col" jhiSortBy="createdBy">
               <div class="d-flex">
                 <span jhiTranslate="jhpetclinicApp.vet.createdBy">Created By</span>
-
                 <fa-icon class="p-1" icon="sort" />
               </div>
             </th>
             <th scope="col" jhiSortBy="createdDate">
               <div class="d-flex">
                 <span jhiTranslate="jhpetclinicApp.vet.createdDate">Created Date</span>
-
                 <fa-icon class="p-1" icon="sort" />
               </div>
             </th>
             <th scope="col" jhiSortBy="lastModifiedBy">
               <div class="d-flex">
                 <span jhiTranslate="jhpetclinicApp.vet.lastModifiedBy">Last Modified By</span>
-
                 <fa-icon class="p-1" icon="sort" />
               </div>
             </th>
             <th scope="col" jhiSortBy="lastModifiedDate">
               <div class="d-flex">
                 <span jhiTranslate="jhpetclinicApp.vet.lastModifiedDate">Last Modified Date</span>
-
                 <fa-icon class="p-1" icon="sort" />
               </div>
             </th>
@@ -111,7 +104,7 @@
                     <span class="d-none d-md-inline" jhiTranslate="entity.action.edit">Edit</span>
                   </a>
 
-                  <button type="submit" (click)="delete(vet)" class="btn btn-danger btn-sm" data-cy="entityDeleteButton">
+                  <button type="button" (click)="delete(vet)" class="btn btn-danger btn-sm" data-cy="entityDeleteButton">
                     <fa-icon icon="times" />
                     <span class="d-none d-md-inline" jhiTranslate="entity.action.delete">Delete</span>
                   </button>

@@ -42,13 +42,13 @@ spring:
       enabled: true
       additional-exclude: static/**,.h2.server.properties
     livereload:
-      enabled: false # we use Webpack dev server + BrowserSync for livereload
+      enabled: false # we use bundler for livereload
   docker:
     compose:
       enabled: true
       profiles:
         active: dev
-  jackson2:
+  jackson:
     serialization:
       indent-output: true
   cloud:

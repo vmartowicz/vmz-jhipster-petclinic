@@ -4,7 +4,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.vmz.jhipster.petclinic.IntegrationTest;
 import fr.vmz.jhipster.petclinic.config.Constants;
 import fr.vmz.jhipster.petclinic.domain.User;
@@ -32,6 +31,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
+import tools.jackson.databind.ObjectMapper;
 
 /**
  * Integration tests for the {@link AccountResource} REST controller.
@@ -68,7 +68,7 @@ class AccountResourceIT {
     }
 
     @AfterEach
-    void cleanupAndCheck() {
+    void checkUsers() {
         assertThat(userRepository.count()).isEqualTo(numberOfUsers);
         numberOfUsers = null;
     }

@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it, vitest } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { HttpResponse } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
@@ -53,10 +53,10 @@ describe('Visit Management Update Component', () => {
       visit.pet = pet;
 
       const petCollection: IPet[] = [{ id: 23154 }];
-      vitest.spyOn(petService, 'query').mockReturnValue(of(new HttpResponse({ body: petCollection })));
+      vi.spyOn(petService, 'query').mockReturnValue(of(new HttpResponse({ body: petCollection })));
       const additionalPets = [pet];
       const expectedCollection: IPet[] = [...additionalPets, ...petCollection];
-      vitest.spyOn(petService, 'addPetToCollectionIfMissing').mockReturnValue(expectedCollection);
+      vi.spyOn(petService, 'addPetToCollectionIfMissing').mockReturnValue(expectedCollection);
 
       activatedRoute.data = of({ visit });
       comp.ngOnInit();
@@ -87,9 +87,9 @@ describe('Visit Management Update Component', () => {
       // GIVEN
       const saveSubject = new Subject<IVisit>();
       const visit = { id: 31581 };
-      vitest.spyOn(visitFormService, 'getVisit').mockReturnValue(visit);
-      vitest.spyOn(visitService, 'update').mockReturnValue(saveSubject);
-      vitest.spyOn(comp, 'previousState');
+      vi.spyOn(visitFormService, 'getVisit').mockReturnValue(visit);
+      vi.spyOn(visitService, 'update').mockReturnValue(saveSubject);
+      vi.spyOn(comp, 'previousState');
       activatedRoute.data = of({ visit });
       comp.ngOnInit();
 
@@ -110,9 +110,9 @@ describe('Visit Management Update Component', () => {
       // GIVEN
       const saveSubject = new Subject<IVisit>();
       const visit = { id: 31581 };
-      vitest.spyOn(visitFormService, 'getVisit').mockReturnValue({ id: null });
-      vitest.spyOn(visitService, 'create').mockReturnValue(saveSubject);
-      vitest.spyOn(comp, 'previousState');
+      vi.spyOn(visitFormService, 'getVisit').mockReturnValue({ id: null });
+      vi.spyOn(visitService, 'create').mockReturnValue(saveSubject);
+      vi.spyOn(comp, 'previousState');
       activatedRoute.data = of({ visit: null });
       comp.ngOnInit();
 
@@ -133,8 +133,8 @@ describe('Visit Management Update Component', () => {
       // GIVEN
       const saveSubject = new Subject<IVisit>();
       const visit = { id: 31581 };
-      vitest.spyOn(visitService, 'update').mockReturnValue(saveSubject);
-      vitest.spyOn(comp, 'previousState');
+      vi.spyOn(visitService, 'update').mockReturnValue(saveSubject);
+      vi.spyOn(comp, 'previousState');
       activatedRoute.data = of({ visit });
       comp.ngOnInit();
 
@@ -155,7 +155,7 @@ describe('Visit Management Update Component', () => {
       it('should forward to petService', () => {
         const entity = { id: 23154 };
         const entity2 = { id: 28893 };
-        vitest.spyOn(petService, 'comparePet');
+        vi.spyOn(petService, 'comparePet');
         comp.comparePet(entity, entity2);
         expect(petService.comparePet).toHaveBeenCalledWith(entity, entity2);
       });

@@ -56,7 +56,7 @@ public class VetResource {
      * {@code POST  /vets} : Create a new vet.
      *
      * @param vetDTO the vetDTO to create.
-     * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new vetDTO, or with status {@code 400 (Bad Request)} if the vet has already an ID.
+     * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new vetDTO, or with status {@code 400 (Bad Request)} if the vet already has an ID.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("")
@@ -118,7 +118,7 @@ public class VetResource {
         @PathVariable(value = "id", required = false) final Long id,
         @NotNull @RequestBody VetDTO vetDTO
     ) throws URISyntaxException {
-        LOG.debug("REST request to partial update Vet partially : {}, {}", id, vetDTO);
+        LOG.debug("REST request to partially update Vet : {}, {}", id, vetDTO);
         if (vetDTO.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }

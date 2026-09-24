@@ -120,7 +120,7 @@
 
         <div class="mb-3">
           <label class="form-label" for="field_type" jhiTranslate="jhpetclinicApp.pet.type">Type</label>
-          <select class="form-control" id="field_type" data-cy="type" name="type" formControlName="type" [compareWith]="comparePetType">
+          <select class="form-select" id="field_type" data-cy="type" name="type" formControlName="type" [compareWith]="comparePetType">
             <option [ngValue]="null"></option>
             @for (petTypeOption of petTypesSharedCollection(); track $index) {
               <option [ngValue]="petTypeOption">{{ petTypeOption.name }}</option>
@@ -130,7 +130,7 @@
 
         <div class="mb-3">
           <label class="form-label" for="field_owner" jhiTranslate="jhpetclinicApp.pet.owner">Owner</label>
-          <select class="form-control" id="field_owner" data-cy="owner" name="owner" formControlName="owner" [compareWith]="compareOwner">
+          <select class="form-select" id="field_owner" data-cy="owner" name="owner" formControlName="owner" [compareWith]="compareOwner">
             <option [ngValue]="null"></option>
             @for (ownerOption of ownersSharedCollection(); track $index) {
               <option [ngValue]="ownerOption">{{ ownerOption.lastName }}</option>

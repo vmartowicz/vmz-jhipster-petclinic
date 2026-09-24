@@ -1,9 +1,9 @@
-import { Injectable } from '@angular/core';
+import { Service } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 
 import dayjs from 'dayjs/esm';
 
-import { DATE_TIME_FORMAT } from 'app/config/input.constants';
+import { DATE_TIME_FORMAT } from 'app/config';
 import { ISpecialty, NewSpecialty } from '../specialty.model';
 
 /**
@@ -43,7 +43,7 @@ type SpecialtyFormGroupContent = {
 
 export type SpecialtyFormGroup = FormGroup<SpecialtyFormGroupContent>;
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class SpecialtyFormService {
   createSpecialtyFormGroup(specialty?: SpecialtyFormGroupInput): SpecialtyFormGroup {
     const specialtyRawValue = this.convertSpecialtyToSpecialtyRawValue({

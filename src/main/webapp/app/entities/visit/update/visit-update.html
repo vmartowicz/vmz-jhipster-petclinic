@@ -127,7 +127,7 @@
 
         <div class="mb-3">
           <label class="form-label" for="field_pet" jhiTranslate="jhpetclinicApp.visit.pet">Pet</label>
-          <select class="form-control" id="field_pet" data-cy="pet" name="pet" formControlName="pet" [compareWith]="comparePet">
+          <select class="form-select" id="field_pet" data-cy="pet" name="pet" formControlName="pet" [compareWith]="comparePet">
             <option [ngValue]="null"></option>
             @for (petOption of petsSharedCollection(); track $index) {
               <option [ngValue]="petOption">{{ petOption.name }}</option>

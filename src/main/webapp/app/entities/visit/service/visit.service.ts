@@ -1,13 +1,11 @@
 import { HttpClient, HttpResponse, httpResource } from '@angular/common/http';
-import { Injectable, computed, inject, signal } from '@angular/core';
+import { Service, computed, inject, signal } from '@angular/core';
 
 import dayjs from 'dayjs/esm';
 import { Observable, map } from 'rxjs';
 
-import { DATE_FORMAT } from 'app/config/input.constants';
-import { ApplicationConfigService } from 'app/core/config/application-config.service';
-import { createRequestOption } from 'app/core/request/request-util';
-import { isPresent } from 'app/core/util/operators';
+import { DATE_FORMAT, serverApiUrl } from 'app/config';
+import { createRequestOption } from 'app/core/request';
 import { IVisit, NewVisit } from '../visit.model';
 
 export type PartialUpdateVisit = Partial<IVisit> & Pick<IVisit, 'id'>;
@@ -24,7 +22,7 @@ export type NewRestVisit = RestOf<NewVisit>;
 
 export type PartialUpdateRestVisit = RestOf<PartialUpdateVisit>;
 
-@Injectable()
+@Service()
 export class VisitsService {
   readonly visitsParams = signal<Record<string, string | number | boolean | readonly (string | number | boolean)[]> | undefined>(undefined);
   readonly visitsResource = httpResource<RestVisit[]>(() => {
@@ -41,8 +39,7 @@ export class VisitsService {
   readonly visits = computed(() =>
     (this.visitsResource.hasValue() ? this.visitsResource.value() : []).map(item => this.convertValueFromServer(item)),
   );
-  protected readonly applicationConfigService = inject(ApplicationConfigService);
-  protected readonly resourceUrl = this.applicationConfigService.getEndpointFor('api/visits');
+  protected readonly resourceUrl = `${serverApiUrl}api/visits`;
 
   protected convertValueFromServer(restVisit: RestVisit): IVisit {
     return {
@@ -54,7 +51,7 @@ export class VisitsService {
   }
 }
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class VisitService extends VisitsService {
   protected readonly http = inject(HttpClient);
 
@@ -104,7 +101,7 @@ export class VisitService extends VisitsService {
     visitCollection: Type[],
     ...visitsToCheck: (Type | null | undefined)[]
   ): Type[] {
-    const visits: Type[] = visitsToCheck.filter(isPresent);
+    const visits: Type[] = visitsToCheck.filter(visitItem => visitItem !== null && visitItem !== undefined);
     if (visits.length > 0) {
       const visitCollectionIdentifiers = visitCollection.map(visitItem => this.getVisitIdentifier(visitItem));
       const visitsToAdd = visits.filter(visitItem => {

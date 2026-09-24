@@ -1,12 +1,11 @@
 import { HttpClient, HttpResponse, httpResource } from '@angular/common/http';
-import { Injectable, computed, inject, signal } from '@angular/core';
+import { Service, computed, inject, signal } from '@angular/core';
 
 import dayjs from 'dayjs/esm';
 import { Observable, map } from 'rxjs';
 
-import { ApplicationConfigService } from 'app/core/config/application-config.service';
-import { createRequestOption } from 'app/core/request/request-util';
-import { isPresent } from 'app/core/util/operators';
+import { serverApiUrl } from 'app/config';
+import { createRequestOption } from 'app/core/request';
 import { ISpecialty, NewSpecialty } from '../specialty.model';
 
 export type PartialUpdateSpecialty = Partial<ISpecialty> & Pick<ISpecialty, 'id'>;
@@ -22,7 +21,7 @@ export type NewRestSpecialty = RestOf<NewSpecialty>;
 
 export type PartialUpdateRestSpecialty = RestOf<PartialUpdateSpecialty>;
 
-@Injectable()
+@Service()
 export class SpecialtiesService {
   readonly specialtiesParams = signal<Record<string, string | number | boolean | readonly (string | number | boolean)[]> | undefined>(
     undefined,
@@ -41,8 +40,7 @@ export class SpecialtiesService {
   readonly specialties = computed(() =>
     (this.specialtiesResource.hasValue() ? this.specialtiesResource.value() : []).map(item => this.convertValueFromServer(item)),
   );
-  protected readonly applicationConfigService = inject(ApplicationConfigService);
-  protected readonly resourceUrl = this.applicationConfigService.getEndpointFor('api/specialties');
+  protected readonly resourceUrl = `${serverApiUrl}api/specialties`;
 
   protected convertValueFromServer(restSpecialty: RestSpecialty): ISpecialty {
     return {
@@ -53,7 +51,7 @@ export class SpecialtiesService {
   }
 }
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class SpecialtyService extends SpecialtiesService {
   protected readonly http = inject(HttpClient);
 
@@ -105,7 +103,7 @@ export class SpecialtyService extends SpecialtiesService {
     specialtyCollection: Type[],
     ...specialtiesToCheck: (Type | null | undefined)[]
   ): Type[] {
-    const specialties: Type[] = specialtiesToCheck.filter(isPresent);
+    const specialties: Type[] = specialtiesToCheck.filter(specialtyItem => specialtyItem !== null && specialtyItem !== undefined);
     if (specialties.length > 0) {
       const specialtyCollectionIdentifiers = specialtyCollection.map(specialtyItem => this.getSpecialtyIdentifier(specialtyItem));
       const specialtiesToAdd = specialties.filter(specialtyItem => {

@@ -14,7 +14,7 @@ describe('Vet e2e test', () => {
   const vetPageUrl = '/vet';
   let username: string;
   let password: string;
-  const vetSample = { firstName: 'Rachelle', lastName: 'Goodwin' };
+  const vetSample = { firstName: 'Reyes', lastName: 'Goodwin' };
 
   let vet;
 
@@ -170,8 +170,8 @@ describe('Vet e2e test', () => {
     });
 
     it('should create an instance of Vet', () => {
-      cy.get(`[data-cy="firstName"]`).type('Hector');
-      cy.get(`[data-cy="firstName"]`).should('have.value', 'Hector');
+      cy.get(`[data-cy="firstName"]`).type('Gustave');
+      cy.get(`[data-cy="firstName"]`).should('have.value', 'Gustave');
 
       cy.get(`[data-cy="lastName"]`).type('Luettgen');
       cy.get(`[data-cy="lastName"]`).should('have.value', 'Luettgen');

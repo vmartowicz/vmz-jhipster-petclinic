@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it, vitest } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { HttpResponse } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
@@ -57,10 +57,10 @@ describe('Pet Management Update Component', () => {
       pet.type = type;
 
       const petTypeCollection: IPetType[] = [{ id: 13878 }];
-      vitest.spyOn(petTypeService, 'query').mockReturnValue(of(new HttpResponse({ body: petTypeCollection })));
+      vi.spyOn(petTypeService, 'query').mockReturnValue(of(new HttpResponse({ body: petTypeCollection })));
       const additionalPetTypes = [type];
       const expectedCollection: IPetType[] = [...additionalPetTypes, ...petTypeCollection];
-      vitest.spyOn(petTypeService, 'addPetTypeToCollectionIfMissing').mockReturnValue(expectedCollection);
+      vi.spyOn(petTypeService, 'addPetTypeToCollectionIfMissing').mockReturnValue(expectedCollection);
 
       activatedRoute.data = of({ pet });
       comp.ngOnInit();
@@ -79,10 +79,10 @@ describe('Pet Management Update Component', () => {
       pet.owner = owner;
 
       const ownerCollection: IOwner[] = [{ id: 25615 }];
-      vitest.spyOn(ownerService, 'query').mockReturnValue(of(new HttpResponse({ body: ownerCollection })));
+      vi.spyOn(ownerService, 'query').mockReturnValue(of(new HttpResponse({ body: ownerCollection })));
       const additionalOwners = [owner];
       const expectedCollection: IOwner[] = [...additionalOwners, ...ownerCollection];
-      vitest.spyOn(ownerService, 'addOwnerToCollectionIfMissing').mockReturnValue(expectedCollection);
+      vi.spyOn(ownerService, 'addOwnerToCollectionIfMissing').mockReturnValue(expectedCollection);
 
       activatedRoute.data = of({ pet });
       comp.ngOnInit();
@@ -116,9 +116,9 @@ describe('Pet Management Update Component', () => {
       // GIVEN
       const saveSubject = new Subject<IPet>();
       const pet = { id: 23154 };
-      vitest.spyOn(petFormService, 'getPet').mockReturnValue(pet);
-      vitest.spyOn(petService, 'update').mockReturnValue(saveSubject);
-      vitest.spyOn(comp, 'previousState');
+      vi.spyOn(petFormService, 'getPet').mockReturnValue(pet);
+      vi.spyOn(petService, 'update').mockReturnValue(saveSubject);
+      vi.spyOn(comp, 'previousState');
       activatedRoute.data = of({ pet });
       comp.ngOnInit();
 
@@ -139,9 +139,9 @@ describe('Pet Management Update Component', () => {
       // GIVEN
       const saveSubject = new Subject<IPet>();
       const pet = { id: 23154 };
-      vitest.spyOn(petFormService, 'getPet').mockReturnValue({ id: null });
-      vitest.spyOn(petService, 'create').mockReturnValue(saveSubject);
-      vitest.spyOn(comp, 'previousState');
+      vi.spyOn(petFormService, 'getPet').mockReturnValue({ id: null });
+      vi.spyOn(petService, 'create').mockReturnValue(saveSubject);
+      vi.spyOn(comp, 'previousState');
       activatedRoute.data = of({ pet: null });
       comp.ngOnInit();
 
@@ -162,8 +162,8 @@ describe('Pet Management Update Component', () => {
       // GIVEN
       const saveSubject = new Subject<IPet>();
       const pet = { id: 23154 };
-      vitest.spyOn(petService, 'update').mockReturnValue(saveSubject);
-      vitest.spyOn(comp, 'previousState');
+      vi.spyOn(petService, 'update').mockReturnValue(saveSubject);
+      vi.spyOn(comp, 'previousState');
       activatedRoute.data = of({ pet });
       comp.ngOnInit();
 
@@ -184,7 +184,7 @@ describe('Pet Management Update Component', () => {
       it('should forward to petTypeService', () => {
         const entity = { id: 13878 };
         const entity2 = { id: 6067 };
-        vitest.spyOn(petTypeService, 'comparePetType');
+        vi.spyOn(petTypeService, 'comparePetType');
         comp.comparePetType(entity, entity2);
         expect(petTypeService.comparePetType).toHaveBeenCalledWith(entity, entity2);
       });
@@ -194,7 +194,7 @@ describe('Pet Management Update Component', () => {
       it('should forward to ownerService', () => {
         const entity = { id: 25615 };
         const entity2 = { id: 10278 };
-        vitest.spyOn(ownerService, 'compareOwner');
+        vi.spyOn(ownerService, 'compareOwner');
         comp.compareOwner(entity, entity2);
         expect(ownerService.compareOwner).toHaveBeenCalledWith(entity, entity2);
       });

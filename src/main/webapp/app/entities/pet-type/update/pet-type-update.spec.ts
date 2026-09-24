@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it, vitest } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute } from '@angular/router';
@@ -57,9 +57,9 @@ describe('PetType Management Update Component', () => {
       // GIVEN
       const saveSubject = new Subject<IPetType>();
       const petType = { id: 13878 };
-      vitest.spyOn(petTypeFormService, 'getPetType').mockReturnValue(petType);
-      vitest.spyOn(petTypeService, 'update').mockReturnValue(saveSubject);
-      vitest.spyOn(comp, 'previousState');
+      vi.spyOn(petTypeFormService, 'getPetType').mockReturnValue(petType);
+      vi.spyOn(petTypeService, 'update').mockReturnValue(saveSubject);
+      vi.spyOn(comp, 'previousState');
       activatedRoute.data = of({ petType });
       comp.ngOnInit();
 
@@ -80,9 +80,9 @@ describe('PetType Management Update Component', () => {
       // GIVEN
       const saveSubject = new Subject<IPetType>();
       const petType = { id: 13878 };
-      vitest.spyOn(petTypeFormService, 'getPetType').mockReturnValue({ id: null });
-      vitest.spyOn(petTypeService, 'create').mockReturnValue(saveSubject);
-      vitest.spyOn(comp, 'previousState');
+      vi.spyOn(petTypeFormService, 'getPetType').mockReturnValue({ id: null });
+      vi.spyOn(petTypeService, 'create').mockReturnValue(saveSubject);
+      vi.spyOn(comp, 'previousState');
       activatedRoute.data = of({ petType: null });
       comp.ngOnInit();
 
@@ -103,8 +103,8 @@ describe('PetType Management Update Component', () => {
       // GIVEN
       const saveSubject = new Subject<IPetType>();
       const petType = { id: 13878 };
-      vitest.spyOn(petTypeService, 'update').mockReturnValue(saveSubject);
-      vitest.spyOn(comp, 'previousState');
+      vi.spyOn(petTypeService, 'update').mockReturnValue(saveSubject);
+      vi.spyOn(comp, 'previousState');
       activatedRoute.data = of({ petType });
       comp.ngOnInit();
 

@@ -56,7 +56,7 @@ public class PetResource {
      * {@code POST  /pets} : Create a new pet.
      *
      * @param petDTO the petDTO to create.
-     * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new petDTO, or with status {@code 400 (Bad Request)} if the pet has already an ID.
+     * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new petDTO, or with status {@code 400 (Bad Request)} if the pet already has an ID.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("")
@@ -118,7 +118,7 @@ public class PetResource {
         @PathVariable(value = "id", required = false) final Long id,
         @NotNull @RequestBody PetDTO petDTO
     ) throws URISyntaxException {
-        LOG.debug("REST request to partial update Pet partially : {}, {}", id, petDTO);
+        LOG.debug("REST request to partially update Pet : {}, {}", id, petDTO);
         if (petDTO.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }

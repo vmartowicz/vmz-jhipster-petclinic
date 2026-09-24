@@ -32,7 +32,7 @@ const routes: Routes = [
     title: 'entityAudit.home.title',
     loadComponent: () => import('./entity-audit/entity-audit.component'),
   },
-  /* jhipster-needle-add-admin-route - JHipster will add admin routes here */
+  // jhipster-needle-add-admin-route - JHipster will add admin routes here
 ];
 
 export default routes;

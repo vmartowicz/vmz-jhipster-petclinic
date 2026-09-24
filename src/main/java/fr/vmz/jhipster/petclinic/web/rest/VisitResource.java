@@ -56,7 +56,7 @@ public class VisitResource {
      * {@code POST  /visits} : Create a new visit.
      *
      * @param visitDTO the visitDTO to create.
-     * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new visitDTO, or with status {@code 400 (Bad Request)} if the visit has already an ID.
+     * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new visitDTO, or with status {@code 400 (Bad Request)} if the visit already has an ID.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("")
@@ -120,7 +120,7 @@ public class VisitResource {
         @PathVariable(value = "id", required = false) final Long id,
         @NotNull @RequestBody VisitDTO visitDTO
     ) throws URISyntaxException {
-        LOG.debug("REST request to partial update Visit partially : {}, {}", id, visitDTO);
+        LOG.debug("REST request to partially update Visit : {}, {}", id, visitDTO);
         if (visitDTO.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }

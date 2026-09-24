@@ -4,13 +4,13 @@ import { IVet, NewVet } from './vet.model';
 
 export const sampleWithRequiredData: IVet = {
   id: 2514,
-  firstName: 'Omar',
+  firstName: 'Nathan',
   lastName: 'Pouros',
 };
 
 export const sampleWithPartialData: IVet = {
   id: 21487,
-  firstName: 'Alejandrin',
+  firstName: 'Alexa',
   lastName: 'Gibson-Klocko',
   createdBy: 'urgently pish',
   createdDate: dayjs('2020-06-26T23:50'),
@@ -18,7 +18,7 @@ export const sampleWithPartialData: IVet = {
 
 export const sampleWithFullData: IVet = {
   id: 29795,
-  firstName: 'Isaac',
+  firstName: 'Hubert',
   lastName: 'Reinger',
   createdBy: 'afore or usually',
   createdDate: dayjs('2020-06-26T13:17'),
@@ -27,7 +27,7 @@ export const sampleWithFullData: IVet = {
 };
 
 export const sampleWithNewData: NewVet = {
-  firstName: 'Juanita',
+  firstName: 'Joana',
   lastName: 'McClure',
   id: null,
 };

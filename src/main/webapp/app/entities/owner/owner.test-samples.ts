@@ -4,7 +4,7 @@ import { IOwner, NewOwner } from './owner.model';
 
 export const sampleWithRequiredData: IOwner = {
   id: 3581,
-  firstName: 'Helen',
+  firstName: 'Gregoria',
   lastName: 'Erdman',
   address: 'obediently',
   city: 'Charlottesville',
@@ -13,35 +13,35 @@ export const sampleWithRequiredData: IOwner = {
 
 export const sampleWithPartialData: IOwner = {
   id: 15531,
-  firstName: 'Taurean',
+  firstName: 'Sydni',
   lastName: 'Stroman',
   address: 'dreamily',
-  city: 'Darrylworth',
-  telephone: '977-307-3903 x1212',
-  createdBy: 'officially worth',
-  createdDate: dayjs('2020-06-27T06:27'),
-  lastModifiedBy: 'haversack',
+  city: 'Davionworth',
+  telephone: '(977) 307-3903',
+  createdBy: 'oof',
+  createdDate: dayjs('2020-06-27T04:48'),
+  lastModifiedBy: 'snack',
 };
 
 export const sampleWithFullData: IOwner = {
   id: 26949,
-  firstName: 'Austyn',
+  firstName: 'August',
   lastName: 'Barton',
   address: 'honestly when evenly',
   city: 'Pocatello',
-  telephone: '(422) 319-2578 x4832',
-  createdBy: 'rightfully sonata forenenst',
-  createdDate: dayjs('2020-06-27T00:22'),
-  lastModifiedBy: 'dislocate thoughtfully',
-  lastModifiedDate: dayjs('2020-06-26T14:54'),
+  telephone: '1-422-319-2578 x483',
+  createdBy: 'substantiate',
+  createdDate: dayjs('2020-06-26T07:41'),
+  lastModifiedBy: 'sonata forenenst fooey',
+  lastModifiedDate: dayjs('2020-06-27T03:36'),
 };
 
 export const sampleWithNewData: NewOwner = {
-  firstName: 'Marjorie',
+  firstName: 'Mae',
   lastName: 'Shanahan',
   address: 'consequently youthfully',
-  city: 'Fort Wendy',
-  telephone: '(485) 389-3348',
+  city: 'Fort Yasmine',
+  telephone: '485-389-3348 x278',
   id: null,
 };
 

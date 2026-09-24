@@ -1,12 +1,11 @@
 import { HttpClient, HttpResponse, httpResource } from '@angular/common/http';
-import { Injectable, computed, inject, signal } from '@angular/core';
+import { Service, computed, inject, signal } from '@angular/core';
 
 import dayjs from 'dayjs/esm';
 import { Observable, map } from 'rxjs';
 
-import { ApplicationConfigService } from 'app/core/config/application-config.service';
-import { createRequestOption } from 'app/core/request/request-util';
-import { isPresent } from 'app/core/util/operators';
+import { serverApiUrl } from 'app/config';
+import { createRequestOption } from 'app/core/request';
 import { IVet, NewVet } from '../vet.model';
 
 export type PartialUpdateVet = Partial<IVet> & Pick<IVet, 'id'>;
@@ -22,7 +21,7 @@ export type NewRestVet = RestOf<NewVet>;
 
 export type PartialUpdateRestVet = RestOf<PartialUpdateVet>;
 
-@Injectable()
+@Service()
 export class VetsService {
   readonly vetsParams = signal<Record<string, string | number | boolean | readonly (string | number | boolean)[]> | undefined>(undefined);
   readonly vetsResource = httpResource<RestVet[]>(() => {
@@ -39,8 +38,7 @@ export class VetsService {
   readonly vets = computed(() =>
     (this.vetsResource.hasValue() ? this.vetsResource.value() : []).map(item => this.convertValueFromServer(item)),
   );
-  protected readonly applicationConfigService = inject(ApplicationConfigService);
-  protected readonly resourceUrl = this.applicationConfigService.getEndpointFor('api/vets');
+  protected readonly resourceUrl = `${serverApiUrl}api/vets`;
 
   protected convertValueFromServer(restVet: RestVet): IVet {
     return {
@@ -51,7 +49,7 @@ export class VetsService {
   }
 }
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class VetService extends VetsService {
   protected readonly http = inject(HttpClient);
 
@@ -98,7 +96,7 @@ export class VetService extends VetsService {
   }
 
   addVetToCollectionIfMissing<Type extends Pick<IVet, 'id'>>(vetCollection: Type[], ...vetsToCheck: (Type | null | undefined)[]): Type[] {
-    const vets: Type[] = vetsToCheck.filter(isPresent);
+    const vets: Type[] = vetsToCheck.filter(vetItem => vetItem !== null && vetItem !== undefined);
     if (vets.length > 0) {
       const vetCollectionIdentifiers = vetCollection.map(vetItem => this.getVetIdentifier(vetItem));
       const vetsToAdd = vets.filter(vetItem => {

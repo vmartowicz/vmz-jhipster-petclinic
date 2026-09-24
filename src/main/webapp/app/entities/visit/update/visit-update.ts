@@ -1,16 +1,15 @@
 import { HttpResponse } from '@angular/common/http';
-import { ChangeDetectionStrategy, Component, OnInit, inject, signal } from '@angular/core';
+import { Component, OnInit, inject, signal } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { NgbInputDatepicker } from '@ng-bootstrap/ng-bootstrap/datepicker';
-import { TranslatePipe } from '@ngx-translate/core';
 import { Observable, finalize, map } from 'rxjs';
 
 import { IPet } from 'app/entities/pet/pet.model';
 import { PetService } from 'app/entities/pet/service/pet.service';
-import { AlertError } from 'app/shared/alert/alert-error';
+import { AlertError } from 'app/shared/alert';
 import { TranslateDirective } from 'app/shared/language';
 import { VisitService } from '../service/visit.service';
 import { IVisit } from '../visit.model';
@@ -18,10 +17,9 @@ import { IVisit } from '../visit.model';
 import { VisitFormGroup, VisitFormService } from './visit-form.service';
 
 @Component({
-  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'jhi-visit-update',
   templateUrl: './visit-update.html',
-  imports: [TranslateDirective, TranslatePipe, FontAwesomeModule, AlertError, ReactiveFormsModule, NgbInputDatepicker],
+  imports: [TranslateDirective, FontAwesomeModule, AlertError, ReactiveFormsModule, NgbInputDatepicker],
 })
 export class VisitUpdate implements OnInit {
   readonly isSaving = signal(false);

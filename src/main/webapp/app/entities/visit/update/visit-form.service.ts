@@ -1,9 +1,9 @@
-import { Injectable } from '@angular/core';
+import { Service } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 
 import dayjs from 'dayjs/esm';
 
-import { DATE_TIME_FORMAT } from 'app/config/input.constants';
+import { DATE_TIME_FORMAT } from 'app/config';
 import { IVisit, NewVisit } from '../visit.model';
 
 /**
@@ -44,7 +44,7 @@ type VisitFormGroupContent = {
 
 export type VisitFormGroup = FormGroup<VisitFormGroupContent>;
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class VisitFormService {
   createVisitFormGroup(visit?: VisitFormGroupInput): VisitFormGroup {
     const visitRawValue = this.convertVisitToVisitRawValue({

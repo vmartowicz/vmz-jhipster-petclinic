@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it, vitest } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute } from '@angular/router';
@@ -57,9 +57,9 @@ describe('Owner Management Update Component', () => {
       // GIVEN
       const saveSubject = new Subject<IOwner>();
       const owner = { id: 25615 };
-      vitest.spyOn(ownerFormService, 'getOwner').mockReturnValue(owner);
-      vitest.spyOn(ownerService, 'update').mockReturnValue(saveSubject);
-      vitest.spyOn(comp, 'previousState');
+      vi.spyOn(ownerFormService, 'getOwner').mockReturnValue(owner);
+      vi.spyOn(ownerService, 'update').mockReturnValue(saveSubject);
+      vi.spyOn(comp, 'previousState');
       activatedRoute.data = of({ owner });
       comp.ngOnInit();
 
@@ -80,9 +80,9 @@ describe('Owner Management Update Component', () => {
       // GIVEN
       const saveSubject = new Subject<IOwner>();
       const owner = { id: 25615 };
-      vitest.spyOn(ownerFormService, 'getOwner').mockReturnValue({ id: null });
-      vitest.spyOn(ownerService, 'create').mockReturnValue(saveSubject);
-      vitest.spyOn(comp, 'previousState');
+      vi.spyOn(ownerFormService, 'getOwner').mockReturnValue({ id: null });
+      vi.spyOn(ownerService, 'create').mockReturnValue(saveSubject);
+      vi.spyOn(comp, 'previousState');
       activatedRoute.data = of({ owner: null });
       comp.ngOnInit();
 
@@ -103,8 +103,8 @@ describe('Owner Management Update Component', () => {
       // GIVEN
       const saveSubject = new Subject<IOwner>();
       const owner = { id: 25615 };
-      vitest.spyOn(ownerService, 'update').mockReturnValue(saveSubject);
-      vitest.spyOn(comp, 'previousState');
+      vi.spyOn(ownerService, 'update').mockReturnValue(saveSubject);
+      vi.spyOn(comp, 'previousState');
       activatedRoute.data = of({ owner });
       comp.ngOnInit();
 

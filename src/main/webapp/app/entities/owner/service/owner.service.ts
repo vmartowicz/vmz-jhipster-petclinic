@@ -1,12 +1,11 @@
 import { HttpClient, HttpResponse, httpResource } from '@angular/common/http';
-import { Injectable, computed, inject, signal } from '@angular/core';
+import { Service, computed, inject, signal } from '@angular/core';
 
 import dayjs from 'dayjs/esm';
 import { Observable, map } from 'rxjs';
 
-import { ApplicationConfigService } from 'app/core/config/application-config.service';
-import { createRequestOption } from 'app/core/request/request-util';
-import { isPresent } from 'app/core/util/operators';
+import { serverApiUrl } from 'app/config';
+import { createRequestOption } from 'app/core/request';
 import { IOwner, NewOwner } from '../owner.model';
 
 export type PartialUpdateOwner = Partial<IOwner> & Pick<IOwner, 'id'>;
@@ -22,7 +21,7 @@ export type NewRestOwner = RestOf<NewOwner>;
 
 export type PartialUpdateRestOwner = RestOf<PartialUpdateOwner>;
 
-@Injectable()
+@Service()
 export class OwnersService {
   readonly ownersParams = signal<Record<string, string | number | boolean | readonly (string | number | boolean)[]> | undefined>(undefined);
   readonly ownersResource = httpResource<RestOwner[]>(() => {
@@ -39,8 +38,7 @@ export class OwnersService {
   readonly owners = computed(() =>
     (this.ownersResource.hasValue() ? this.ownersResource.value() : []).map(item => this.convertValueFromServer(item)),
   );
-  protected readonly applicationConfigService = inject(ApplicationConfigService);
-  protected readonly resourceUrl = this.applicationConfigService.getEndpointFor('api/owners');
+  protected readonly resourceUrl = `${serverApiUrl}api/owners`;
 
   protected convertValueFromServer(restOwner: RestOwner): IOwner {
     return {
@@ -51,7 +49,7 @@ export class OwnersService {
   }
 }
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class OwnerService extends OwnersService {
   protected readonly http = inject(HttpClient);
 
@@ -101,7 +99,7 @@ export class OwnerService extends OwnersService {
     ownerCollection: Type[],
     ...ownersToCheck: (Type | null | undefined)[]
   ): Type[] {
-    const owners: Type[] = ownersToCheck.filter(isPresent);
+    const owners: Type[] = ownersToCheck.filter(ownerItem => ownerItem !== null && ownerItem !== undefined);
     if (owners.length > 0) {
       const ownerCollectionIdentifiers = ownerCollection.map(ownerItem => this.getOwnerIdentifier(ownerItem));
       const ownersToAdd = owners.filter(ownerItem => {

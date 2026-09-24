@@ -14,7 +14,13 @@ describe('Owner e2e test', () => {
   const ownerPageUrl = '/owner';
   let username: string;
   let password: string;
-  const ownerSample = { firstName: 'Sophie', lastName: 'Wisoky', address: 'and', city: 'Fort Aprilview', telephone: '643.322.6797 x7359' };
+  const ownerSample = {
+    firstName: 'Fabian',
+    lastName: 'Reichert',
+    address: 'sans recent',
+    city: 'Fort Dianaport',
+    telephone: '239.835.2807 x395',
+  };
 
   let owner;
 
@@ -170,8 +176,8 @@ describe('Owner e2e test', () => {
     });
 
     it('should create an instance of Owner', () => {
-      cy.get(`[data-cy="firstName"]`).type('Cheyenne');
-      cy.get(`[data-cy="firstName"]`).should('have.value', 'Cheyenne');
+      cy.get(`[data-cy="firstName"]`).type('Celia');
+      cy.get(`[data-cy="firstName"]`).should('have.value', 'Celia');
 
       cy.get(`[data-cy="lastName"]`).type('Senger');
       cy.get(`[data-cy="lastName"]`).should('have.value', 'Senger');
@@ -182,8 +188,8 @@ describe('Owner e2e test', () => {
       cy.get(`[data-cy="city"]`).type('Hansenboro');
       cy.get(`[data-cy="city"]`).should('have.value', 'Hansenboro');
 
-      cy.get(`[data-cy="telephone"]`).type('244.428.2677 x6153');
-      cy.get(`[data-cy="telephone"]`).should('have.value', '244.428.2677 x6153');
+      cy.get(`[data-cy="telephone"]`).type('(244) 428-2677 x6153');
+      cy.get(`[data-cy="telephone"]`).should('have.value', '(244) 428-2677 x6153');
 
       cy.get(entityCreateSaveButtonSelector).click();
 

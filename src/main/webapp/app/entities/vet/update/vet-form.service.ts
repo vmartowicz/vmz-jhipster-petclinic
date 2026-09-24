@@ -1,9 +1,9 @@
-import { Injectable } from '@angular/core';
+import { Service } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 
 import dayjs from 'dayjs/esm';
 
-import { DATE_TIME_FORMAT } from 'app/config/input.constants';
+import { DATE_TIME_FORMAT } from 'app/config';
 import { IVet, NewVet } from '../vet.model';
 
 /**
@@ -44,7 +44,7 @@ type VetFormGroupContent = {
 
 export type VetFormGroup = FormGroup<VetFormGroupContent>;
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class VetFormService {
   createVetFormGroup(vet?: VetFormGroupInput): VetFormGroup {
     const vetRawValue = this.convertVetToVetRawValue({

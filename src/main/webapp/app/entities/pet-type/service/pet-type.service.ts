@@ -1,12 +1,11 @@
 import { HttpClient, HttpResponse, httpResource } from '@angular/common/http';
-import { Injectable, computed, inject, signal } from '@angular/core';
+import { Service, computed, inject, signal } from '@angular/core';
 
 import dayjs from 'dayjs/esm';
 import { Observable, map } from 'rxjs';
 
-import { ApplicationConfigService } from 'app/core/config/application-config.service';
-import { createRequestOption } from 'app/core/request/request-util';
-import { isPresent } from 'app/core/util/operators';
+import { serverApiUrl } from 'app/config';
+import { createRequestOption } from 'app/core/request';
 import { IPetType, NewPetType } from '../pet-type.model';
 
 export type PartialUpdatePetType = Partial<IPetType> & Pick<IPetType, 'id'>;
@@ -22,7 +21,7 @@ export type NewRestPetType = RestOf<NewPetType>;
 
 export type PartialUpdateRestPetType = RestOf<PartialUpdatePetType>;
 
-@Injectable()
+@Service()
 export class PetTypesService {
   readonly petTypesParams = signal<Record<string, string | number | boolean | readonly (string | number | boolean)[]> | undefined>(
     undefined,
@@ -41,8 +40,7 @@ export class PetTypesService {
   readonly petTypes = computed(() =>
     (this.petTypesResource.hasValue() ? this.petTypesResource.value() : []).map(item => this.convertValueFromServer(item)),
   );
-  protected readonly applicationConfigService = inject(ApplicationConfigService);
-  protected readonly resourceUrl = this.applicationConfigService.getEndpointFor('api/pet-types');
+  protected readonly resourceUrl = `${serverApiUrl}api/pet-types`;
 
   protected convertValueFromServer(restPetType: RestPetType): IPetType {
     return {
@@ -53,7 +51,7 @@ export class PetTypesService {
   }
 }
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class PetTypeService extends PetTypesService {
   protected readonly http = inject(HttpClient);
 
@@ -105,7 +103,7 @@ export class PetTypeService extends PetTypesService {
     petTypeCollection: Type[],
     ...petTypesToCheck: (Type | null | undefined)[]
   ): Type[] {
-    const petTypes: Type[] = petTypesToCheck.filter(isPresent);
+    const petTypes: Type[] = petTypesToCheck.filter(petTypeItem => petTypeItem !== null && petTypeItem !== undefined);
     if (petTypes.length > 0) {
       const petTypeCollectionIdentifiers = petTypeCollection.map(petTypeItem => this.getPetTypeIdentifier(petTypeItem));
       const petTypesToAdd = petTypes.filter(petTypeItem => {

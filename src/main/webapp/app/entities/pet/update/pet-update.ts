@@ -1,18 +1,17 @@
 import { HttpResponse } from '@angular/common/http';
-import { ChangeDetectionStrategy, Component, OnInit, inject, signal } from '@angular/core';
+import { Component, OnInit, inject, signal } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { NgbInputDatepicker } from '@ng-bootstrap/ng-bootstrap/datepicker';
-import { TranslatePipe } from '@ngx-translate/core';
 import { Observable, finalize, map } from 'rxjs';
 
 import { IOwner } from 'app/entities/owner/owner.model';
 import { OwnerService } from 'app/entities/owner/service/owner.service';
 import { IPetType } from 'app/entities/pet-type/pet-type.model';
 import { PetTypeService } from 'app/entities/pet-type/service/pet-type.service';
-import { AlertError } from 'app/shared/alert/alert-error';
+import { AlertError } from 'app/shared/alert';
 import { TranslateDirective } from 'app/shared/language';
 import { IPet } from '../pet.model';
 import { PetService } from '../service/pet.service';
@@ -20,10 +19,9 @@ import { PetService } from '../service/pet.service';
 import { PetFormGroup, PetFormService } from './pet-form.service';
 
 @Component({
-  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'jhi-pet-update',
   templateUrl: './pet-update.html',
-  imports: [TranslateDirective, TranslatePipe, FontAwesomeModule, AlertError, ReactiveFormsModule, NgbInputDatepicker],
+  imports: [TranslateDirective, FontAwesomeModule, AlertError, ReactiveFormsModule, NgbInputDatepicker],
 })
 export class PetUpdate implements OnInit {
   readonly isSaving = signal(false);
